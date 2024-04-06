@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'dart:math' as math;
 
 import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
@@ -38,6 +39,7 @@ class _View_PageState extends State<View_Page> {
   void initState() {
     // TODO: implement initState
 
+  document.onContextMenu.listen((event) => event.preventDefault());
 
   draw_controller.x_move=0;
   draw_controller.y_move=0;
@@ -99,7 +101,7 @@ class _View_PageState extends State<View_Page> {
                       /// Enter
                       if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
 
-                        print("enter");
+                        // print("enter");
 
                         setState(() {});
                       }

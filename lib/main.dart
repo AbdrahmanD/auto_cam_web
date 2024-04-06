@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:auto_cam_web/online_autoam/Controller/MY_Binding.dart';
 import 'package:auto_cam_web/web_bages/Main_Screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -10,7 +11,17 @@ import 'package:get_storage/get_storage.dart';
 void main() async {
 
   await GetStorage.init();
-
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: FirebaseOptions(
+          apiKey: "AIzaSyDfIotM6QYft8vM78-IS1JoGpMlBcdahi4",
+          authDomain: "autocam-5f9b9.firebaseapp.com",
+           projectId: "autocam-5f9b9",
+          storageBucket: "autocam-5f9b9.appspot.com",
+          messagingSenderId: "374244028436",
+          appId: "1:374244028436:web:7ed439f93884db4c9cf701"
+      )
+  );
   runApp(
       GetMaterialApp(
           scrollBehavior: MaterialScrollBehavior().copyWith(
