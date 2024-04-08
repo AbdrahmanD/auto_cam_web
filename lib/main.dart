@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:auto_cam_web/online_autoam/Controller/MY_Binding.dart';
-import 'package:auto_cam_web/web_bages/Main_Screen.dart';
+import 'package:auto_cam_web/web_bages/Home_Screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,13 +22,16 @@ void main() async {
           appId: "1:374244028436:web:7ed439f93884db4c9cf701"
       )
   );
+  final my_setting_data = GetStorage();
+  my_setting_data.write("user", "anonymous");
+
   runApp(
       GetMaterialApp(
           scrollBehavior: MaterialScrollBehavior().copyWith(
             dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch, PointerDeviceKind.stylus, PointerDeviceKind.unknown},
           ),
           initialBinding: MY_Binding(),
-          home: Main_Screen()
+          home: Home_Screen()
       )
   );
 }

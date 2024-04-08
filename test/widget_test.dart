@@ -5,7 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:auto_cam_web/web_bages/Main_Screen.dart';
+import 'package:auto_cam_web/web_bages/Home_Screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -14,7 +14,7 @@ import 'package:auto_cam_web/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const Main_Screen());
+    await tester.pumpWidget(const Home_Screen());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

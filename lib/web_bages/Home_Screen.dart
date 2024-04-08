@@ -1,4 +1,5 @@
 
+import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/View_Pages_Controller.dart';
 import 'package:auto_cam_web/web_bages/Contact_US_Page.dart';
 import 'package:auto_cam_web/web_bages/Learn_Page.dart';
 import 'package:auto_cam_web/web_bages/Library_Page.dart';
@@ -6,16 +7,17 @@ import 'package:auto_cam_web/web_bages/Main_View_Page.dart';
 import 'package:auto_cam_web/web_bages/Sign_Up_In_Page.dart';
 import 'package:auto_cam_web/web_bages/Try_Page.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Main_Screen extends StatefulWidget {
-  const Main_Screen({Key? key}) : super(key: key);
+class Home_Screen extends StatefulWidget {
+  const Home_Screen({Key? key}) : super(key: key);
 
   @override
-  State<Main_Screen> createState() => _Main_ScreenState();
+  State<Home_Screen> createState() => _Main_ScreenState();
 }
 
-class _Main_ScreenState extends State<Main_Screen> {
+class _Main_ScreenState extends State<Home_Screen> {
 
 
   List<bool> hover_texts = [
@@ -31,28 +33,25 @@ class _Main_ScreenState extends State<Main_Screen> {
     false,
   ];
 
+  final my_setting_data = GetStorage();
 
+  View_Pages_Controller view_pages_controller=View_Pages_Controller();
 
-  bool main_bage=true;
-  bool try_bage=false;
-  bool learn_bage=false;
-  bool library_bage=false;
-  bool contact_us__bage=false;
-  bool sign_up_in_bage=false;
+  corrent_page(){
 
- Widget corrent_page(){
     Widget widget=Container();
 
-    if(main_bage){widget=Main_View_Page();}
-    if(try_bage){widget=Try_Page();}
-    if(learn_bage){widget=Learn_Page();}
-    if(library_bage){widget=Library_Page();}
-    if(contact_us__bage){widget=Contact_US_Page();}
-    if(sign_up_in_bage){widget=Sign_Up_In_Page();}
+    if(view_pages_controller.main_bage.value){widget=Main_View_Page();}
+    if(view_pages_controller.try_bage.value){widget=Try_Page();}
+    if(view_pages_controller.learn_bage.value){widget=Learn_Page();}
+    if(view_pages_controller.library_bage.value){widget=Library_Page();}
+    if(view_pages_controller.contact_us__bage.value){widget=Contact_US_Page();}
+    if(view_pages_controller.sign_up_in_bage.value){widget=Sign_Up_In_Page();}
 
 
     return widget;
   }
+  bool sign_in=false;
 
 
   @override
@@ -61,6 +60,14 @@ class _Main_ScreenState extends State<Main_Screen> {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
 
+    if(my_setting_data.read("sign_in")!=null){
+        sign_in=my_setting_data.read("sign_in");
+
+    }
+    else{
+        sign_in=false;
+    }
+    corrent_page();
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Scaffold(
@@ -76,7 +83,7 @@ class _Main_ScreenState extends State<Main_Screen> {
 
 
                 /// left side
-              main_bage?  Padding(
+                view_pages_controller.main_bage.value?  Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: Card(elevation: 12,
                   child: Container(width: w/5,
@@ -223,11 +230,11 @@ class _Main_ScreenState extends State<Main_Screen> {
 
 
                 ///main screen
-                Container(    width:main_bage?(w/5)*4-56:w,
+                Container(    width:view_pages_controller.main_bage.value?(w/5)*4-56:w,
                   // color: Colors.blue[100],
                   child: Column(
                     children: [
-                      SizedBox(height: main_bage?18:0,),
+                      SizedBox(height: view_pages_controller.main_bage.value?18:0,),
 
 
                       /// titles : try , learn , library , contact us , log in or up
@@ -237,7 +244,7 @@ class _Main_ScreenState extends State<Main_Screen> {
                           Row(
                             children: [
 
-                              main_bage?
+                              view_pages_controller. main_bage.value?
                               SizedBox(width: 50,):
                           Container(
 
@@ -267,12 +274,12 @@ class _Main_ScreenState extends State<Main_Screen> {
                                 },
                                 child: InkWell(onTap: (){
 
-                                  main_bage=true;
-                                  try_bage=false;
-                                  learn_bage=false;
-                                  library_bage=false;
-                                  contact_us__bage=false;
-                                  sign_up_in_bage=false;
+                                  view_pages_controller.main_bage.value=true;
+                                  view_pages_controller.try_bage.value=false;
+                                  view_pages_controller.learn_bage.value=false;
+                                  view_pages_controller.library_bage.value=false;
+                                  view_pages_controller.contact_us__bage.value=false;
+                                  view_pages_controller.sign_up_in_bage.value=false;
                                   setState(() {
 
                                   });
@@ -301,12 +308,12 @@ class _Main_ScreenState extends State<Main_Screen> {
                                 },
                                 child: InkWell(onTap: (){
 
-                                  main_bage=false;
-                                  try_bage=true;
-                                  learn_bage=false;
-                                  library_bage=false;
-                                  contact_us__bage=false;
-                                  sign_up_in_bage=false;
+                                 view_pages_controller.main_bage.value=false;
+                                 view_pages_controller.try_bage.value=true;
+                                 view_pages_controller.learn_bage.value=false;
+                                 view_pages_controller.library_bage.value=false;
+                                 view_pages_controller.contact_us__bage.value=false;
+                                 view_pages_controller.sign_up_in_bage.value=false;
                                   setState(() {
 
                                   });
@@ -333,12 +340,12 @@ class _Main_ScreenState extends State<Main_Screen> {
                                   });
                                 },
                                 child: InkWell(onTap: (){
-                                  main_bage=false;
-                                  try_bage=false;
-                                  learn_bage=true;
-                                  library_bage=false;
-                                  contact_us__bage=false;
-                                  sign_up_in_bage=false;
+                                  view_pages_controller.main_bage.value=false;
+                                  view_pages_controller.try_bage.value=false;
+                                  view_pages_controller.learn_bage.value=true;
+                                  view_pages_controller.library_bage.value=false;
+                                  view_pages_controller.contact_us__bage.value=false;
+                                  view_pages_controller.sign_up_in_bage.value=false;
                                   setState(() {
 
                                   });
@@ -365,12 +372,12 @@ class _Main_ScreenState extends State<Main_Screen> {
                                   });
                                 },
                                 child: InkWell(onTap: (){
-                                  main_bage=false;
-                                  try_bage=false;
-                                  learn_bage=false;
-                                  library_bage=true;
-                                  contact_us__bage=false;
-                                  sign_up_in_bage=false;
+                                 view_pages_controller.main_bage.value=false;
+                                 view_pages_controller.try_bage.value=false;
+                                 view_pages_controller.learn_bage.value=false;
+                                 view_pages_controller.library_bage.value=true;
+                                 view_pages_controller.contact_us__bage.value=false;
+                                 view_pages_controller.sign_up_in_bage.value=false;
                                   setState(() {
 
                                   });
@@ -398,12 +405,12 @@ class _Main_ScreenState extends State<Main_Screen> {
                                 },
                                 child: InkWell(onTap: (){
 
-                                  main_bage=false;
-                                  try_bage=false;
-                                  learn_bage=false;
-                                  library_bage=false;
-                                  contact_us__bage=true;
-                                  sign_up_in_bage=false;
+                                  view_pages_controller.main_bage.value=false;
+                                  view_pages_controller.try_bage.value=false;
+                                  view_pages_controller.learn_bage.value=false;
+                                  view_pages_controller.library_bage.value=false;
+                                  view_pages_controller.contact_us__bage.value=true;
+                                  view_pages_controller.sign_up_in_bage.value=false;
                                   setState(() {
 
                                   });
@@ -425,18 +432,18 @@ class _Main_ScreenState extends State<Main_Screen> {
                                 child: InkWell(
                                     onTap: () {
 
-                                      main_bage=false;
-                                      try_bage=false;
-                                      learn_bage=false;
-                                      library_bage=false;
-                                      contact_us__bage=false;
-                                      sign_up_in_bage=true;
+                                      view_pages_controller.main_bage.value=false;
+                                      view_pages_controller.try_bage.value=false;
+                                      view_pages_controller.learn_bage.value=false;
+                                      view_pages_controller.library_bage.value=false;
+                                      view_pages_controller.contact_us__bage.value=false;
+                                      view_pages_controller.sign_up_in_bage.value=true;
                                       setState(() {
 
                                       });
 
                                       },
-                                    child: Center(child: Text("LOG IN"))),
+                                    child: Center(child: Text(!sign_in?"LOG IN":"LOG OUT"))),
                               ),
 
                               SizedBox(width: 24,)

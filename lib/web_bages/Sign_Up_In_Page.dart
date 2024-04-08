@@ -1,7 +1,11 @@
-import 'dart:js_interop';
 
+import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/View_Pages_Controller.dart';
+import 'package:auto_cam_web/online_autoam/View/Main_Screen.dart';
+import 'package:auto_cam_web/web_bages/Home_Screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class Sign_Up_In_Page extends StatefulWidget {
@@ -17,7 +21,10 @@ class _Sign_Up_In_PageState extends State<Sign_Up_In_Page> {
 
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn  _googleSignIn = GoogleSignIn();
+
+  final my_setting_data = GetStorage();
+  View_Pages_Controller view_pages_controller=View_Pages_Controller();
 
 
   Future<void> signInWithGoogle() async {
@@ -27,13 +34,24 @@ class _Sign_Up_In_PageState extends State<Sign_Up_In_Page> {
 
     print('==================================================');
     print('==================================================');
+    print('user name = ${googleSignInAccount!.displayName}');
     print('user email = ${googleSignInAccount!.email}');
+
+
+    my_setting_data.write("user",googleSignInAccount!.displayName);
+    my_setting_data.write("sign_in",true);
+
+    Get.to(Home_Screen());
+
+
 
   }
 
   Future<void> signOut() async {
     await _googleSignIn.signOut();
-    print('sign out');
+    my_setting_data.write("sign_in",false);
+
+    Get.to(Home_Screen());
   }
 
 
