@@ -1,48 +1,27 @@
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/AnalyzeJoins.dart';
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Excel_Controller.dart';
-import 'package:auto_cam_web/online_autoam/Controller/Painters/Piece_Painter.dart';
-import 'package:auto_cam_web/online_autoam/Controller/Painters/Faces_Painter.dart';
+ import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
+  import 'package:auto_cam_web/online_autoam/Controller/Painters/Faces_Painter.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Cut_List_Item.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
-import 'package:auto_cam_web/online_autoam/project/Projecet_Controller.dart';
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class Piece_List_view extends StatefulWidget {
-  late bool project;
 
-  Piece_List_view(bool project) {
-    this.project = project;
-  }
+
 
   @override
-  State<Piece_List_view> createState() => _Piece_List_viewState(project);
+  State<Piece_List_view> createState() => _Piece_List_viewState( );
 }
 
 class _Piece_List_viewState extends State<Piece_List_view> {
   Draw_Controller draw_controller = Get.find();
-  Project_Controller project_controller = Get.find();
-  late bool project;
-  List<Piece_model> pieces = [];
+   List<Piece_model> pieces = [];
 
-  _Piece_List_viewState(bool project) {
-    this.project = project;
+  _Piece_List_viewState() {
 
-    if (project) {
-      for (int i = 0; i <
-          project_controller.box_repository.project_model.boxes.length; i++) {
-        for (int p = 0; p <
-            project_controller.box_repository.project_model.boxes[i].box_pieces
-                .length; p++) {
-          pieces.add(project_controller.box_repository.project_model.boxes[i]
-              .box_pieces[p]);
-        }
-      }
-    }
-    else {
+
       pieces = draw_controller.box_repository.box_model.value.box_pieces;
-    }
+
 
     // print(pieces.length);
   }
@@ -150,9 +129,7 @@ class _Piece_List_viewState extends State<Piece_List_view> {
                       height: 70,
                       child: Center(
                           child: Text(
-                        !project
-                            ? 'List of Box Pieces'
-                            : 'List of Project boxes Pieces',
+                        'List of Box Pieces',
                         style: TextStyle(fontSize: 18),
                       ))),
                   Container(
@@ -165,39 +142,7 @@ class _Piece_List_viewState extends State<Piece_List_view> {
                     padding: const EdgeInsets.only(left: 18.0),
                     child: Container(color:Colors.grey[100],
                         height: 350,
-                        child: project
-                            ?
-
-                            ///project pieces
-                            ListView.builder(
-                                itemCount: pieces.length,
-                                itemBuilder: (context, i) {
-                                  if (pieces[i].piece_name.contains("inner") ||
-                                   pieces[i].piece_thickness==0||
-                                      pieces[i].piece_name.contains('Helper') ||
-                                      (pieces[i]
-                                              .piece_name
-                                              .contains('drawer'))) {
-                                    return SizedBox();
-                                  } else {
-                                    return Row(
-                                      children: [
-                                        Checkbox(
-                                            value: pieces[i].piece_inable,
-                                            onChanged: (v) {
-                                              pieces[i].piece_inable =
-                                                  !pieces[i].piece_inable;
-                                              setState(() {});
-                                            }),
-                                        SizedBox(
-                                          height: 12,
-                                        ),
-                                        Text(pieces[i].piece_name)
-                                      ],
-                                    );
-                                  }
-                                })
-                            :
+                        child:
 
                             /// box pieces
                             ListView.builder(
@@ -253,7 +198,7 @@ class _Piece_List_viewState extends State<Piece_List_view> {
                         ),
                         InkWell(
                             onTap: () {
-                              draw_controller.extract_xml_files(project);
+                              draw_controller.extract_xml_files();
                             },
                             child: Icon(
                               Icons.view_array_outlined,

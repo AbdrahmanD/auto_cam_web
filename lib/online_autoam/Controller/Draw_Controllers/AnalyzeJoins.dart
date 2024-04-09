@@ -6,16 +6,14 @@ import 'package:auto_cam_web/online_autoam/Model/Main_Models/Cut_List_Item.dart'
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Faces_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
-import 'package:auto_cam_web/online_autoam/project/Project_model.dart';
-import 'package:get/get.dart';
+ import 'package:get/get.dart';
 
 
 class AnalyzeJoins {
 
   late bool project;
   late bool collect_same_pieces;
-  late Project_model project_model;
-  Draw_Controller draw_controller = Get.find();
+   Draw_Controller draw_controller = Get.find();
 
 
   AnalyzeJoins(this.project,this.collect_same_pieces) {
@@ -23,20 +21,10 @@ class AnalyzeJoins {
 this.project=project;
 
     draw_controller.box_repository.cut_list_items = [];
-project_model = draw_controller.box_repository.project_model;
 
-    if(project){
-     for (int i = 0; i<draw_controller.box_repository.project_model.boxes.length; i++) {
-       Box_model box_model = draw_controller.box_repository.project_model.boxes[i];
-        clean_faces(box_model);
-        all_face_check(box_model);
-     }
-    }
-    else{
       Box_model box_model = draw_controller.box_repository.box_model.value;
       clean_faces(box_model);
       all_face_check(box_model);
-    }
 
     collect_all_same_pieces(collect_same_pieces);
 
@@ -1593,22 +1581,8 @@ project_model = draw_controller.box_repository.project_model;
 
     List<Piece_model> pices =[];
 
-if(project){
-  for(int b=0;b<draw_controller.box_repository.project_model.boxes.length;b++) {
-
-    Box_model box_model=draw_controller.box_repository.project_model.boxes[b];
-
-    for(int p=0;p<box_model.box_pieces.length;p++) {
-      Piece_model piece_model = box_model.box_pieces[p];
-      // piece_model.piece_id="$b-${piece_model.piece_id}";
-      pices.add(piece_model);
-
-     }
-
-  }
-}else{
   pices=draw_controller.box_repository.box_model.value.box_pieces;
-}
+
 if(collect)
     {
 

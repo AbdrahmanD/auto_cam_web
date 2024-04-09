@@ -2,11 +2,11 @@ import 'package:auto_cam_web/online_autoam/Controller/DecimalTextInputFormatter.
 import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
    import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
   import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
- import 'package:auto_cam_web/online_autoam/View/Main_Screen.dart';
-import 'package:auto_cam_web/online_autoam/View/Screens_parts/Box_Type.dart';
+ import 'package:auto_cam_web/online_autoam/View/Screens_parts/Box_Type.dart';
  import 'package:auto_cam_web/online_autoam/View/Screens_parts/Cut_List_review.dart';
 import 'package:auto_cam_web/online_autoam/View/Setting_Page.dart';
  import 'package:auto_cam_web/online_autoam/View/Piece_List_view.dart';
+import 'package:auto_cam_web/web_bages/Home_Screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -103,7 +103,7 @@ class _Setting_Box_Size_FormState extends State<Setting_Box_Size_Form> {
                     color: Colors.teal,
                   ),
                   onTap: () {
-                    Get.to(Main_Screen());
+                    Get.to(Home_Screen());
                   },
                 ),
               ),
@@ -607,7 +607,7 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
                     onTap: () {
                       draw_Controller.analyze();
                       Future.delayed(Duration(milliseconds: 1000))
-                          .then((value) => Get.to(Piece_List_view(false)));
+                          .then((value) => Get.to(Piece_List_view()));
                     },
                     child: Icon(
                       Icons.draw,

@@ -1222,22 +1222,15 @@ if(select_window.value){
     }
   }
 
-  extract_xml_files(bool project) async {
+  extract_xml_files() async {
     String? directory = await FilePicker.platform.saveFile(
       dialogTitle: 'Please select an output file:',
       fileName: 'box name',
     );
 
-    if (project) {
-      for (int i = 0; i < box_repository.project_model.boxes.length; i++) {
-        Box_model box_model = box_repository.project_model.boxes[i];
-        extract_xml_files_pattern(
-            box_model, box_repository.project_model.project_name, directory!);
-      }
-    } else {
       extract_xml_files_pattern(box_repository.box_model.value,
           box_repository.box_model.value.box_name, directory!);
-    }
+
   }
 
   save_Box() async {

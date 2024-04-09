@@ -1,7 +1,5 @@
 
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/View_Pages_Controller.dart';
-import 'package:auto_cam_web/online_autoam/View/Main_Screen.dart';
-import 'package:auto_cam_web/web_bages/Home_Screen.dart';
+ import 'package:auto_cam_web/web_bages/Home_Screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,7 +22,6 @@ class _Sign_Up_In_PageState extends State<Sign_Up_In_Page> {
   final GoogleSignIn  _googleSignIn = GoogleSignIn();
 
   final my_setting_data = GetStorage();
-  View_Pages_Controller view_pages_controller=View_Pages_Controller();
 
 
   Future<void> signInWithGoogle() async {

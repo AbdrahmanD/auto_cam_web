@@ -1,13 +1,11 @@
 
-import 'package:auto_cam_web/online_autoam/Controller/nesting/Nesting_Pieces.dart';
-import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_Pieces_Arrang.dart';
+ import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_Pieces_Arrang.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/CNC_Tool.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Cut_List_Item.dart';
  import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
-import 'package:auto_cam_web/online_autoam/project/Project_model.dart';
-import 'package:get/get.dart';
+ import 'package:get/get.dart';
 
 class Box_Repository extends GetxController {
   double top_base_piece_width = 100;
@@ -25,10 +23,6 @@ class Box_Repository extends GetxController {
 
   String back_panel_type = "full_cover";
 
-
-
-  Project_model project_model =
-      Project_model("current project", 1, 1, 2023, "", "", []);
 
   Map<String, List<JoinHolePattern>> join_patterns =
   {
@@ -52,7 +46,6 @@ class Box_Repository extends GetxController {
     CNC_Tool("cut", 1, "cutting tool", 12, 18, 100, 100, 10000)
   ];
 
-  Nesting_Pieces nesting_pieces = Nesting_Pieces([], 12);
 
   bool nesting_pieces_saves = false;
 
@@ -62,7 +55,6 @@ class Box_Repository extends GetxController {
   bool project_have_been_saved = false;
   String project_file_path = '';
 
-  List<My_Sheet> repo_sheerts = [];
 
 
 
@@ -76,9 +68,6 @@ class Box_Repository extends GetxController {
 
   }
 
-  add_box_to_project(Box_model box_model) {
-    project_model.boxes.add(box_model);
-  }
 
 
   Box_Pieces_Arrang arrange_box(Box_model b){
