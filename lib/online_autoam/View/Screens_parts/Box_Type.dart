@@ -32,7 +32,7 @@ class _Box_TypeState extends State<Box_Type> {
     var w = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      appBar: AppBar(),
+
       body:!active?Container(width: w,height: h,child: Center(child: Text("active key is requested ",style: TextStyle(fontSize: 32),),),):
       Container(
         height: h,
@@ -44,278 +44,230 @@ class _Box_TypeState extends State<Box_Type> {
                 colors: [Colors.white, Colors.grey])),
         child: Center(
           child:
-          Column(
+          ListView(
+            scrollDirection: Axis.horizontal,
+
             children: [
 
-              SizedBox(
-                height: 100,
-              ),
+              /// standard_unit
+              Flexible(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "standard unit",
+                      style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 32,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        // Get.to(Project_Screen());
+                        draw_controller.box_type="standard_unit";
+                        Navigator.of(context).pop();
 
-              // auto cam lable
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.red[400],
-                  borderRadius: BorderRadius.circular(12),
+                      },
+                      child: Container(
+                          height: 200,
+                          // color: Colors.red,
+                          child: Image.asset(
+                            "lib/assets/images/unit.png",
+                          )),
+                    ),
+                    // Text(
+                    //   "normal cabinet",
+                    //   style: TextStyle(fontSize: 14),
+                    // ),
+                  ],
                 ),
-                child: Text(
-                  "  chose the type of box you want to build    ",
-                  style: TextStyle(fontSize: 32, color: Colors.white),
+              ),
+
+
+              Flexible(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "free panel",
+                      style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 32,
+                    ),
+                    InkWell(
+                      onTap: () {
+
+                        draw_controller.box_type="free_panel";
+                        Navigator.of(context).pop();
+
+                      },
+                      child: Container(
+                          height: 200,
+                          // color: Colors.red,
+                          child: Image.asset(
+                            "lib/assets/images/panel.png",
+                          )),
+                    ),
+                    // Text(
+                    //   "normal cabinet",
+                    //   style: TextStyle(fontSize: 14),
+                    // ),
+                  ],
                 ),
               ),
 
-              SizedBox(
-                height: 64,
+
+              /// wall cabinet
+              Flexible(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "wall cabinet",
+                      style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 32,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        // Get.to(Project_Screen());
+                        draw_controller.box_type="wall_cabinet";
+                        Navigator.of(context).pop();
+
+                      },
+                      child: Container(
+                          height: 200,
+                          // color: Colors.red,
+                          child: Image.asset(
+                            "lib/assets/images/normal.png",
+                          )),
+                    ),
+                    // Text(
+                    //   "normal cabinet",
+                    //   style: TextStyle(fontSize: 14),
+                    // ),
+                  ],
+                ),
               ),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-
-                children: [
-
-                  /// standard_unit
-                  Flexible(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "standard unit",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 32,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            // Get.to(Project_Screen());
-                            draw_controller.box_type="standard_unit";
-                            draw_controller.box_repository.box_model.value=Box_model
-                              ('box_name', "standard_unit", 400, 600, 500,
-                                18, 'MDF', 5, 9, 18, 100, true, Point_model(0, 0, 0));
-                            Get.to(Cabinet_Editor(active));
-
-                          },
-                          child: Container(
-                              height: 200,
-                              // color: Colors.red,
-                              child: Image.asset(
-                                "lib/assets/images/unit.png",
-                              )),
-                        ),
-                        // Text(
-                        //   "normal cabinet",
-                        //   style: TextStyle(fontSize: 14),
-                        // ),
-                      ],
+              /// base cabinet
+              Flexible(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "base _cabinet",
+                      style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                  ),
-
-
-                  Flexible(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "free panel",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 32,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            // Get.to(Project_Screen());
-                            draw_controller.box_type="free_panel";
-                            draw_controller.box_repository.box_model.value=Box_model
-                              ('box_name', "free_panel", 400, 600, 500,
-                                18, 'MDF', 5, 9, 18, 100, true, Point_model(0, 0, 0));
-                            Get.to(Cabinet_Editor(active));
-
-                          },
-                          child: Container(
-                              height: 200,
-                              // color: Colors.red,
-                              child: Image.asset(
-                                "lib/assets/images/panel.png",
-                              )),
-                        ),
-                        // Text(
-                        //   "normal cabinet",
-                        //   style: TextStyle(fontSize: 14),
-                        // ),
-                      ],
+                    SizedBox(
+                      height: 32,
                     ),
-                  ),
-
-
-                  /// wall cabinet
-                  Flexible(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "wall cabinet",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 32,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            // Get.to(Project_Screen());
-                            draw_controller.box_type="wall_cabinet";
-                            draw_controller.box_repository.box_model.value=Box_model
-                              ('box_name', "wall_cabinet", 400, 600, 500,
-                                18, 'MDF', 5, 9, 18, 100, true, Point_model(0, 0, 0));
-                            Get.to(Cabinet_Editor(active));
-
-                          },
-                          child: Container(
-                              height: 200,
-                              // color: Colors.red,
-                              child: Image.asset(
-                                "lib/assets/images/normal.png",
-                              )),
-                        ),
-                        // Text(
-                        //   "normal cabinet",
-                        //   style: TextStyle(fontSize: 14),
-                        // ),
-                      ],
+                    InkWell(
+                      onTap: () {
+                        draw_controller.box_type="base_cabinet";
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                          height: 200,
+                          // color: Colors.red,
+                          child: Image.asset(
+                            "lib/assets/images/10u.png",
+                          )),
                     ),
-                  ),
-
-                  /// base cabinet
-                  Flexible(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "base _cabinet",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 32,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            draw_controller.box_type="base_cabinet";
-                            draw_controller.box_repository.box_model.value=Box_model
-                              ('box_name', "base_cabinet", 400, 600, 500,
-                                18, 'MDF', 5, 9, 18, 100, true, Point_model(0, 0, 0));
-                            Get.to(Cabinet_Editor(active));
-                          },
-                          child: Container(
-                              height: 200,
-                              // color: Colors.red,
-                              child: Image.asset(
-                                "lib/assets/images/10u.png",
-                              )),
-                        ),
-                        // Text(
-                        //   "box with 10 cm top and normal base",
-                        //   style: TextStyle(fontSize: 14),
-                        // ),
-                      ],
-                    ),
-                  ),
-
-                  /// sink cabinet
-                  Flexible(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Sink Cabinet",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 32,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            // Get.to(Single_Piece_Editor());
-                            draw_controller.box_type="sink_cabinet";
-                            draw_controller.box_repository.box_model.value=Box_model
-                              ('box_name', "sink_cabinet", 400, 600, 500,
-                                18, 'MDF', 5, 9, 18, 100, true, Point_model(0, 0, 0));
-                            Get.to(Cabinet_Editor(active));
-                          },
-                          child: Container(
-                              height: 200,
-                              // color: Colors.red,
-                              child: Image.asset(
-                                "lib/assets/images/sink_cabinet.png",
-                              )),
-                        ),
-                        // Text(
-                        //   "box with 10 cm  top and base",
-                        //   style: TextStyle(fontSize: 14),
-                        // ),
-                      ],
-                    ),
-                  ),
-
-                  /// inner box
-                  Flexible(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Inner Box",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 32,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            // Get.to(Single_Piece_Editor());
-                            draw_controller.box_type="inner_cabinet";
-                            draw_controller.box_repository.box_model.value=Box_model
-                              ('box_name', "inner_cabinet", 400, 600, 500,
-                                18, 'MDF', 5, 9, 18, 100, true, Point_model(0, 0, 0));
-                            Get.to(Cabinet_Editor(active));
-                          },
-                          child: Container(
-                              height: 200,
-                              // color: Colors.red,
-                              child: Image.asset(
-                                "lib/assets/images/10ud.png",
-                              )),
-                        ),
-                        // Text(
-                        //   "box with 10 cm  top and base",
-                        //   style: TextStyle(fontSize: 14),
-                        // ),
-                      ],
-                    ),
-                  ),
-
-
-                ],
+                    // Text(
+                    //   "box with 10 cm top and normal base",
+                    //   style: TextStyle(fontSize: 14),
+                    // ),
+                  ],
+                ),
               ),
 
+              /// sink cabinet
+              Flexible(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Sink Cabinet",
+                      style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 32,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        // Get.to(Single_Piece_Editor());
+                        draw_controller.box_type="sink_cabinet";
+                        Navigator.of(context).pop();
 
-              /// setting
-              SizedBox(
-                height: 24,
+                      },
+                      child: Container(
+                          height: 200,
+                          // color: Colors.red,
+                          child: Image.asset(
+                            "lib/assets/images/sink_cabinet.png",
+                          )),
+                    ),
+                    // Text(
+                    //   "box with 10 cm  top and base",
+                    //   style: TextStyle(fontSize: 14),
+                    // ),
+                  ],
+                ),
+              ),
+
+              /// inner box
+              Flexible(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Inner Box",
+                      style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 32,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        // Get.to(Single_Piece_Editor());
+                        draw_controller.box_type="inner_cabinet";
+                        Navigator.of(context).pop();
+
+                      },
+                      child: Container(
+                          height: 200,
+                          // color: Colors.red,
+                          child: Image.asset(
+                            "lib/assets/images/10ud.png",
+                          )),
+                    ),
+                    // Text(
+                    //   "box with 10 cm  top and base",
+                    //   style: TextStyle(fontSize: 14),
+                    // ),
+                  ],
+                ),
               ),
 
 
             ],
           ),
+
         ),
       ),
     );

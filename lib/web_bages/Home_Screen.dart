@@ -1,12 +1,9 @@
 
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/View_Pages_Controller.dart';
-import 'package:auto_cam_web/web_bages/Contact_US_Page.dart';
+import 'package:auto_cam_web/online_autoam/View/Cabinet_Editor.dart';
 import 'package:auto_cam_web/web_bages/Learn_Page.dart';
-import 'package:auto_cam_web/web_bages/Library_Page.dart';
-import 'package:auto_cam_web/web_bages/Main_View_Page.dart';
-import 'package:auto_cam_web/web_bages/Sign_Up_In_Page.dart';
 import 'package:auto_cam_web/web_bages/Try_Page.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -18,8 +15,6 @@ class Home_Screen extends StatefulWidget {
 }
 
 class _Main_ScreenState extends State<Home_Screen> {
-
-
   List<bool> hover_texts = [
     false,
     false,
@@ -35,443 +30,554 @@ class _Main_ScreenState extends State<Home_Screen> {
 
   final my_setting_data = GetStorage();
 
-  View_Pages_Controller view_pages_controller=View_Pages_Controller();
 
-  corrent_page(){
-
-    Widget widget=Container();
-
-    if(view_pages_controller.main_bage.value){widget=Main_View_Page();}
-    if(view_pages_controller.try_bage.value){widget=Try_Page();}
-    if(view_pages_controller.learn_bage.value){widget=Learn_Page();}
-    if(view_pages_controller.library_bage.value){widget=Library_Page();}
-    if(view_pages_controller.contact_us__bage.value){widget=Contact_US_Page();}
-    if(view_pages_controller.sign_up_in_bage.value){widget=Sign_Up_In_Page();}
+  TextEditingController customer_email = TextEditingController();
+  TextEditingController customer_email_subject = TextEditingController();
+  TextEditingController customer_email_content = TextEditingController();
 
 
-    return widget;
+
+  bool sign_in = false;
+  String customer_name="";
+
+  @override
+  void initState() {
+
+    if (my_setting_data.read("customer_name") != null) {
+      customer_name = my_setting_data.read("customer_name");
+    } else {
+      customer_name = "";
+    }
+
+
+    super.initState();
   }
-  bool sign_in=false;
 
 
   @override
   Widget build(BuildContext context) {
-
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
 
-    if(my_setting_data.read("sign_in")!=null){
-        sign_in=my_setting_data.read("sign_in");
+    if (my_setting_data.read("sign_in") != null) {
+      sign_in = my_setting_data.read("sign_in");
+    } else {
+      sign_in = false;
+    }
 
-    }
-    else{
-        sign_in=false;
-    }
-    corrent_page();
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Scaffold(
-          body: Container(
-            // AssetImage("lib/assets/background.png"),fit: BoxFit.fill),),
-            width: w,
-            height: h,
-            child:
+          backgroundColor: Color.fromRGBO(26, 43, 52, 1),
+          body:
 
-            Row(
-              children: [
+          ListView(
+            children: [
 
+              /// home page
+              Container(
+                // AssetImage("lib/assets/background.png"),fit: BoxFit.fill),),
+                width: w, height: h,
+                child: Column(
+                  children: [
+                    Container(
+                      height: h/4,
+                      child:
 
-
-                /// left side
-                view_pages_controller.main_bage.value?  Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Card(elevation: 12,
-                  child: Container(width: w/5,
-                      color: Colors.white,
-                      child: Column(
+                      /// app par
+                      Row(
                         children: [
-
                           SizedBox(
-                            height: 24,
+                            width: (w / 3),
                           ),
-                          /// AutoCam
+
+                          ///home page
                           Container(
-
-                            height: 72,width: w/5,
+                            // color: Colors.blue,
+                            width: w / 18,
                             child: Center(
-                                child: Text("AutoCam",
-                                    style: GoogleFonts.abhayaLibre(
-                                        textStyle: TextStyle(
-                                            fontSize: w / 24,
-                                            color: Colors.teal)))),
+                                child: InkWell(
+                              onTap: () {
+                                Get.to(Home_Screen());
+                              },
+                              child: Text("Home",
+                                  style: GoogleFonts.aBeeZee(
+                                      fontSize: w/80, color: Color.fromRGBO(0, 0, 0, 0),
+                                      fontWeight: FontWeight.bold,
+                                    shadows: [
+                                      Shadow(
+                                          color: Colors.white,
+                                          offset: Offset(0, -5))
+                                    ],
+                                     decoration: TextDecoration.underline,
+                                    decorationColor: Colors.white,
+                                    decorationThickness: 4,
+                                    // decorationStyle: TextDecorationStyle.dashed,
+                                  ),
+                              ),
+                            )),
                           ),
+
+                          /// try page
+                          Container(
+                            width: w / 18,
+                            child: Center(
+                                child: InkWell(
+                              onTap: () {
+                                Get.to(Cabinet_Editor(true));
+                              },
+                              child: Text("Try",
+                                  style: GoogleFonts.aBeeZee(
+                                      fontSize: w/96, color: Colors.white)),
+                            )),
+                          ),
+
+                          /// Learn
+                          Container(
+                            width: w / 18,
+                            child: Center(
+                                child: InkWell(
+                              onTap: () {
+                                Get.to(Learn_Page());
+                              },
+                              child: Text("Learn",
+                                  style: GoogleFonts.aBeeZee(
+                                      fontSize: w/96, color: Colors.white)),
+                            )),
+                          ),
+
+                          ///Download
+                          Container(
+                            width: w / 18,
+                            child: Center(
+                                child: InkWell(
+                              onTap: () {
+                                Get.to(Home_Screen());
+                              },
+                              child: Text("Download",
+                                  style: GoogleFonts.aBeeZee(
+                                      fontSize: w/96, color: Colors.white)),
+                            )),
+                          ),
+
+                          /// Sign in / out
+                          Container(
+                            width: w / 18,
+                            child: Center(
+                                child: InkWell(
+                              onTap: () {
+                                Get.to(Home_Screen());
+                              },
+                              child: Text(sign_in?"Sign out":"Sign in",
+                                  style: GoogleFonts.aBeeZee(
+                                      fontSize: w/96, color: Colors.white)
+                              ),
+                            )),
+                          ),
+
+                          /// contact us
+                          Container(
+                            width: w / 18,
+                            child: Center(
+                                child: InkWell(
+                              onTap: () {
+                                Get.to(Home_Screen());
+                              },
+                              child: Text("contact us",
+                                  style: GoogleFonts.aBeeZee(
+                                      fontSize: w/96, color: Colors.white)
+                              ),
+                            )),
+                          ),
+
 
                           SizedBox(
-                            height: 96,
+                            width: (w / 6),
                           ),
 
-
-                          ///What is AutoCam
-                          MouseRegion(
-                              onHover: (v) {
-                                hover_texts[0] = true;
-                                setState(() {});
-                              },
-                              onExit: (v){
-                                hover_texts[0] = false;
-                                setState(() {});
-                              },
-                              child: Container(height: 69,
-                                child: Text("What is AutoCam ?",
-                                    style: GoogleFonts.abhayaLibre(
-                                        textStyle: TextStyle(fontWeight: FontWeight.bold,
-                                          fontSize: hover_texts[0] ? 36 : 32,
-                                        ))),
-                              )),
-                          SizedBox(
-                            height: 12,
-                          ),
-
-
-                          ///Design your wardrobe or kitchen cabinet
-                          MouseRegion(
-                              onHover: (v) {
-                                hover_texts[1] = true;
-                                setState(() {});
-                              },
-                              onExit: (v){
-                                hover_texts[1] = false;
-                                setState(() {});
-                              },
-                              child: Container(height: 56,
-                                child: Text("Design wardrobe or cabinet",
-                                    style: GoogleFonts.abhayaLibre(
-                                        textStyle: TextStyle(
-                                          fontSize: hover_texts[1] ? 24 : 18,fontWeight: FontWeight.bold,
-                                        ))),
-                              )),
-                          SizedBox(
-                            height: 8,
-                          ),
-
-
-
-                          ///Export CutList as excel file
-                          MouseRegion(
-                              onHover: (v) {
-                                hover_texts[2] = true;
-                                setState(() {});
-                              },
-                              onExit: (v){
-                                hover_texts[2] = false;
-                                setState(() {});
-                              },
-                              child: Container(height: 56,
-                                child: Text("Export CutList as excel file ",
-                                    style: GoogleFonts.abhayaLibre(
-                                        textStyle: TextStyle(
-                                          fontSize: hover_texts[2] ?  24 : 18,fontWeight: FontWeight.bold,
-                                        ))),
-                              )),
-                          SizedBox(
-                            height: 8,
-                          ),
-
-
-
-                          ///Export drilling files for KD work
-                          MouseRegion(
-                              onHover: (v) {
-                                hover_texts[3] = true;
-                                setState(() {});
-                              },
-                              onExit: (v){
-                                hover_texts[3] = false;
-                                setState(() {});
-                              },
-                              child: Container(height: 56,
-                                child: Text("Export  files for KD work ",
-                                    style: GoogleFonts.abhayaLibre(
-                                        textStyle: TextStyle(
-                                          fontSize: hover_texts[3] ?  24 : 18,fontWeight: FontWeight.bold,
-                                        ))),
-                              )),
-                          SizedBox(
-                            height: 8,
-                          ),
-
-                          ///Export drilling files for KD work
-                          MouseRegion(
-                              onHover: (v) {
-                                hover_texts[4] = true;
-                                setState(() {});
-                              },
-                              onExit: (v){
-                                hover_texts[4] = false;
-                                setState(() {});
-                              },
-                              child: Container(height: 56,
-                                child: Text("Export Shop Drawing ",
-                                    style: GoogleFonts.abhayaLibre(
-                                        textStyle: TextStyle(
-                                          fontSize: hover_texts[4] ?  24 : 18,fontWeight: FontWeight.bold,
-                                        ))),
-                              )),
-                          SizedBox(
-                            height: 8,
-                          ),
-
-
+                          Container(width: w/6,
+                          child: Text("$customer_name",
+                              style: GoogleFonts.aBeeZee(
+                              fontSize: w/96, color: Colors.white)
+                          ),)
                         ],
                       ),
                     ),
-                ),
-              ):SizedBox(),
 
+                    /// main content
+                    Row(
+                      children: [
 
-                ///main screen
-                Container(    width:view_pages_controller.main_bage.value?(w/5)*4-56:w,
-                  // color: Colors.blue[100],
-                  child: Column(
-                    children: [
-                      SizedBox(height: view_pages_controller.main_bage.value?18:0,),
+                        ///Sized box
+                        Expanded(
+                            flex: 1,
+                            child: Container(
+                              // height: h - 200,
+                                               )),
 
+                        /// main title
+                        Expanded(
+                            flex: 10,
+                            child: Container(
+                              // height: h - 200,
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 120),
+                                child: Center(
+                                    child:
+                                   RichText(
+                                     text: TextSpan(
+                                        children: [
+                                         TextSpan(
+                                             text: "AUTOCAM\n",
+                                             style: GoogleFonts.kalam(fontSize: w/20,color: Colors.white,fontWeight: FontWeight.bold),
+                                         ),
+                                          TextSpan(
+                                            text: "        SOFTWARE\n\n",
+                                            style: GoogleFonts.kalam(fontSize: w/32,color: Colors.white,fontWeight: FontWeight.bold),
+                                          ),
+                                          TextSpan(
+                                            text: "no cad , no cam ...\n\n",
+                                            style: GoogleFonts.arsenal(fontSize: w/36,color: Colors.white),
+                                          ),
+                                          TextSpan(
+                                            text: "only autocam\n",
+                                            style: GoogleFonts.arsenal(fontSize: w/36,color: Colors.white),
+                                          ),
+                                       ]
+                                     ),
 
-                      /// titles : try , learn , library , contact us , log in or up
-                      Card(elevation: 12,
-                        child: Container(height: 32,color: Colors.white,
-                          child:
-                          Row(
-                            children: [
-
-                              view_pages_controller. main_bage.value?
-                              SizedBox(width: 50,):
-                          Container(
-
-                          // color: Colors.teal[100],
-
-                          height: 32,width: w/5+50,
-                          child: Center(
-                              child: Text("AutoCam",
-                                  style: GoogleFonts.abhayaLibre(
-                                      textStyle: TextStyle(
-                                          fontSize:  32,
-                                          color: Colors.teal)))),
-                        ),
-
-                             /// Home
-                              MouseRegion(
-                                onHover: (v){
-                                  hover_texts[9]=true;setState(() {
-
-                                  });
-                                },
-                                onExit: (v){
-                                  hover_texts[9]=false;
-                                  setState(() {
-
-                                  });
-                                },
-                                child: InkWell(onTap: (){
-
-                                  view_pages_controller.main_bage.value=true;
-                                  view_pages_controller.try_bage.value=false;
-                                  view_pages_controller.learn_bage.value=false;
-                                  view_pages_controller.library_bage.value=false;
-                                  view_pages_controller.contact_us__bage.value=false;
-                                  view_pages_controller.sign_up_in_bage.value=false;
-                                  setState(() {
-
-                                  });
-
-                                },
-                                  child: Container(height: 32,width:hover_texts[9]? 112:80,
-                                    //
-                                    child: Center(child: Text("Home" ,
-                                      style: GoogleFonts.aBeeZee(fontSize: hover_texts[9]? 24:16),),),
-                                  ),
+                                   )
                                 ),
-                              ),SizedBox(width: hover_texts[9]? 44:76,),
-
-                              ///try
-                              MouseRegion(
-                                onHover: (v){
-                                  hover_texts[5]=true;setState(() {
-
-                                  });
-                                },
-                                onExit: (v){
-                                  hover_texts[5]=false;
-                                  setState(() {
-
-                                  });
-                                },
-                                child: InkWell(onTap: (){
-
-                                 view_pages_controller.main_bage.value=false;
-                                 view_pages_controller.try_bage.value=true;
-                                 view_pages_controller.learn_bage.value=false;
-                                 view_pages_controller.library_bage.value=false;
-                                 view_pages_controller.contact_us__bage.value=false;
-                                 view_pages_controller.sign_up_in_bage.value=false;
-                                  setState(() {
-
-                                  });
-
-                                },
-                                  child: Container(height: 32,width:hover_texts[5]? 112:80,
-                                   child: Center(child: Text("try" ,
-                                      style: GoogleFonts.aBeeZee(fontSize: hover_texts[5]? 24:16),),),
-                                  ),
-                                ),
-                              ),SizedBox(width: hover_texts[5]? 44:76,),
-
-                              ///learn
-                              MouseRegion(
-                                onHover: (v){
-                                  hover_texts[6]=true;setState(() {
-
-                                  });
-                                },
-                                onExit: (v){
-                                  hover_texts[6]=false;
-                                  setState(() {
-
-                                  });
-                                },
-                                child: InkWell(onTap: (){
-                                  view_pages_controller.main_bage.value=false;
-                                  view_pages_controller.try_bage.value=false;
-                                  view_pages_controller.learn_bage.value=true;
-                                  view_pages_controller.library_bage.value=false;
-                                  view_pages_controller.contact_us__bage.value=false;
-                                  view_pages_controller.sign_up_in_bage.value=false;
-                                  setState(() {
-
-                                  });
-
-                                },
-                                  child: Container(height: 42,width:hover_texts[6]? 112:80,
-                                     child: Center(child: Text("learn" ,
-                                      style: GoogleFonts.aBeeZee(fontSize: hover_texts[6]? 24:16),),),
-                                  ),
-                                ),
-                              ),SizedBox(width: hover_texts[6]? 44:76,),
-
-                              ///library
-                              MouseRegion(
-                                onHover: (v){
-                                  hover_texts[7]=true;setState(() {
-
-                                  });
-                                },
-                                onExit: (v){
-                                  hover_texts[7]=false;
-                                  setState(() {
-
-                                  });
-                                },
-                                child: InkWell(onTap: (){
-                                 view_pages_controller.main_bage.value=false;
-                                 view_pages_controller.try_bage.value=false;
-                                 view_pages_controller.learn_bage.value=false;
-                                 view_pages_controller.library_bage.value=true;
-                                 view_pages_controller.contact_us__bage.value=false;
-                                 view_pages_controller.sign_up_in_bage.value=false;
-                                  setState(() {
-
-                                  });
-
-                                },
-                                  child: Container(height:42,width:hover_texts[7]? 112:80,
-                                  child: Center(child: Text("library" , style:
-                                    GoogleFonts.aBeeZee(fontSize: hover_texts[7]? 24:16),),),
-                                  ),
-                                ),
-                              ),SizedBox(width: hover_texts[7]? 44:76,),
-
-                              ///contact us
-                              MouseRegion(
-                                onHover: (v){
-                                  hover_texts[8]=true;setState(() {
-
-                                  });
-                                },
-                                onExit: (v){
-                                  hover_texts[8]=false;
-                                  setState(() {
-
-                                  });
-                                },
-                                child: InkWell(onTap: (){
-
-                                  view_pages_controller.main_bage.value=false;
-                                  view_pages_controller.try_bage.value=false;
-                                  view_pages_controller.learn_bage.value=false;
-                                  view_pages_controller.library_bage.value=false;
-                                  view_pages_controller.contact_us__bage.value=true;
-                                  view_pages_controller.sign_up_in_bage.value=false;
-                                  setState(() {
-
-                                  });
-                                },
-                                  child: Container(height: 42,width:hover_texts[8]? 132:100,
-                                  child: Center(child: Text("Contact Us" , style:
-                                    GoogleFonts.aBeeZee(fontSize: hover_texts[8]? 24:16),),),
-                                  ),
-                                ),
-                              ),SizedBox(width: hover_texts[8]? 54:86,),
-
-                              Expanded(child: SizedBox()),
-
-
-                              /// customer name or log in or up
-                              Container(
-                                height: 30,
-                                width: 100,
-                                child: InkWell(
-                                    onTap: () {
-
-                                      view_pages_controller.main_bage.value=false;
-                                      view_pages_controller.try_bage.value=false;
-                                      view_pages_controller.learn_bage.value=false;
-                                      view_pages_controller.library_bage.value=false;
-                                      view_pages_controller.contact_us__bage.value=false;
-                                      view_pages_controller.sign_up_in_bage.value=true;
-                                      setState(() {
-
-                                      });
-
-                                      },
-                                    child: Center(child: Text(!sign_in?"LOG IN":"LOG OUT"))),
                               ),
+                            )),
+                        Expanded(
+                            flex: 20,
+                            child: Container(
+                              height: h - 200,
+                              child: Center(
+                                  child: Text(
+                                "home",
+                                style: GoogleFonts.aBeeZee(
+                                    fontSize: 32, color: Colors.white),
+                              )),
+                            )),
 
-                              SizedBox(width: 24,)
-                            ],
-                          ),
+                        ///Sized box
+                        Expanded(
+                            flex: 1,
+                            child: Container(
+                                height: h - 200,
+                                child:
+                                SizedBox()                        )),
 
 
-                        ),
-                      ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
 
-Container(width: w,height: h-69,
-  color: Colors.blue[100],
 
-  child: corrent_page(),
-)
-                    ],
+              /// center part , explaining text
+              Container(color: Color.fromRGBO(74, 101, 114,1),
+                width: w,
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 256,right: 256,top: 72,bottom: 72),
+                    child: Text(
+                      "AUTOCAM software is the perfect solution for furniture factories.\n    "
+                          " using AUTOCAM you will :\n    "
+                          "     - Design capabilities . \n    "
+                          "     - Shop drawings.\n    "
+                          "     - Material Quantity lists. \n    "
+                          "     - Cutting files for cutting machines ex : BeamSaw , CNC Routers.\n    "
+                          "     - Drilling files for Drilling machines.\n\n    "
+                          " with AUTOCAM \n    "
+                          " No more CAD or CAM softwares .. "
+                          ,style: GoogleFonts.arsenal(fontSize: w/56,fontWeight: FontWeight.w100,color: Colors.white),
+                    ),
                   ),
                 ),
+              ),
+
+
+              /// process flow
+              Container(
+                width: w,height: h,
+                child: Container(),
+              ),
+
+
+              /// bottom
+              Container(
+                width: w,height: h/2,color: Color.fromRGBO(74, 101, 114,1),
+                child: Row(
+                  children: [
+
+                    /// label , social media , email
+                    Expanded(flex: 1,child:
+                    Container(
+                    child: Column(
+                      children: [
+
+                        SizedBox(height: 32,),
+                        Text("AUTOCAM" ,
+                          style: GoogleFonts.kalam(fontSize: 36,color: Colors.white,fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 64,),
+                        Row(mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(onTap: (){},child: Icon(Icons.facebook,size: 32,color: Colors.white,)),
+                            SizedBox(width: 24,),
+                            InkWell(onTap: (){},child: Icon(Icons.facebook,size: 32,color: Colors.white,)),
+                            SizedBox(width: 24,),
+                            InkWell(onTap: (){},child: Icon(Icons.facebook,size: 32,color: Colors.white,)),
+                            SizedBox(width: 24,),
+                          ],
+                        ),
+                        SizedBox(height: 16,),
+
+                        InkWell(
+                          onTap: (){
+
+                          },
+                          child: Text("info@autocam.pro" ,
+                            style: GoogleFonts.arsenal(fontSize: 24,color: Colors.white),
+                          ),
+                        ),
+
+                      ],
+                    ),
+                    )),
+
+                    /// app par
+                    Expanded(flex: 1,child: Container(
+
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: (h / 25),
+                        ),
+                        Container(
+                          height: h / 20,
+                          child: Center(
+                              child: InkWell(
+                                onTap: () {
+                                  Get.to(Home_Screen());
+                                },
+                                child: Text("Home",
+                                    style: GoogleFonts.aBeeZee(
+                                        fontSize: 18, color: Colors.white)),
+                              )),
+                        ),
+                        Container(
+                          height: h / 20,
+                          child: Center(
+                              child: InkWell(
+                                onTap: () {
+                                  Get.to(Home_Screen());
+                                },
+                                child: Text("Home",
+                                    style: GoogleFonts.aBeeZee(
+                                        fontSize: 18, color: Colors.white)),
+                              )),
+                        ),
+                        Container(
+                          height: h / 20,
+                          child: Center(
+                              child: InkWell(
+                                onTap: () {
+                                  Get.to(Home_Screen());
+                                },
+                                child: Text("Home",
+                                    style: GoogleFonts.aBeeZee(
+                                        fontSize: 18, color: Colors.white)),
+                              )),
+                        ),
+                        Container(
+                          height: h / 20,
+                          child: Center(
+                              child: InkWell(
+                                onTap: () {
+                                  Get.to(Home_Screen());
+                                },
+                                child: Text("Home",
+                                    style: GoogleFonts.aBeeZee(
+                                        fontSize: 18, color: Colors.white)),
+                              )),
+                        ),
+                        Container(
+                          height: h / 20,
+                          child: Center(
+                              child: InkWell(
+                                onTap: () {
+                                  Get.to(Home_Screen());
+                                },
+                                child: Text("Home",
+                                    style: GoogleFonts.aBeeZee(
+                                        fontSize: 18, color: Colors.white)),
+                              )),
+                        ),
+                        SizedBox(
+                          height: h / 10,
+                        ),
+                      ],
+                    ),
+                    )
+
+                    ),
+
+
+                    /// send message
+                    Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+
+                            color: Color.fromRGBO(26, 43, 52, 1),
+                            borderRadius: BorderRadius.circular(12)
+                        ),
+                        child:
+                        Row(
+                          children: [
+                            SizedBox(width: 64,),
+                            Column(
+                              children: [
+
+                                SizedBox(height: 24,),
+
+
+                                Text("Your Email :"
+                                  ,style: GoogleFonts.arsenal(fontSize: 16,fontWeight: FontWeight.w100,color: Colors.white),
+                                ),
+                                SizedBox(height: 6,),
+
+                                Container(
+                                  width: 200,
+                                  height: 42,
+                                  child: TextFormField(
+                                    style: TextStyle(fontSize: 12 , color: Colors.white),
+                                    controller: customer_email,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    validator: (d) {
+                                      if (d!.isEmpty) {
+                                        return 'please add value';
+                                      }
+                                    },
+                                  ),
+                                ),
+                                SizedBox(height: 16,),
+
+                                Text("Subject :"
+                                  ,style: GoogleFonts.arsenal(fontSize: 16,fontWeight: FontWeight.w100,color: Colors.white),
+                                ),
+                                SizedBox(height: 6,),
+
+                                Container(
+                                  width: 200,
+                                  height: 42,
+                                  child: TextFormField(
+                                    style: TextStyle(fontSize: 12 , color: Colors.white),
+                                    controller: customer_email_subject,
+
+                                    decoration: InputDecoration(
+
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    validator: (d) {
+                                      if (d!.isEmpty) {
+                                        return 'please add value';
+                                      }
+                                    },
+                                  ),
+                                ),
+
+                                SizedBox(height: 12,),
+
+                                /// send button
+                                InkWell(onTap: (){
+
+                                },
+                                  child: Container(width: 200,height: 50,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromRGBO(74, 101, 114,1),
+                                      borderRadius: BorderRadius.circular(12)
+                                    ),
+                                    child: Center(
+                                      child: Text("Send Message"
+                                        ,style: GoogleFonts.arsenal(fontSize: 24,fontWeight: FontWeight.w100,color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                              ],
+                            ),
+                            SizedBox(width: 24,),
+                            Container(
+                              // color: Colors.teal,
+
+                              child: Column(
+                                children: [
+
+                                  SizedBox(height: 24,),
+                                  Text("Message content :"
+                                    ,style: GoogleFonts.arsenal(fontSize: 16,fontWeight: FontWeight.w100,color: Colors.white),
+                                  ),
+
+                                  SizedBox(height: 6,),
 
 
 
+                                  Container(
+                                    width: 200,
+                                    // height: 200,
+                                    child: TextFormField(
+                                      style: TextStyle(fontSize: 12 , color: Colors.white),
+                                      controller: customer_email_content,
+                                      maxLines: 14,minLines: 8,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                      validator: (d) {
+                                        if (d!.isEmpty) {
+                                          return 'please add value';
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(height: 24,),
 
-              ],
-            ),
+
+                                ],
+                              ),
 
 
+                            ),
+                            SizedBox(width: 64,),
 
-          )),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+
+
+            ],
+          ),
+
+
+      ),
     );
   }
 }

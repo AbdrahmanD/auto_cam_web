@@ -3,6 +3,7 @@ import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Cont
    import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
   import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
  import 'package:auto_cam_web/online_autoam/View/Main_Screen.dart';
+import 'package:auto_cam_web/online_autoam/View/Screens_parts/Box_Type.dart';
  import 'package:auto_cam_web/online_autoam/View/Screens_parts/Cut_List_review.dart';
 import 'package:auto_cam_web/online_autoam/View/Setting_Page.dart';
  import 'package:auto_cam_web/online_autoam/View/Piece_List_view.dart';
@@ -77,6 +78,8 @@ class _Setting_Box_Size_FormState extends State<Setting_Box_Size_Form> {
   @override
   Widget build(BuildContext context) {
 
+    double w = MediaQuery.of(context).size.width;
+    double h = MediaQuery.of(context).size.height;
 
     return Form(
       key: form_key,
@@ -436,6 +439,36 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
             height: 6,
           ),
 
+          ///chose type of box
+          Padding(
+            padding: const EdgeInsets.only(left: 24,right: 24,top: 6,bottom: 6),
+            child: InkWell(
+              onTap: () {
+
+                Get.defaultDialog(
+                  title: "chose type of box",
+                  content: Container(
+                    width: w,height: h/2,
+                    child:Box_Type(true) ,
+                  )
+                );
+
+              },
+              child: Container(
+                width: 532,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: Colors.teal[500],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Center(
+                    child: Text(
+                      'chose type of box',
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    )),
+              ),
+            ),
+          ),
 
           ///Draw in the Screen button
           Padding(
