@@ -23,7 +23,7 @@ void main() async {
       )
   );
   final my_setting_data = GetStorage();
-  my_setting_data.write("user", "anonymous");
+  my_setting_data.write("user", "");
 
   runApp(
       GetMaterialApp(

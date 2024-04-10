@@ -1,10 +1,12 @@
 
 import 'package:auto_cam_web/online_autoam/View/Cabinet_Editor.dart';
 import 'package:auto_cam_web/web_bages/Learn_Page.dart';
+import 'package:auto_cam_web/web_bages/Sign_Up_In_Page.dart';
  import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Home_Screen extends StatefulWidget {
   const Home_Screen({Key? key}) : super(key: key);
@@ -14,18 +16,7 @@ class Home_Screen extends StatefulWidget {
 }
 
 class _Main_ScreenState extends State<Home_Screen> {
-  List<bool> hover_texts = [
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ];
+
 
   final my_setting_data = GetStorage();
 
@@ -34,18 +25,46 @@ class _Main_ScreenState extends State<Home_Screen> {
   TextEditingController customer_email_subject = TextEditingController();
   TextEditingController customer_email_content = TextEditingController();
 
-
+ScrollController scrollController=ScrollController();
 
   bool sign_in = false;
-  String customer_name="";
+  String user="";
+  final GoogleSignIn  _googleSignIn = GoogleSignIn();
+
+
+  Future<void> signInWithGoogle() async {
+    GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
+
+    my_setting_data.write("user",googleSignInAccount!.displayName);
+    my_setting_data.write("sign_in",true);
+
+Get.to(Home_Screen());
+setState(() {
+
+    });
+  }
+
+  Future<void> signOut() async {
+    await _googleSignIn.signOut();
+    my_setting_data.write("sign_in",false);
+    my_setting_data.write("user","");
+
+    Get.to(Home_Screen());
+
+    setState(() {
+
+    });
+  }
+
+
 
   @override
   void initState() {
 
-    if (my_setting_data.read("customer_name") != null) {
-      customer_name = my_setting_data.read("customer_name");
+    if (my_setting_data.read("user") != null) {
+      user = my_setting_data.read("user");
     } else {
-      customer_name = "";
+      user = "";
     }
 
 
@@ -64,6 +83,12 @@ class _Main_ScreenState extends State<Home_Screen> {
       sign_in = false;
     }
 
+    if (my_setting_data.read("user") != null) {
+      user = my_setting_data.read("user");
+    } else {
+      user = "";
+    }
+
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Scaffold(
@@ -71,7 +96,10 @@ class _Main_ScreenState extends State<Home_Screen> {
           body:
 
           ListView(
+
+controller: scrollController,
             children: [
+
 
               /// home page
               Container(
@@ -86,14 +114,14 @@ class _Main_ScreenState extends State<Home_Screen> {
                       /// app par
                       Row(
                         children: [
+
                           SizedBox(
                             width: (w / 3),
                           ),
-
                           ///home page
                           Container(
                             // color: Colors.blue,
-                            width: w / 18,
+                            width: w / 16,
                             child: Center(
                                 child: InkWell(
                               onTap: () {
@@ -119,7 +147,7 @@ class _Main_ScreenState extends State<Home_Screen> {
 
                           /// try page
                           Container(
-                            width: w / 18,
+                            width: w / 16,
                             child: Center(
                                 child: InkWell(
                               onTap: () {
@@ -133,7 +161,7 @@ class _Main_ScreenState extends State<Home_Screen> {
 
                           /// Learn
                           Container(
-                            width: w / 18,
+                            width: w / 16,
                             child: Center(
                                 child: InkWell(
                               onTap: () {
@@ -147,7 +175,7 @@ class _Main_ScreenState extends State<Home_Screen> {
 
                           ///Download
                           Container(
-                            width: w / 18,
+                            width: w / 16,
                             child: Center(
                                 child: InkWell(
                               onTap: () {
@@ -159,28 +187,17 @@ class _Main_ScreenState extends State<Home_Screen> {
                             )),
                           ),
 
-                          /// Sign in / out
-                          Container(
-                            width: w / 18,
-                            child: Center(
-                                child: InkWell(
-                              onTap: () {
-                                Get.to(Home_Screen());
-                              },
-                              child: Text(sign_in?"Sign out":"Sign in",
-                                  style: GoogleFonts.aBeeZee(
-                                      fontSize: w/96, color: Colors.white)
-                              ),
-                            )),
-                          ),
 
                           /// contact us
                           Container(
-                            width: w / 18,
+                            width: w / 16,
                             child: Center(
                                 child: InkWell(
                               onTap: () {
-                                Get.to(Home_Screen());
+
+                                scrollController.jumpTo(scrollController.position.maxScrollExtent);
+
+
                               },
                               child: Text("contact us",
                                   style: GoogleFonts.aBeeZee(
@@ -191,11 +208,32 @@ class _Main_ScreenState extends State<Home_Screen> {
 
 
                           SizedBox(
-                            width: (w / 6),
+                            width: (w / 9),
+                          ),
+
+                          /// Sign in / out
+                          Container(
+                            width: w / 18,
+                            child: Center(
+                                child: InkWell(
+                                  onTap: () {
+
+                                    !sign_in?
+                                    signInWithGoogle()
+                                        :
+                                    signOut();
+
+
+                                  },
+                                  child: Text(sign_in?"Sign out":"Sign in",
+                                      style: GoogleFonts.aBeeZee(
+                                          fontSize: w/96, color: Colors.white)
+                                  ),
+                                )),
                           ),
 
                           Container(width: w/6,
-                          child: Text("$customer_name",
+                          child: Text("$user",
                               style: GoogleFonts.aBeeZee(
                               fontSize: w/96, color: Colors.white)
                           ),)
@@ -285,15 +323,18 @@ class _Main_ScreenState extends State<Home_Screen> {
                     padding: const EdgeInsets.only(left: 256,right: 256,top: 72,bottom: 72),
                     child: Text(
                       "AUTOCAM software is the perfect solution for furniture factories.\n    "
-                          " using AUTOCAM you will :\n    "
+                          " using AUTOCAM you will get :\n    "
                           "     - Design capabilities . \n    "
                           "     - Shop drawings.\n    "
                           "     - Material Quantity lists. \n    "
-                          "     - Cutting files for cutting machines ex : BeamSaw , CNC Routers.\n    "
+                          "     - Cutting files for cutting machines like : BeamSaw , CNC Routers .\n    "
                           "     - Drilling files for Drilling machines.\n\n    "
                           " with AUTOCAM \n    "
-                          " No more CAD or CAM softwares .. "
-                          ,style: GoogleFonts.arsenal(fontSize: w/56,fontWeight: FontWeight.w100,color: Colors.white),
+                          " No more CAD or CAM softwares ....\n\n "
+                          " one place for all you work process \n\n"
+                          "  AUTOCAM \n    "
+
+                      ,style: GoogleFonts.arsenal(fontSize: w/56,fontWeight: FontWeight.w100,color: Colors.white),
                     ),
                   ),
                 ),
@@ -341,6 +382,18 @@ class _Main_ScreenState extends State<Home_Screen> {
 
                           },
                           child: Text("info@autocam.pro" ,
+                            style: GoogleFonts.arsenal(fontSize: 24,color: Colors.white),
+                          ),
+                        ),
+
+                        SizedBox(height: 16,),
+
+
+                        InkWell(
+                          onTap: (){
+
+                          },
+                          child: Text("support@autocam.pro" ,
                             style: GoogleFonts.arsenal(fontSize: 24,color: Colors.white),
                           ),
                         ),

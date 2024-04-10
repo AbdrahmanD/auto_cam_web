@@ -46,6 +46,8 @@ dependencies:
   firebase_core:
   firebase_auth:
   google_sign_in:
+  video_player: ^2.8.5
+  chewie:
 #  google_sign_in_web:
 
 
@@ -108,6 +110,9 @@ flutter:
     - lib/assets/images/drawer_rail.png
     - lib/assets/images/red_arrow.png
     - lib/assets/images/blue_arrow.png
+    - lib/assets/videos/watermarked_preview.mp4
+    - lib/assets/videos/video_preview_h264.mp4
+    - lib/assets/videos/quraan.mp4
 
   #   - images/a_dot_ham.jpeg
 
