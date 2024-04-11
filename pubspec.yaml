@@ -46,10 +46,7 @@ dependencies:
   firebase_core:
   firebase_auth:
   google_sign_in:
-  video_player: ^2.8.5
-  chewie:
-#  google_sign_in_web:
-
+  flutter_widget_from_html:
 
 dev_dependencies:
   flutter_test:

@@ -1,15 +1,12 @@
  import 'package:auto_cam_web/online_autoam/View/Cabinet_Editor.dart';
 import 'package:auto_cam_web/web_bages/Home_Screen.dart';
- import 'package:chewie/chewie.dart';
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:video_player/video_player.dart';
 
-
-
+ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 
 class Learn_Page extends StatefulWidget {
@@ -54,19 +51,26 @@ class _Learn_PageState extends State<Learn_Page> {
   }
 
 
-
-
   /// video
   List<String> videos_links=[
-    "lib/assets/videos/watermarked_preview.mp4",
-    "lib/assets/videos/video_preview_h264.mp4",
-    "lib/assets/videos/quraan.mp4",
+    "<iframe width='560' height='315' src='https://www.youtube.com/embed/6stlCkUDG_s?si=YQcE4o89MO_rQfZt' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
+    "<iframe width='560' height='315' src='https://www.youtube.com/embed/pavJSLjL964?si=GCHujQiP1x9g6pS3' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
+
+    "<iframe width='560' height='315' src='https://www.youtube.com/embed/6stlCkUDG_s?si=YQcE4o89MO_rQfZt' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
+    "<iframe width='560' height='315' src='https://www.youtube.com/embed/6stlCkUDG_s?si=YQcE4o89MO_rQfZt' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
+    "<iframe width='560' height='315' src='https://www.youtube.com/embed/pavJSLjL964?si=GCHujQiP1x9g6pS3' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
+    "<iframe width='560' height='315' src='https://www.youtube.com/embed/pavJSLjL964?si=GCHujQiP1x9g6pS3' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
+
+    "<iframe width='560' height='315' src='https://www.youtube.com/embed/6stlCkUDG_s?si=YQcE4o89MO_rQfZt' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
+    "<iframe width='560' height='315' src='https://www.youtube.com/embed/pavJSLjL964?si=GCHujQiP1x9g6pS3' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
   ];
 
   int index=0;
 
-  late VideoPlayerController videoPlayerController;
-  ///
+
+
+
+   ///
 
   @override
   Widget build(BuildContext context) {
@@ -264,6 +268,9 @@ class _Learn_PageState extends State<Learn_Page> {
                                   onTap: (){
                                     index=i;
                                     setState(() {});
+
+
+
                                   },
                                   child: Container(width: w/4-76,child: Center(child: Text(
                                       "$i video .. $i"
@@ -296,21 +303,37 @@ class _Learn_PageState extends State<Learn_Page> {
                 ///video player
                 Container(
                   width: (w/4)*3-80,
-                  height: h - 200,
+                  height: h-200,
 
                   child: Padding(
-                    padding: const EdgeInsets.all(64.0),
+                    padding: const EdgeInsets.all(32.0),
                     child:
+ListView.builder(
 
-                    Chewie(
-                      controller: ChewieController(videoPlayerController: VideoPlayerController.asset(videos_links[index]),
-                        looping: false,
-                        autoPlay: true
-                      )
+    itemCount: videos_links.length,
+    itemBuilder: (context,i){
+  return
 
+    Container(width: 500,height: 460,
+    child: Column(
+      children: [
 
+        SizedBox(height: 24,),
+        Text(" video titel",style: TextStyle(fontSize: 24,color: Colors.white)),
+        SizedBox(height: 24,),
+        // HtmlWidget(videos_links[0]),
+        Container(width: 500,height: 350,color: Colors.yellow,child: Center(child:
+        HtmlWidget(videos_links[i])
+        // Text("$i",style: TextStyle(fontSize: 190),)
 
-)
+        ),),
+        SizedBox(height: 24,),
+        Container(height: 2,color: Colors.grey,width: 300,)
+      ],
+    ),
+  );
+
+})
                   ),
                 ),
 
@@ -324,4 +347,5 @@ class _Learn_PageState extends State<Learn_Page> {
     ));
   }
 }
+
 
