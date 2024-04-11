@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'dart:html' as html;
+import 'package:archive/archive.dart';
+import 'dart:typed_data';
 
 import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/AnalyzeJoins.dart';
 import 'package:auto_cam_web/online_autoam/Controller/Painters/Box_Painter.dart';
@@ -1207,79 +1210,114 @@ if(select_window.value){
   }
 
   /// extract executable files with xml extension  to use in this case with kdt drilling machine
-  extract_xml_files_pattern(
-      Box_model box_model, String folder_name, String directory) {
-    for (int i = 0; i < box_model.box_pieces.length; i++) {
-      if (box_model.box_pieces[i].piece_name.contains("inner") ||
-          box_model.box_pieces[i].piece_name.contains("back_panel") ||
-          box_model.box_pieces[i].piece_name.contains("base_panel") ||
-          box_model.box_pieces[i].piece_name.contains("Help") ||
-          box_model.box_pieces[i].piece_inable == false) {
+  extract_xml_files_pattern() {
+
+    // Uint8List uint8List1 = Uint8List(10);
+
+    var archive = Archive();
+
+     for (int i = 0; i < box_repository.box_model.value.box_pieces.length; i++) {
+      if (box_repository.box_model.value.box_pieces[i].piece_name.contains("inner") ||
+          box_repository.box_model.value.box_pieces[i].piece_name.contains("back_panel") ||
+          box_repository.box_model.value.box_pieces[i].piece_name.contains("base_panel") ||
+          box_repository.box_model.value.box_pieces[i].piece_name.contains("Help") ||
+          box_repository.box_model.value.box_pieces[i].piece_inable == false) {
         continue;
       } else {
-        kdt_file kdt = kdt_file(directory, box_model.box_pieces[i]);
+        kdt_file kdt = kdt_file( box_repository.box_model.value.box_pieces[i]);
+
+        // var fileData = content.codeUnits;
+        var file = ArchiveFile("${box_repository.box_model.value.box_pieces[i].piece_name}.xml", kdt.kdt_file_content.length, kdt.kdt_file_content);
+        archive.addFile(file);
+
       }
     }
+
+    // Convert the archive to bytes
+    var zipBytes = ZipEncoder().encode(archive);
+
+    // Convert bytes to a Blob
+    var blob = html.Blob([Uint8List.fromList(zipBytes!)]);
+
+    // Create an object URL for the Blob
+    var url = html.Url.createObjectUrlFromBlob(blob);
+
+    // Create a link element
+    var anchor = html.AnchorElement(href: url)
+      ..setAttribute("download", "${box_repository.box_model.value.box_name}.zip")
+      ..click();
+
+    // Revoke the object URL to free up resources
+    html.Url.revokeObjectUrl(url);
   }
 
-  extract_xml_files() async {
-    String? directory = await FilePicker.platform.saveFile(
-      dialogTitle: 'Please select an output file:',
-      fileName: 'box name',
-    );
-
-      extract_xml_files_pattern(box_repository.box_model.value,
-          box_repository.box_model.value.box_name, directory!);
-
-  }
-
-  save_Box() async {
-    if (box_repository.box_have_been_saved) {
-      String jsonData = jsonEncode(box_repository.box_model.value.toJson());
-      File file = File(box_repository.box_file_path!);
-      file.writeAsStringSync(jsonData);
-    } else {
-      String? outputFile = await FilePicker.platform.saveFile(
-        dialogTitle: 'Please select an output file:',
-        fileName: 'box name',
-      );
-
-      if (outputFile == null) {}
-
-      try {
-        String jsonData = jsonEncode(box_repository.box_model.value.toJson());
-        File file = File(outputFile!);
-        file.writeAsStringSync(jsonData);
-        box_repository.box_file_path = outputFile;
-        box_repository.box_have_been_saved = true;
-
-        // print("file file $file");
-      } catch (e) {
-        print('Error writing JSON data to the file: $e');
-      }
-    }
-  }
-
-  // /// history - undo - redo
+  // extract_xml_files() async {
   //
-  // List<Piece_model> deleted_box_history = [];
+  //   String? directory = await FilePicker.platform.saveFile(
+  //     dialogTitle: 'Please select an output file:',
+  //     fileName: 'box name',
+  //   );
   //
+  //     extract_xml_files_pattern(box_repository.box_model.value,
+  //         box_repository.box_model.value.box_name, directory!);
   //
-  //
-  //
-  // undo() {
-  //
-  //     deleted_box_history.add(box_repository.box_model.value.box_pieces.removeAt(box_repository.box_model.
-  //     value.box_pieces.length-1));
-  //
-  //    box_repository.box_model.value.box_pieces.removeAt(box_repository.box_model.value.box_pieces.length-1);
-  //
-  //   draw_Box();
-  // }
-  // redo() {
   //
   //
   // }
+
+  // save_Box() async {
+  //   if (box_repository.box_have_been_saved) {
+  //     String jsonData = jsonEncode(box_repository.box_model.value.toJson());
+  //     File file = File(box_repository.box_file_path!);
+  //     file.writeAsStringSync(jsonData);
+  //   } else {
+  //     String? outputFile = await FilePicker.platform.saveFile(
+  //       dialogTitle: 'Please select an output file:',
+  //       fileName: 'box name',
+  //     );
+  //
+  //     if (outputFile == null) {}
+  //
+  //     try {
+  //       String jsonData = jsonEncode(box_repository.box_model.value.toJson());
+  //       File file = File(outputFile!);
+  //       file.writeAsStringSync(jsonData);
+  //       box_repository.box_file_path = outputFile;
+  //       box_repository.box_have_been_saved = true;
+  //
+  //       // print("file file $file");
+  //     } catch (e) {
+  //       print('Error writing JSON data to the file: $e');
+  //     }
+  //   }
+  // }
+
+
+
+  void save_BOX_File( ) {
+
+
+    var contents=box_repository.box_model.value.toJson();
+
+    String fileName = "${box_repository.box_model.value.box_name}.json";
+
+    // Convert the contents to a Blob
+    var blob = html.Blob([contents]);
+
+    // Create an object URL for the Blob
+    var url = html.Url.createObjectUrlFromBlob(blob);
+
+    // Create a link element
+    var anchor = html.AnchorElement(href: url)
+      ..setAttribute("download", fileName)
+      ..click();
+
+    // Revoke the object URL to free up resources
+    html.Url.revokeObjectUrl(url);
+
+
+  }
+
 
   ///   //////////////////////
 

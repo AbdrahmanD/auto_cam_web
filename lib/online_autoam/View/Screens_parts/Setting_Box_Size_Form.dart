@@ -49,6 +49,9 @@ class _Setting_Box_Size_FormState extends State<Setting_Box_Size_Form> {
       TextEditingController();
 
 
+
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -564,7 +567,7 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
                 ),
                 InkWell(
                     onTap: () {
-                      draw_Controller.save_Box();
+                      draw_Controller.save_BOX_File();
                     },
                     child: Icon(
                       Icons.save,

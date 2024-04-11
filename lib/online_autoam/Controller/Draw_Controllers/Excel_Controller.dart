@@ -19,21 +19,21 @@ class Excel_Controller extends GetxController {
 
   create_excel(int box_quantity) async {
 
-    bool windows_platform=Platform.isWindows;
 
-    String? directory0 = await FilePicker.platform.saveFile(
-      dialogTitle: 'Please select an output file:',
-      fileName: 'box name',
-    );
-
-    String file_name=windows_platform?(directory0!.split("\\")[directory0!.split("\\").length-1]):(directory0!.split("/")[directory0!.split("/").length-1]);
-    // String new_directory_0 =directory0!.split('/').sublist(0,directory0!.split("/").length-1).join("/");
-
-    final Directory newDirectory = Directory('$directory0');
-    newDirectory.createSync();
-
-    File file=windows_platform?( File('${newDirectory.path}\\$file_name.xlsx')):( File('${newDirectory.path}/$file_name.xlsx'));
-
+    // bool windows_platform=Platform.isWindows;
+    //
+    // String? directory0 = await FilePicker.platform.saveFile(
+    //   dialogTitle: 'Please select an output file:',
+    //   fileName: 'box name',
+    // );
+    //
+    // String file_name=windows_platform?(directory0!.split("\\")[directory0!.split("\\").length-1]):(directory0!.split("/")[directory0!.split("/").length-1]);
+    // // String new_directory_0 =directory0!.split('/').sublist(0,directory0!.split("/").length-1).join("/");
+    //
+    // final Directory newDirectory = Directory('$directory0');
+    // newDirectory.createSync();
+    //
+    // File file=windows_platform?( File('${newDirectory.path}\\$file_name.xlsx')):( File('${newDirectory.path}/$file_name.xlsx'));
 
     var excel = Excel.createExcel(); // automatically creates 1 empty sheet: Sheet1
     var sheet = excel['mySheet'];
@@ -81,16 +81,24 @@ int n=2;
     }
 
 
-    List<int>? fileBytes = excel.save();
+    // List<int>? fileBytes = excel.save();
 
-    if (fileBytes != null) {
-      File(file.path)
-        ..createSync(recursive: true)
-        ..writeAsBytesSync(fileBytes);
-    }
+    excel.save(fileName: "sheeeeeet.xlsx");
 
+    //
+    //
+    // File file=File("");
+
+
+
+    // if (fileBytes != null) {
+    //   File(file.path)
+    //     ..createSync(recursive: true)
+    //     ..writeAsBytesSync(fileBytes);
+    // }
 
   }
+
 
 }
 

@@ -1,5 +1,6 @@
 
 import 'package:auto_cam_web/online_autoam/View/Cabinet_Editor.dart';
+import 'package:auto_cam_web/web_bages/Contact_US_Page.dart';
 import 'package:auto_cam_web/web_bages/Learn_Page.dart';
 import 'package:auto_cam_web/web_bages/Sign_Up_In_Page.dart';
  import 'package:flutter/material.dart';
@@ -21,9 +22,6 @@ class _Main_ScreenState extends State<Home_Screen> {
   final my_setting_data = GetStorage();
 
 
-  TextEditingController customer_email = TextEditingController();
-  TextEditingController customer_email_subject = TextEditingController();
-  TextEditingController customer_email_content = TextEditingController();
 
 ScrollController scrollController=ScrollController();
 
@@ -195,7 +193,8 @@ controller: scrollController,
                                 child: InkWell(
                               onTap: () {
 
-                                scrollController.jumpTo(scrollController.position.maxScrollExtent);
+                                Get.to(Contact_US_Page(false));
+                                // scrollController.jumpTo(scrollController.position.maxScrollExtent);
 
 
                               },
@@ -349,281 +348,11 @@ controller: scrollController,
 
 
               /// bottom
+
               Container(
-                width: w,height: h/2,color: Color.fromRGBO(74, 101, 114,1),
-                child: Row(
-                  children: [
-
-                    /// label , social media , email
-                    Expanded(flex: 1,child:
-                    Container(
-                    child: Column(
-                      children: [
-
-                        SizedBox(height: 32,),
-                        Text("AUTOCAM" ,
-                          style: GoogleFonts.kalam(fontSize: 36,color: Colors.white,fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 64,),
-                        Row(mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(onTap: (){},child: Icon(Icons.facebook,size: 32,color: Colors.white,)),
-                            SizedBox(width: 24,),
-                            InkWell(onTap: (){},child: Icon(Icons.facebook,size: 32,color: Colors.white,)),
-                            SizedBox(width: 24,),
-                            InkWell(onTap: (){},child: Icon(Icons.facebook,size: 32,color: Colors.white,)),
-                            SizedBox(width: 24,),
-                          ],
-                        ),
-                        SizedBox(height: 16,),
-
-                        InkWell(
-                          onTap: (){
-
-                          },
-                          child: Text("info@autocam.pro" ,
-                            style: GoogleFonts.arsenal(fontSize: 24,color: Colors.white),
-                          ),
-                        ),
-
-                        SizedBox(height: 16,),
-
-
-                        InkWell(
-                          onTap: (){
-
-                          },
-                          child: Text("support@autocam.pro" ,
-                            style: GoogleFonts.arsenal(fontSize: 24,color: Colors.white),
-                          ),
-                        ),
-
-                      ],
-                    ),
-                    )),
-
-                    /// app par
-                    Expanded(flex: 1,child: Container(
-
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: (h / 25),
-                        ),
-                        Container(
-                          height: h / 20,
-                          child: Center(
-                              child: InkWell(
-                                onTap: () {
-                                  Get.to(Home_Screen());
-                                },
-                                child: Text("Home",
-                                    style: GoogleFonts.aBeeZee(
-                                        fontSize: 18, color: Colors.white)),
-                              )),
-                        ),
-                        Container(
-                          height: h / 20,
-                          child: Center(
-                              child: InkWell(
-                                onTap: () {
-                                  Get.to(Home_Screen());
-                                },
-                                child: Text("Home",
-                                    style: GoogleFonts.aBeeZee(
-                                        fontSize: 18, color: Colors.white)),
-                              )),
-                        ),
-                        Container(
-                          height: h / 20,
-                          child: Center(
-                              child: InkWell(
-                                onTap: () {
-                                  Get.to(Home_Screen());
-                                },
-                                child: Text("Home",
-                                    style: GoogleFonts.aBeeZee(
-                                        fontSize: 18, color: Colors.white)),
-                              )),
-                        ),
-                        Container(
-                          height: h / 20,
-                          child: Center(
-                              child: InkWell(
-                                onTap: () {
-                                  Get.to(Home_Screen());
-                                },
-                                child: Text("Home",
-                                    style: GoogleFonts.aBeeZee(
-                                        fontSize: 18, color: Colors.white)),
-                              )),
-                        ),
-                        Container(
-                          height: h / 20,
-                          child: Center(
-                              child: InkWell(
-                                onTap: () {
-                                  Get.to(Home_Screen());
-                                },
-                                child: Text("Home",
-                                    style: GoogleFonts.aBeeZee(
-                                        fontSize: 18, color: Colors.white)),
-                              )),
-                        ),
-                        SizedBox(
-                          height: h / 10,
-                        ),
-                      ],
-                    ),
-                    )
-
-                    ),
-
-
-                    /// send message
-                    Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-
-                            color: Color.fromRGBO(26, 43, 52, 1),
-                            borderRadius: BorderRadius.circular(12)
-                        ),
-                        child:
-                        Row(
-                          children: [
-                            SizedBox(width: 64,),
-                            Column(
-                              children: [
-
-                                SizedBox(height: 24,),
-
-
-                                Text("Your Email :"
-                                  ,style: GoogleFonts.arsenal(fontSize: 16,fontWeight: FontWeight.w100,color: Colors.white),
-                                ),
-                                SizedBox(height: 6,),
-
-                                Container(
-                                  width: 200,
-                                  height: 42,
-                                  child: TextFormField(
-                                    style: TextStyle(fontSize: 12 , color: Colors.white),
-                                    controller: customer_email,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    validator: (d) {
-                                      if (d!.isEmpty) {
-                                        return 'please add value';
-                                      }
-                                    },
-                                  ),
-                                ),
-                                SizedBox(height: 16,),
-
-                                Text("Subject :"
-                                  ,style: GoogleFonts.arsenal(fontSize: 16,fontWeight: FontWeight.w100,color: Colors.white),
-                                ),
-                                SizedBox(height: 6,),
-
-                                Container(
-                                  width: 200,
-                                  height: 42,
-                                  child: TextFormField(
-                                    style: TextStyle(fontSize: 12 , color: Colors.white),
-                                    controller: customer_email_subject,
-
-                                    decoration: InputDecoration(
-
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    validator: (d) {
-                                      if (d!.isEmpty) {
-                                        return 'please add value';
-                                      }
-                                    },
-                                  ),
-                                ),
-
-                                SizedBox(height: 12,),
-
-                                /// send button
-                                InkWell(onTap: (){
-
-                                },
-                                  child: Container(width: 200,height: 50,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromRGBO(74, 101, 114,1),
-                                      borderRadius: BorderRadius.circular(12)
-                                    ),
-                                    child: Center(
-                                      child: Text("Send Message"
-                                        ,style: GoogleFonts.arsenal(fontSize: 24,fontWeight: FontWeight.w100,color: Colors.white),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                              ],
-                            ),
-                            SizedBox(width: 24,),
-                            Container(
-                              // color: Colors.teal,
-
-                              child: Column(
-                                children: [
-
-                                  SizedBox(height: 24,),
-                                  Text("Message content :"
-                                    ,style: GoogleFonts.arsenal(fontSize: 16,fontWeight: FontWeight.w100,color: Colors.white),
-                                  ),
-
-                                  SizedBox(height: 6,),
-
-
-
-                                  Container(
-                                    width: 200,
-                                    // height: 200,
-                                    child: TextFormField(
-                                      style: TextStyle(fontSize: 12 , color: Colors.white),
-                                      controller: customer_email_content,
-                                      maxLines: 14,minLines: 8,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                      ),
-                                      validator: (d) {
-                                        if (d!.isEmpty) {
-                                          return 'please add value';
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(height: 24,),
-
-
-                                ],
-                              ),
-
-
-                            ),
-                            SizedBox(width: 64,),
-
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  width: w,height: h/2,
+                  child: Contact_US_Page(true)
               )
-
 
             ],
           ),

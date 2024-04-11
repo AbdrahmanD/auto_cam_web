@@ -9,12 +9,12 @@ import 'package:path_provider/path_provider.dart';
 
 class kdt_file {
 
-  late String directory;
+  // late String directory;
   String kdt_file_content = "";
   late Piece_model piece_model;
 
 
-  kdt_file(this.directory,this.piece_model) {
+  kdt_file(this.piece_model) {
 
 
     kdt_file_content += "<KDTPanelFormat>\n";
@@ -810,25 +810,25 @@ class kdt_file {
 
     kdt_file_content += "</KDTPanelFormat>";
 
-    extract_xml_file("${piece_model.piece_id}");
+    // extract_xml_file("${piece_model.piece_id}");
 
 
   }
 
-  extract_xml_file( String file_name)async{
-
-    bool windows_platform=Platform.isWindows;
-
-    final Directory finalDirectory = Directory('$directory');
-    finalDirectory.createSync();
-
-    final path = await finalDirectory.path;
-    File file =await windows_platform?(File("$path\\$file_name.xml")):(File("$path/$file_name.xml"));
-
-    // File file =await File('$file_path.xml');
-    file.writeAsString('$kdt_file_content');
-// print(directory);
-
-  }
+//   extract_xml_file( String file_name)async{
+//
+//     bool windows_platform=Platform.isWindows;
+//
+//     final Directory finalDirectory = Directory('$directory');
+//     finalDirectory.createSync();
+//
+//     final path = await finalDirectory.path;
+//     File file =await windows_platform?(File("$path\\$file_name.xml")):(File("$path/$file_name.xml"));
+//
+//     // File file =await File('$file_path.xml');
+//     file.writeAsString('$kdt_file_content');
+// // print(directory);
+//
+//   }
 
 }

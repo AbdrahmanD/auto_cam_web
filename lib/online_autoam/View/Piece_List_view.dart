@@ -198,7 +198,7 @@ class _Piece_List_viewState extends State<Piece_List_view> {
                         ),
                         InkWell(
                             onTap: () {
-                              draw_controller.extract_xml_files();
+                              draw_controller.extract_xml_files_pattern();
                             },
                             child: Icon(
                               Icons.view_array_outlined,

@@ -62,6 +62,7 @@ class _Cut_List_reviewState extends State<Cut_List_review> {
                   .toInt();
               Excel_Controller my_excel = Excel_Controller();
               my_excel.create_excel(quantity);
+
               Navigator.of(Get.overlayContext!).pop();
             },
             child: Container(width: 330,
