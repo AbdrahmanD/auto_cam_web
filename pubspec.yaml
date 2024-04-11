@@ -107,9 +107,6 @@ flutter:
     - lib/assets/images/drawer_rail.png
     - lib/assets/images/red_arrow.png
     - lib/assets/images/blue_arrow.png
-    - lib/assets/videos/watermarked_preview.mp4
-    - lib/assets/videos/video_preview_h264.mp4
-    - lib/assets/videos/quraan.mp4
 
   #   - images/a_dot_ham.jpeg
 

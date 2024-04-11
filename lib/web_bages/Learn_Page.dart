@@ -52,21 +52,22 @@ class _Learn_PageState extends State<Learn_Page> {
 
 
   /// video
-  List<String> videos_links=[
-    "<iframe width='560' height='315' src='https://www.youtube.com/embed/6stlCkUDG_s?si=YQcE4o89MO_rQfZt' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
-    "<iframe width='560' height='315' src='https://www.youtube.com/embed/pavJSLjL964?si=GCHujQiP1x9g6pS3' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
+  Map<String,String> videos_links= {
+  "Video 1" : "<iframe width='560' height='315' src='https://www.youtube.com/embed/6stlCkUDG_s?si=YQcE4o89MO_rQfZt' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
+  "Video 2" : "<iframe width='560' height='315' src='https://www.youtube.com/embed/pavJSLjL964?si=GCHujQiP1x9g6pS3' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
+  "Video 3" : "<iframe width='560' height='315' src='https://www.youtube.com/embed/6stlCkUDG_s?si=YQcE4o89MO_rQfZt' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
+  "Video 4" : "<iframe width='560' height='315' src='https://www.youtube.com/embed/6stlCkUDG_s?si=YQcE4o89MO_rQfZt' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
+  "Video 5" : "<iframe width='560' height='315' src='https://www.youtube.com/embed/pavJSLjL964?si=GCHujQiP1x9g6pS3' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
+  "Video 6" : "<iframe width='560' height='315' src='https://www.youtube.com/embed/pavJSLjL964?si=GCHujQiP1x9g6pS3' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
+  "Video 7" : "<iframe width='560' height='315' src='https://www.youtube.com/embed/6stlCkUDG_s?si=YQcE4o89MO_rQfZt' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
+  "Video 8" : "<iframe width='560' height='315' src='https://www.youtube.com/embed/pavJSLjL964?si=GCHujQiP1x9g6pS3' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
 
-    "<iframe width='560' height='315' src='https://www.youtube.com/embed/6stlCkUDG_s?si=YQcE4o89MO_rQfZt' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
-    "<iframe width='560' height='315' src='https://www.youtube.com/embed/6stlCkUDG_s?si=YQcE4o89MO_rQfZt' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
-    "<iframe width='560' height='315' src='https://www.youtube.com/embed/pavJSLjL964?si=GCHujQiP1x9g6pS3' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
-    "<iframe width='560' height='315' src='https://www.youtube.com/embed/pavJSLjL964?si=GCHujQiP1x9g6pS3' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
 
-    "<iframe width='560' height='315' src='https://www.youtube.com/embed/6stlCkUDG_s?si=YQcE4o89MO_rQfZt' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
-    "<iframe width='560' height='315' src='https://www.youtube.com/embed/pavJSLjL964?si=GCHujQiP1x9g6pS3' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' referrerpolicy='strict-origin-when-cross-origin' allowfullscreen></iframe>",
-  ];
+  };
 
   int index=0;
 
+  ScrollController scrollController = ScrollController();
 
 
 
@@ -252,7 +253,7 @@ class _Learn_PageState extends State<Learn_Page> {
                   height: h - 200,
                   child:
                   ListView.builder(
-                      itemCount: 24,
+                      itemCount: videos_links.length,
                       itemBuilder: (context,i){
                         return Column(mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -267,13 +268,16 @@ class _Learn_PageState extends State<Learn_Page> {
                                 InkWell(
                                   onTap: (){
                                     index=i;
+                                    double video_position=double.parse("$i")*550;
+                                    scrollController.animateTo(video_position,
+                                        duration: const Duration(milliseconds: 100),
+                                        curve: Curves.bounceIn);
+
                                     setState(() {});
-
-
 
                                   },
                                   child: Container(width: w/4-76,child: Center(child: Text(
-                                      "$i video .. $i"
+                                    videos_links.keys.toList()[i]
                                     ,style: GoogleFonts.arsenal(fontSize: 18,fontWeight: FontWeight.w100,color: Colors.white),
 
                                   ))),
@@ -310,24 +314,25 @@ class _Learn_PageState extends State<Learn_Page> {
                     child:
 ListView.builder(
 
+
+  controller: scrollController,
     itemCount: videos_links.length,
     itemBuilder: (context,i){
   return
 
-    Container(width: 500,height: 460,
+    Container(width: 500,height: 550,
     child: Column(
       children: [
 
-        SizedBox(height: 24,),
-        Text(" video titel",style: TextStyle(fontSize: 24,color: Colors.white)),
-        SizedBox(height: 24,),
+        SizedBox(height: 15,),
+        Text(videos_links.keys.toList()[i],style: TextStyle(fontSize: 24,color: Colors.white)),
         // HtmlWidget(videos_links[0]),
-        Container(width: 500,height: 350,color: Colors.yellow,child: Center(child:
-        HtmlWidget(videos_links[i])
+        Container(width:w/2,height: 481,child: Center(child:
+        HtmlWidget(videos_links.values.toList()[i])
         // Text("$i",style: TextStyle(fontSize: 190),)
 
         ),),
-        SizedBox(height: 24,),
+        SizedBox(height: 18,),
         Container(height: 2,color: Colors.grey,width: 300,)
       ],
     ),
