@@ -1,4 +1,6 @@
  import 'package:auto_cam_web/online_autoam/View/Cabinet_Editor.dart';
+import 'package:auto_cam_web/web_bages/Buy_Page.dart';
+import 'package:auto_cam_web/web_bages/Contact_US_Page.dart';
 import 'package:auto_cam_web/web_bages/Home_Screen.dart';
  import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,11 +21,6 @@ class Learn_Page extends StatefulWidget {
 class _Learn_PageState extends State<Learn_Page> {
 
 
-
-  bool sign_in = false;
-  String user="";
-  final GoogleSignIn  _googleSignIn = GoogleSignIn();
-  final my_setting_data = GetStorage();
 
 
   Future<void> signInWithGoogle() async {
@@ -49,6 +46,15 @@ class _Learn_PageState extends State<Learn_Page> {
 
     });
   }
+
+
+
+
+  bool sign_in = false;
+  String user="";
+  final GoogleSignIn  _googleSignIn = GoogleSignIn();
+  final my_setting_data = GetStorage();
+
 
 
   /// video
@@ -171,20 +177,6 @@ class _Learn_PageState extends State<Learn_Page> {
                         )),
                   ),
 
-                  ///Download
-                  Container(
-                    width: w / 16,
-                    child: Center(
-                        child: InkWell(
-                          onTap: () {
-                            Get.to(Home_Screen());
-                          },
-                          child: Text("Download",
-                              style: GoogleFonts.aBeeZee(
-                                  fontSize: w/96, color: Colors.white)),
-                        )),
-                  ),
-
 
                   /// contact us
                   Container(
@@ -192,17 +184,32 @@ class _Learn_PageState extends State<Learn_Page> {
                     child: Center(
                         child: InkWell(
                           onTap: () {
-
-
-
+                            Get.to(Contact_US_Page(false));
 
                           },
-                          child: Text("contact us",
+                          child: Text("contact",
                               style: GoogleFonts.aBeeZee(
                                   fontSize: w/96, color: Colors.white)
                           ),
                         )),
                   ),
+
+
+                  ///buy
+                  Container(
+                    width: w / 16,
+                    child: Center(
+                        child: InkWell(
+                          onTap: () {
+                            Get.to(Buy_Page());
+                          },
+                          child: Text("Buy",
+                              style: GoogleFonts.aBeeZee(
+                                  fontSize: w/96, color: Colors.white)),
+                        )),
+                  ),
+
+
 
 
                   SizedBox(
@@ -210,25 +217,26 @@ class _Learn_PageState extends State<Learn_Page> {
                   ),
 
                   /// Sign in / out
-                  Container(
-                    width: w / 18,
-                    child: Center(
-                        child: InkWell(
-                          onTap: () {
+                  // Container(
+                  //   width: w / 18,
+                  //   child: Center(
+                  //       child: InkWell(
+                  //         onTap: () {
+                  //
+                  //           !sign_in?
+                  //           signInWithGoogle()
+                  //               :
+                  //           signOut();
+                  //
+                  //
+                  //         },
+                  //         child: Text(sign_in?"Sign out":"Sign in",
+                  //             style: GoogleFonts.aBeeZee(
+                  //                 fontSize: w/96, color: Colors.white)
+                  //         ),
+                  //       )),
+                  // ),
 
-                            !sign_in?
-                            signInWithGoogle()
-                                :
-                            signOut();
-
-
-                          },
-                          child: Text(sign_in?"Sign out":"Sign in",
-                              style: GoogleFonts.aBeeZee(
-                                  fontSize: w/96, color: Colors.white)
-                          ),
-                        )),
-                  ),
 
                   Container(width: w/6,
                     child: Text("$user",
@@ -350,6 +358,9 @@ ListView.builder(
       ),
 
     ));
+
+
+
   }
 }
 

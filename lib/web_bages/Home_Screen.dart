@@ -1,5 +1,6 @@
 
 import 'package:auto_cam_web/online_autoam/View/Cabinet_Editor.dart';
+import 'package:auto_cam_web/web_bages/Buy_Page.dart';
 import 'package:auto_cam_web/web_bages/Contact_US_Page.dart';
 import 'package:auto_cam_web/web_bages/Learn_Page.dart';
 import 'package:auto_cam_web/web_bages/Sign_Up_In_Page.dart';
@@ -171,22 +172,9 @@ controller: scrollController,
                             )),
                           ),
 
-                          ///Download
-                          Container(
-                            width: w / 16,
-                            child: Center(
-                                child: InkWell(
-                              onTap: () {
-                                Get.to(Home_Screen());
-                              },
-                              child: Text("Download",
-                                  style: GoogleFonts.aBeeZee(
-                                      fontSize: w/96, color: Colors.white)),
-                            )),
-                          ),
 
 
-                          /// contact us
+                          /// contact
                           Container(
                             width: w / 16,
                             child: Center(
@@ -198,12 +186,28 @@ controller: scrollController,
 
 
                               },
-                              child: Text("contact us",
+                              child: Text("contact",
                                   style: GoogleFonts.aBeeZee(
                                       fontSize: w/96, color: Colors.white)
                               ),
                             )),
                           ),
+
+
+                          ///buy
+                          Container(
+                            width: w / 16,
+                            child: Center(
+                                child: InkWell(
+                                  onTap: () {
+                                    Get.to(Buy_Page());
+                                  },
+                                  child: Text("Buy",
+                                      style: GoogleFonts.aBeeZee(
+                                          fontSize: w/96, color: Colors.white)),
+                                )),
+                          ),
+
 
 
                           SizedBox(
