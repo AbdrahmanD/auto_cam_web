@@ -43,10 +43,14 @@ dependencies:
   dart_eval:
   file_picker:
   get_storage:
-  firebase_core:
-  firebase_auth:
+  firebase_core: ^2.27.0
+  firebase_auth: ^4.17.8
   google_sign_in:
+  google_sign_in_web:
+
   flutter_widget_from_html:
+  flutter_animate: ^4.5.0
+  firebase_database: ^10.4.9
 
 dev_dependencies:
   flutter_test:

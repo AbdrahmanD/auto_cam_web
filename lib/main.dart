@@ -19,7 +19,8 @@ void main() async {
            projectId: "autocam-5f9b9",
           storageBucket: "autocam-5f9b9.appspot.com",
           messagingSenderId: "374244028436",
-          appId: "1:374244028436:web:7ed439f93884db4c9cf701"
+          appId: "1:374244028436:web:7ed439f93884db4c9cf701",
+          databaseURL:"https://autocam-5f9b9-default-rtdb.firebaseio.com/"
       )
   );
   final my_setting_data = GetStorage();

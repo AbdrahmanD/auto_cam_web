@@ -499,9 +499,9 @@ SizedBox()                            ),
                                     width: 200,
                                     // height: 200,
                                     child: TextFormField(
-                                      style: TextStyle(fontSize: 12 , color: Colors.white),
                                       controller: customer_email_content,
                                       maxLines: 14,minLines: 8,
+                                      style: TextStyle(fontSize: 12 , color: Colors.white),
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(8),

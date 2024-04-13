@@ -1,14 +1,17 @@
 
+import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Firebase_controller.dart';
 import 'package:auto_cam_web/online_autoam/View/Cabinet_Editor.dart';
 import 'package:auto_cam_web/web_bages/Buy_Page.dart';
 import 'package:auto_cam_web/web_bages/Contact_US_Page.dart';
 import 'package:auto_cam_web/web_bages/Learn_Page.dart';
 import 'package:auto_cam_web/web_bages/Sign_Up_In_Page.dart';
- import 'package:flutter/material.dart';
+  import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+ import 'package:google_fonts/google_fonts.dart';
+
+
+
 
 class Home_Screen extends StatefulWidget {
   const Home_Screen({Key? key}) : super(key: key);
@@ -19,52 +22,10 @@ class Home_Screen extends StatefulWidget {
 
 class _Main_ScreenState extends State<Home_Screen> {
 
-
-  final my_setting_data = GetStorage();
-
-
-
-ScrollController scrollController=ScrollController();
-
-  bool sign_in = false;
-  String user="";
-  final GoogleSignIn  _googleSignIn = GoogleSignIn();
-
-
-  Future<void> signInWithGoogle() async {
-    GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
-
-    my_setting_data.write("user",googleSignInAccount!.displayName);
-    my_setting_data.write("sign_in",true);
-
-Get.to(Home_Screen());
-setState(() {
-
-    });
-  }
-
-  Future<void> signOut() async {
-    await _googleSignIn.signOut();
-    my_setting_data.write("sign_in",false);
-    my_setting_data.write("user","");
-
-    Get.to(Home_Screen());
-
-    setState(() {
-
-    });
-  }
-
-
+  Firebase_caontroller firebase_caontroller = Get.find();
 
   @override
   void initState() {
-
-    if (my_setting_data.read("user") != null) {
-      user = my_setting_data.read("user");
-    } else {
-      user = "";
-    }
 
 
     super.initState();
@@ -73,20 +34,12 @@ setState(() {
 
   @override
   Widget build(BuildContext context) {
+
+
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
 
-    if (my_setting_data.read("sign_in") != null) {
-      sign_in = my_setting_data.read("sign_in");
-    } else {
-      sign_in = false;
-    }
 
-    if (my_setting_data.read("user") != null) {
-      user = my_setting_data.read("user");
-    } else {
-      user = "";
-    }
 
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -96,21 +49,21 @@ setState(() {
 
           ListView(
 
-controller: scrollController,
-            children: [
+            children:[
 
 
               /// home page
               Container(
                 // AssetImage("lib/assets/background.png"),fit: BoxFit.fill),),
-                width: w, height: h,
+                width: w, height: h+200,
                 child: Column(
                   children: [
+
+                    /// app par
                     Container(
                       height: h/4,
                       child:
 
-                      /// app par
                       Row(
                         children: [
 
@@ -181,6 +134,7 @@ controller: scrollController,
                                 child: InkWell(
                               onTap: () {
 
+
                                 Get.to(Contact_US_Page(false));
                                 // scrollController.jumpTo(scrollController.position.maxScrollExtent);
 
@@ -218,17 +172,11 @@ controller: scrollController,
                           Container(
                             width: w / 18,
                             child: Center(
-                                child: InkWell(
-                                  onTap: () {
-
-                                    !sign_in?
-                                    signInWithGoogle()
-                                        :
-                                    signOut();
-
-
+                                child: InkWell (
+                                  onTap: () async{
+                                    Get.to(Sign_Up_In_Page());
                                   },
-                                  child: Text(sign_in?"Sign out":"Sign in",
+                                  child: Text("Sign in",
                                       style: GoogleFonts.aBeeZee(
                                           fontSize: w/96, color: Colors.white)
                                   ),
@@ -236,82 +184,98 @@ controller: scrollController,
                           ),
 
                           Container(width: w/6,
-                          child: Text("$user",
+                          child: Text("${firebase_caontroller.user}",
                               style: GoogleFonts.aBeeZee(
                               fontSize: w/96, color: Colors.white)
                           ),)
                         ],
                       ),
+                    ).animate(
+                      effects: [ScaleEffect(duration: Duration(milliseconds: 200))],
                     ),
 
                     /// main content
-                    Row(
-                      children: [
+                    MouseRegion(
+                    onHover: (v){
 
-                        ///Sized box
-                        Expanded(
-                            flex: 1,
-                            child: Container(
-                              // height: h - 200,
-                                               )),
+                    }
+                    ,child: Row(
+                        children: [
 
-                        /// main title
-                        Expanded(
-                            flex: 10,
-                            child: Container(
-                              // height: h - 200,
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 120),
-                                child: Center(
-                                    child:
-                                   RichText(
-                                     text: TextSpan(
-                                        children: [
-                                         TextSpan(
-                                             text: "AUTOCAM\n",
-                                             style: GoogleFonts.kalam(fontSize: w/20,color: Colors.white,fontWeight: FontWeight.bold),
-                                         ),
-                                          TextSpan(
-                                            text: "        SOFTWARE\n\n",
-                                            style: GoogleFonts.kalam(fontSize: w/32,color: Colors.white,fontWeight: FontWeight.bold),
-                                          ),
-                                          TextSpan(
-                                            text: "no cad , no cam ...\n\n",
-                                            style: GoogleFonts.arsenal(fontSize: w/36,color: Colors.white),
-                                          ),
-                                          TextSpan(
-                                            text: "only autocam\n",
-                                            style: GoogleFonts.arsenal(fontSize: w/36,color: Colors.white),
-                                          ),
-                                       ]
-                                     ),
+                          ///Sized box
+                          Expanded(
+                              flex: 1,
+                              child:
+                              Container(
+                                // height: h - 200,
+                                                 )),
 
-                                   )
+                          /// main title
+                          Expanded(
+                              flex: 10,
+                              child: Container(
+                                // height: h - 200,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 120),
+                                  child: Center(
+                                      child:
+                                     RichText(
+                                       text: TextSpan(
+                                          children: [
+                                           TextSpan(
+                                               text: "AUTOCAM\n",
+                                               style: GoogleFonts.kalam(fontSize: w/20,color: Colors.white,fontWeight: FontWeight.bold),
+                                           ),
+                                            TextSpan(
+                                              text: "        SOFTWARE\n\n",
+                                              style: GoogleFonts.kalam(fontSize: w/32,color: Colors.white,fontWeight: FontWeight.bold),
+                                            ),
+                                            TextSpan(
+                                              text: "no cad , no cam ...\n\n",
+                                              style: GoogleFonts.arsenal(fontSize: w/36,color: Colors.white),
+                                            ),
+                                            TextSpan(
+                                              text: "only autocam\n",
+                                              style: GoogleFonts.arsenal(fontSize: w/36,color: Colors.white),
+                                            ),
+                                         ]
+                                       ),
+
+                                     )
+                                  ),
                                 ),
-                              ),
-                            )),
-                        Expanded(
-                            flex: 20,
-                            child: Container(
-                              height: h - 200,
-                              child: Center(
-                                  child: Text(
-                                "home",
-                                style: GoogleFonts.aBeeZee(
-                                    fontSize: 32, color: Colors.white),
                               )),
-                            )),
 
-                        ///Sized box
-                        Expanded(
-                            flex: 1,
-                            child: Container(
+                          ///home
+                          Expanded(
+                              flex: 20,
+                              child: Container(
                                 height: h - 200,
                                 child:
-                                SizedBox()                        )),
+                                InkWell(
+                                onTap: ()async{
+                                  // firebase_caontroller.user_sign_in_up();
+                                }
+                                ,child: Center(
+                                      child: Text(
+                                    "home",
+                                    style: GoogleFonts.aBeeZee(
+                                        fontSize: 32, color: Colors.white),
+                                  )),
+                                ),
+                              )),
+
+                          ///Sized box
+                          Expanded(
+                              flex: 1,
+                              child: Container(
+                                  height: h - 200,
+                                  child:
+                                  SizedBox()                        )),
 
 
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -324,7 +288,8 @@ controller: scrollController,
                 child: Center(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 256,right: 256,top: 72,bottom: 72),
-                    child: Text(
+                    child:
+                    Text(
                       "AUTOCAM software is the perfect solution for furniture factories.\n    "
                           " using AUTOCAM you will get :\n    "
                           "     - Design capabilities . \n    "
@@ -338,7 +303,8 @@ controller: scrollController,
                           "  AUTOCAM \n    "
 
                       ,style: GoogleFonts.arsenal(fontSize: w/56,fontWeight: FontWeight.w100,color: Colors.white),
-                    ),
+                    )
+                    ,
                   ),
                 ),
               ),
