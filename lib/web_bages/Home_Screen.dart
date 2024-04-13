@@ -8,6 +8,7 @@ import 'package:auto_cam_web/web_bages/Sign_Up_In_Page.dart';
   import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
  import 'package:google_fonts/google_fonts.dart';
 
 
@@ -24,9 +25,21 @@ class _Main_ScreenState extends State<Home_Screen> {
 
   Firebase_caontroller firebase_caontroller = Get.find();
 
+  final my_setting_data = GetStorage();
+  bool sign_in = false;
+  String user="";
+
+
   @override
   void initState() {
 
+    if(
+    my_setting_data.read("user_name")!=null &&
+    my_setting_data.read("user_name")!=""
+    ){
+      user=my_setting_data.read("user_name");
+      sign_in=true;
+    }
 
     super.initState();
   }
@@ -170,24 +183,27 @@ class _Main_ScreenState extends State<Home_Screen> {
 
                           /// Sign in / out
                           Container(
-                            width: w / 18,
+                            width: w / 9,
                             child: Center(
                                 child: InkWell (
                                   onTap: () async{
-                                    Get.to(Sign_Up_In_Page());
+                                   !sign_in? Get.to(Sign_Up_In_Page())
+                                   :
+                                   firebase_caontroller.sign_out()
+                                   ;
                                   },
-                                  child: Text("Sign in",
+                                  child: Text(!sign_in?"Sign in":user,
                                       style: GoogleFonts.aBeeZee(
                                           fontSize: w/96, color: Colors.white)
                                   ),
                                 )),
                           ),
 
-                          Container(width: w/6,
-                          child: Text("${firebase_caontroller.user}",
-                              style: GoogleFonts.aBeeZee(
-                              fontSize: w/96, color: Colors.white)
-                          ),)
+                          // Container(width: w/6,
+                          // child: Text("$user",
+                          //     style: GoogleFonts.aBeeZee(
+                          //     fontSize: w/96, color: Colors.white)
+                          // ),)
                         ],
                       ),
                     ).animate(

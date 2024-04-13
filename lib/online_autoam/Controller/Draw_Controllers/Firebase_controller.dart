@@ -1,4 +1,5 @@
 
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/User_modle.dart';
 import 'package:auto_cam_web/web_bages/Home_Screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,7 +14,7 @@ class Firebase_caontroller extends GetxController{
 
   final my_setting_data = GetStorage();
   bool sign_in = false;
-  String user="";
+
   List<String> names =[];
 
   bool loading_user=true;
@@ -31,17 +32,26 @@ class Firebase_caontroller extends GetxController{
   user_sign_in_up(User_modle user){
 
     if(names.contains(user.name)){
-      print("exist");
       Get.to(Home_Screen());
     }else if(!names.contains(user.name)){
-      print("new");
+
+      add_new_user(user);
       Get.to(Home_Screen());
 
     }
 
+    my_setting_data.write("user_name", user.name);
+    my_setting_data.write("sign_in",true);
 
   }
 
+
+  sign_out(){
+    // my_setting_data.write("user_name","");
+    // sign_in=false;
+    // Get.off(Home_Screen());
+
+  }
   add_new_user(User_modle user) async{
     DatabaseReference ref = FirebaseDatabase.instance.ref("users/${user.name}");
 
@@ -72,6 +82,30 @@ class Firebase_caontroller extends GetxController{
           loading_user=false;
     });
     return users_names;
+
+  }
+
+
+
+
+  featch_user_patterns(User_modle user){
+
+
+
+
+  }
+
+
+  save_pattern_to_cloud(JoinHolePattern pattern , String category) async{
+
+    if(my_setting_data.read("user_name")!=null) {
+      DatabaseReference ref = FirebaseDatabase.instance.ref("users").
+      child("${my_setting_data.read("user_name")}").
+      child("patterns").
+      child(category).child(pattern.name);
+
+      await ref.set(pattern.toJson());
+    }
 
   }
 

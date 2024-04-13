@@ -44,7 +44,7 @@ bool init_state=true;
               width: pattern.max_length * scale,
               height: 100,
               decoration:
-                  BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+                  BoxDecoration(border: Border.all(color: Colors.red)),
               child: Container(),
             )),
       );

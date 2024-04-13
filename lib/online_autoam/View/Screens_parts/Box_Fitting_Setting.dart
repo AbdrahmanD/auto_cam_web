@@ -1,5 +1,6 @@
 import 'package:auto_cam_web/online_autoam/Controller/DecimalTextInputFormatter.dart';
 import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
+import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Firebase_controller.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/View/Screens_parts/Box_Fitting_Editor.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,8 @@ class _Box_Fitting_SettingState extends State<Box_Fitting_Setting> {
   double d3 = 46;
 
   Draw_Controller draw_controller = Get.find();
+
+  Firebase_caontroller firebase_caontroller =Get.find();
 
   String corrent_setting = " SETTING - KD patterns ";
   String category = "Box_Fitting_DRILL";
@@ -168,8 +171,10 @@ class _Box_Fitting_SettingState extends State<Box_Fitting_Setting> {
 
                   list_boxes_fitting.add(corrent_join_pattern);
 
-                  await draw_controller.save_joinHolePattern(
-                      corrent_join_pattern, category);
+                  // await draw_controller.save_joinHolePattern(
+                  //     corrent_join_pattern, category);
+
+                  draw_controller.box_repository.join_patterns[category]!.add(corrent_join_pattern);
                   setState(() {});
 
                   Navigator.of(Get.overlayContext!).pop();
@@ -360,7 +365,10 @@ class _Box_Fitting_SettingState extends State<Box_Fitting_Setting> {
 
   save_changes() async {
 
-    draw_controller.save_joinHolePattern(list_boxes_fitting[pattern_index], category);
+    /// in web app we dont need to safe to file , we will save to cloud only
+    // draw_controller.save_joinHolePattern(list_boxes_fitting[pattern_index], category);
+
+    firebase_caontroller.save_pattern_to_cloud(list_boxes_fitting[pattern_index], category);
 
     List<Bore_unit> bores=[];
     for(int i=0;i<list_boxes_fitting[pattern_index].bores.length;i++){
@@ -393,7 +401,13 @@ class _Box_Fitting_SettingState extends State<Box_Fitting_Setting> {
         bores,
         list_boxes_fitting[pattern_index].pattern_enable
     );
-    draw_controller.save_joinHolePattern(drawer_face_pattern, "Drawer_Face");
+
+
+    /// in web app we dont need to safe to file , we will save to cloud only
+    // draw_controller.save_joinHolePattern(drawer_face_pattern, "Drawer_Face");
+
+    firebase_caontroller.save_pattern_to_cloud(drawer_face_pattern, "Drawer_Face");
+
 
     Get.defaultDialog(
       title: "save change",

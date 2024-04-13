@@ -1117,56 +1117,6 @@ if(select_window.value){
 
 
 
-  // flip_piece() {
-  //   Box_model b = box_repository.box_model.value;
-  //
-  //   if (selected_id.length==1) {
-  //     Piece_model p = b.box_pieces[selected_id[0]];
-  //
-  //     if (view_port == 'F') {
-  //     } else if (view_port == 'R') {
-  //       if (p.piece_direction == 'H') {
-  //         p.piece_direction = "F";
-  //       } else if (p.piece_direction == 'F') {
-  //         p.piece_direction = "H";
-  //       }
-  //     } else if (view_port == 'T') {}
-  //
-  //     Piece_model np = Piece_model(
-  //         p.piece_id,
-  //         p.piece_name,
-  //         p.piece_direction,
-  //         p.material_name,
-  //         p.piece_height,
-  //         p.piece_width,
-  //         p.piece_thickness,
-  //         p.piece_origin,
-  //     p.enner_name);
-  //
-  //     b.box_pieces.remove(p);
-  //     b.box_pieces.add(np);
-  //   }
-  //
-  //   box_repository.add_box_to_repo(b);
-  //
-  //   draw_Box();
-  // }
-
-  rotate_around_X(Piece_model p) {
-    double h = p.piece_width;
-    double th = p.piece_thickness;
-
-    ///
-    p.piece_faces.faces[4].corners[2].y_coordinate += h - th;
-    p.piece_faces.faces[4].corners[3].y_coordinate += h - th;
-    p.piece_faces.faces[5].corners[0].z_coordinate += h - th;
-    p.piece_faces.faces[5].corners[1].z_coordinate -= h - th;
-    p.piece_faces.faces[5].corners[2].y_coordinate += h - th;
-    p.piece_faces.faces[5].corners[2].z_coordinate -= h - th;
-    p.piece_faces.faces[5].corners[3].y_coordinate += h - th;
-    p.piece_faces.faces[5].corners[3].z_coordinate -= h - th;
-  }
-
   /// analyze box
   analyze() {
     AnalyzeJoins analayzejoins = AnalyzeJoins(false, false);
@@ -1731,61 +1681,8 @@ if(select_window.value){
     // await read_brands();
   }
 
-  /// this only debug mode method to get information off the box pieces
-  print_pieces_coordinate() {
-    for (int i = 0; i < box_repository.box_model.value.box_pieces.length; i++) {
-      print(
-          'index : $i;; name  :${box_repository.box_model.value.box_pieces[i].piece_name}');
-      Piece_model p = box_repository.box_model.value.box_pieces[i];
-      for (int i = 0; i < p.piece_faces.faces.length; i++) {
-        Single_Face sf = p.piece_faces.faces[i];
-        print('index : $i;; face name  :${sf.name}');
-        print('bores  :${sf.bores.length}');
 
-        print("==   ==   ==   ==");
-      }
-
-      // print(
-      //     'index : $i;; piece id :${box_repository.box_model.value.box_pieces[i].piece_id} ;; name  :${box_repository.box_model.value.box_pieces[i].piece_name}');
-      // print(
-      //     'height :  ${box_repository.box_model.value.box_pieces[i].piece_height} ;;'
-      //     ' width :  ${box_repository.box_model.value.box_pieces[i].piece_width}');
-      // print(
-      //     'thickness :  ${box_repository.box_model.value.box_pieces[i].piece_thickness}');
-      // print('quantity :  1');
-      //
-      // box_repository.box_model.value.box_pieces[i].piece_faces.top_face.face_item.forEach((element) {print('top   : $element');});
-      // print('---------');
-      // box_repository.box_model.value.box_pieces[i].piece_faces.right_face.face_item.forEach((element) {print('right : $element');});
-      // print('---------');
-      // box_repository.box_model.value.box_pieces[i].piece_faces.base_face .face_item.forEach((element) {print('base  : $element');});
-      // print('---------');
-      // box_repository.box_model.value.box_pieces[i].piece_faces.left_face .face_item.forEach((element) {print('left  : $element');});
-      // print('---------');
-      // print('(# Y #) = ${box_repository.box_model.value.box_pieces[i].piece_origin.y_coordinate}');
-      // print('-----------------------------------');
-      // print('-----------------------------------');
-    }
-  }
-
-  ///nesting_pieces
-  List<Piece_model> nesting_pieces() {
-    List<Piece_model> nesting_pieces = [];
-
-    for (int r = 0; r < box_repository.box_model.value.box_pieces.length; r++) {
-      Piece_model my_piece = box_repository.box_model.value.box_pieces[r];
-      if (my_piece.piece_name.contains("inner") ||
-          my_piece.piece_name.contains("Helper")) {
-        continue;
-      } else {
-         nesting_pieces.add(my_piece);
-      }
-    }
-
-    return nesting_pieces;
-  }
-
-  /// /// / / / PROJECT /////////////
+  /// /// / / / naming /////////////
 
   String first_chart_every_word(String name) {
     List<String> Lbox_name = name.split(" ");
