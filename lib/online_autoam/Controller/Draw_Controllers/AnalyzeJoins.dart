@@ -251,9 +251,9 @@ this.project=project;
   add_fastener(Box_model box_model){
 
     Point_model tp1=Point_model(
-        200,
-        200,
-        200
+        0,
+        0,
+        0
     ).correct_cordinate();
 
     Fastener f = Fastener("center", tp1,

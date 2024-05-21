@@ -53,7 +53,7 @@ class Draw_Controller extends GetxController {
 
   RxBool draw_3_D = true.obs;
 
-  RxString view_port = 'F'.obs;
+  RxString view_port = 'P'.obs;
 
 
   Point_model drawing_origin = Point_model(0, 0, 0);
@@ -122,84 +122,6 @@ class Draw_Controller extends GetxController {
     }
   }
 
-  // select_piece_via_window() {
-  //
-  //   selected_pieces.value = [];
-  //   Point_model my_origin = box_repository.box_model.value.box_origin;
-  //
-  //   double ssx = start_select_window.value.dx;
-  //   double ssy = start_select_window.value.dy;
-  //   double esx = end_select_window.value.dx;
-  //   double esy = end_select_window.value.dy;
-  //
-  //   late double left_down_point_x;
-  //   late double left_down_point_y;
-  //   late double right_up_point_x;
-  //   late double right_up_point_y;
-  //
-  //   for (int i = 0; i < box_repository.box_model.value.box_pieces.length; i++) {
-  //     Piece_model p = box_repository.box_model.value.box_pieces[i];
-  //
-  //     if (view_port == 'F') {
-  //       left_down_point_x = (my_origin.x_coordinate +
-  //           p.piece_faces.faces[4].corners[0].x_coordinate *
-  //               drawing_scale.value);
-  //       left_down_point_y = (my_origin.y_coordinate -
-  //           p.piece_faces.faces[4].corners[0].y_coordinate *
-  //               drawing_scale.value);
-  //       right_up_point_x = (my_origin.x_coordinate +
-  //           p.piece_faces.faces[4].corners[2].x_coordinate *
-  //               drawing_scale.value);
-  //       right_up_point_y = (my_origin.y_coordinate -
-  //           p.piece_faces.faces[4].corners[2].y_coordinate *
-  //               drawing_scale.value);
-  //     }
-  //     else if (view_port == 'R') {
-  //       left_down_point_x = (my_origin.x_coordinate +
-  //           p.piece_faces.faces[1].corners[0].z_coordinate *
-  //               drawing_scale.value);
-  //       left_down_point_y = (my_origin.y_coordinate -
-  //           p.piece_faces.faces[1].corners[0].y_coordinate *
-  //               drawing_scale.value);
-  //       right_up_point_x = (my_origin.x_coordinate +
-  //           p.piece_faces.faces[1].corners[2].z_coordinate *
-  //               drawing_scale.value);
-  //       right_up_point_y = (my_origin.y_coordinate -
-  //           p.piece_faces.faces[1].corners[2].y_coordinate *
-  //               drawing_scale.value);
-  //     }
-  //     else if (view_port == 'T') {
-  //       left_down_point_x = (my_origin.x_coordinate +
-  //           p.piece_faces.faces[0].corners[0].x_coordinate *
-  //               drawing_scale.value);
-  //       left_down_point_y = (my_origin.y_coordinate -
-  //           p.piece_faces.faces[0].corners[0].z_coordinate *
-  //               drawing_scale.value);
-  //       right_up_point_x = (my_origin.x_coordinate +
-  //           p.piece_faces.faces[0].corners[2].x_coordinate *
-  //               drawing_scale.value);
-  //       right_up_point_y = (my_origin.y_coordinate -
-  //           p.piece_faces.faces[0].corners[2].z_coordinate *
-  //               drawing_scale.value);
-  //     }
-  //
-  //     bool x_compare = right_up_point_x < ssx && left_down_point_x > esx;
-  //     bool y_compare = right_up_point_y > ssy && left_down_point_y < esy;
-  //
-  //     if (x_compare && y_compare
-  //         // && !p.piece_name.contains('inner')
-  //         // &&
-  //         // !p.piece_name.contains('back_panel') &&
-  //         // !p.piece_name.contains('Helper')
-  //         ) {
-  //       selected_pieces.value.add(p);
-  //       gumball.value=true;
-  //     }
-  //   }
-  //
-  //   start_select_window.value = Offset(0, 0);
-  //   end_select_window.value = Offset(0, 0);
-  // }
 
   select_piece_via_window() {
 
@@ -354,8 +276,35 @@ if(select_window.value){
     for (int f = 0; f < box_repository.box_model.value.fasteners.length; f++) {
 
 
-        bool x_compare =box_repository.box_model.value.fasteners[f].fastener_origin.x_coordinate < ssx && box_repository.box_model.value.fasteners[f].fastener_origin.x_coordinate > esx;
-        bool y_compare =box_repository.box_model.value.fasteners[f].fastener_origin.y_coordinate < ssy && box_repository.box_model.value.fasteners[f].fastener_origin.y_coordinate > esy;
+      double fx=0;
+      double fy=0;
+      double fz=0;
+
+
+      if (view_port == 'F') {
+
+        fx=box_repository.box_model.value.fasteners[f].fastener_origin.x_coordinate;
+        fy=box_repository.box_model.value.fasteners[f].fastener_origin.y_coordinate;
+        fz=box_repository.box_model.value.fasteners[f].fastener_origin.z_coordinate;
+
+      }
+      else if (view_port == 'R') {
+
+        fx=box_repository.box_model.value.fasteners[f].fastener_origin.z_coordinate;
+        fy=box_repository.box_model.value.fasteners[f].fastener_origin.y_coordinate;
+        fz=box_repository.box_model.value.fasteners[f].fastener_origin.x_coordinate;
+
+      }
+      else if (view_port == 'T') {
+
+        fx=box_repository.box_model.value.fasteners[f].fastener_origin.x_coordinate;
+        fy=box_repository.box_model.value.fasteners[f].fastener_origin.z_coordinate;
+        fz=box_repository.box_model.value.fasteners[f].fastener_origin.y_coordinate;
+
+      }
+
+        bool x_compare =fx < ssx && fx> esx;
+        bool y_compare =fy < ssy && fy > esy;
 
         if (x_compare && y_compare) {
 
@@ -1134,6 +1083,11 @@ if(select_window.value){
           dy = 0;
           dz = y_move_value;
         }
+      else if (view_port == 'P')  {
+        dx = 0;
+        dy = 0;
+        dz = 0;
+      }
 
       box_repository.box_model.value.fasteners[selected_fasteners_id].fastener_origin.x_coordinate += dx;
       box_repository.box_model.value.fasteners[selected_fasteners_id].fastener_origin.y_coordinate += dy;
