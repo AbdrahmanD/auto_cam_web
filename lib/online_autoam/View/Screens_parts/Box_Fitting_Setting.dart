@@ -3,6 +3,7 @@ import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Cont
 import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Firebase_controller.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/View/Screens_parts/Box_Fitting_Editor.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -51,7 +52,8 @@ class _Box_Fitting_SettingState extends State<Box_Fitting_Setting> {
   read_patterns() async {
     list_boxes_fitting = [];
 
-    await draw_controller.read_pattern_files();
+
+    // await draw_controller.read_pattern_files();
 
     Map<String, List<JoinHolePattern>> join_patterns =
         draw_controller.box_repository.join_patterns;
@@ -169,12 +171,10 @@ class _Box_Fitting_SettingState extends State<Box_Fitting_Setting> {
                   corrent_join_pattern.min_length =
                       double.parse(pattern_min_controller.text.toString());
 
-                  list_boxes_fitting.add(corrent_join_pattern);
-
-                  // await draw_controller.save_joinHolePattern(
-                  //     corrent_join_pattern, category);
 
                   draw_controller.box_repository.join_patterns[category]!.add(corrent_join_pattern);
+                  pattern_index=list_boxes_fitting.length-1;
+
                   setState(() {});
 
                   Navigator.of(Get.overlayContext!).pop();
@@ -309,6 +309,7 @@ class _Box_Fitting_SettingState extends State<Box_Fitting_Setting> {
                       double.parse(pattern_min_controller.text.toString());
 
                   save_changes();
+
                   setState(() {});
 
                   Navigator.of(Get.overlayContext!).pop();
@@ -330,9 +331,8 @@ class _Box_Fitting_SettingState extends State<Box_Fitting_Setting> {
               ),
               InkWell(
                 onTap: () {
-                  draw_controller.delete_joinHolePattern(
-                      list_boxes_fitting[pattern_index], category);
-
+                  // draw_controller.delete_joinHolePattern(list_boxes_fitting[pattern_index], category);
+                  firebase_caontroller.delete_Pattern_from_cloud(list_boxes_fitting[i], category);
                   list_boxes_fitting.removeAt(i);
                   pattern_index = 0;
 
@@ -413,9 +413,12 @@ class _Box_Fitting_SettingState extends State<Box_Fitting_Setting> {
       title: "save change",
       content: Container(child: Text("The setting for corrent selected pattern are saved"),)
     );
+
+
   }
 
   add_dowel(Offset offset) {
+
     double pre_distance = offset.dx - 100;
 
     bool center = false;
@@ -952,10 +955,14 @@ class _Box_Fitting_SettingState extends State<Box_Fitting_Setting> {
     );
   }
 
+
+
+
+
+
+
   @override
   void initState() {
-
-    // my_setting_data.write("mini_fix_setting", false);
 
 
     read_patterns();
@@ -963,6 +970,11 @@ class _Box_Fitting_SettingState extends State<Box_Fitting_Setting> {
 
     super.initState();
   }
+
+
+
+  double draw_scale=1;
+
 
   @override
   Widget build(BuildContext context) {
@@ -974,310 +986,313 @@ class _Box_Fitting_SettingState extends State<Box_Fitting_Setting> {
       corrent_join_pattern = JoinHolePattern('name', 150, 500, 0, 0, [], true);
     }
     return Scaffold(
-       body: Row(
-        children: [
-          Container(
-            child: Row(
-              children: [
-                Container(
-                    width: 250,
-                    height: h,
-                    color: Colors.grey[100],
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 32,
-                        ),
+       body: Container(
+         child: Row(
+           children: [
+             Container(
+                 width: 300,
+                 height: h,
+                 color: Colors.grey[100],
+                 child: Column(
+                   children: [
+                     SizedBox(
+                       height: 32,
+                     ),
 
-                        ///title : List of patterns
-                        Text(
-                          "List of patterns ",
-                          style: TextStyle(fontSize: 24),
-                        ),
-                        SizedBox(
-                          height: 24,
-                        ),
+                     ///title : List of patterns
+                     Text(
+                       "List of patterns ",
+                       style: TextStyle(fontSize: 24),
+                     ),
+                     SizedBox(
+                       height: 24,
+                     ),
 
-                        /// pattern listview builder
-                        Container(
-                          width: 250,
-                          height: h - 300,
-                          child: ListView.builder(
-                            itemCount: list_boxes_fitting.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                color: (pattern_index == index)
-                                    ? Colors.blue[100]
-                                    : Colors.grey[100],
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Row(
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          edit_pattern(index);
-                                        },
-                                        child: Icon(
-                                          Icons.edit,
-                                          size: 24,
-                                          color: Colors.teal,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 12,
-                                      ),
-                                      Container(
-                                        width: 150,
-                                        child: InkWell(
-                                          /// chose pattern
-                                          onTap: () {
-                                            pattern_index = index;
+                     /// pattern listview builder
+                     Container(
+                       // width: 250,
+                       height: h - 300,
+                       child: ListView.builder(
+                         itemCount: list_boxes_fitting.length,
+                         itemBuilder: (context, index) {
+                           return Container(
+                             color: (pattern_index == index)
+                                 ? Colors.blue[100]
+                                 : Colors.grey[100],
+                             child: Padding(
+                               padding: const EdgeInsets.all(12.0),
+                               child: Row(
+                                 children: [
+                                   InkWell(
+                                     onTap: () {
+                                       edit_pattern(index);
+                                     },
+                                     child: Icon(
+                                       Icons.edit,
+                                       size: 24,
+                                       color: Colors.teal,
+                                     ),
+                                   ),
+                                   SizedBox(
+                                     width: 12,
+                                   ),
+                                   Container(
+                                     width: 150,
+                                     child: InkWell(
+                                       /// chose pattern
+                                       onTap: () {
+                                         pattern_index = index;
+                                         setState(() {});
 
-                                            setState(() {});
-                                          },
+                                       },
 
-                                          child: Text(
-                                            "${list_boxes_fitting[index].name}",
-                                            style: TextStyle(fontSize: 16),
-                                          ),
-                                        ),
-                                      ),
-                                      InkWell(
-                                        onTap: () {},
-                                        child: Checkbox(
-                                          value: list_boxes_fitting[index]
-                                              .pattern_enable,
-                                          onChanged: (v) {
-                                            list_boxes_fitting[index]
-                                                    .pattern_enable =
-                                                !list_boxes_fitting[index]
-                                                    .pattern_enable;
-                                            setState(() {});
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                                       child: Text(
+                                         "${list_boxes_fitting[index].name}",
+                                         style: TextStyle(fontSize: 16),
+                                       ),
+                                     ),
+                                   ),
+                                   InkWell(
+                                     onTap: () {},
+                                     child: Checkbox(
+                                       value: list_boxes_fitting[index]
+                                           .pattern_enable,
+                                       onChanged: (v) {
+                                         list_boxes_fitting[index]
+                                                 .pattern_enable =
+                                             !list_boxes_fitting[index]
+                                                 .pattern_enable;
+                                         setState(() {});
+                                       },
+                                     ),
+                                   ),
+                                 ],
+                               ),
+                             ),
+                           );
+                         },
+                       ),
+                     ),
 
-                        /// add new pattern button
-                        InkWell(
-                          onTap: () {
-                            add_new_pattern();
-                          },
-                          child: Container(
-                            width: 200,
-                            height: 32,
-                            child: Center(child: Text("NEW PATTERN")),
-                            decoration: BoxDecoration(
-                                color: Colors.teal[200],
-                                borderRadius: BorderRadius.circular(12)),
-                          ),
-                        ),
+                     /// add new pattern button
+                     InkWell(
+                       onTap: () {
+                         add_new_pattern();
+                       },
+                       child: Container(
+                         width: 150,
+                         height: 32,
+                         child: Center(child: Text("NEW PATTERN")),
+                         decoration: BoxDecoration(
+                             color: Colors.teal[200],
+                             borderRadius: BorderRadius.circular(12)),
+                       ),
+                     ),
 
-                        SizedBox(
-                          height: 32,
-                        ),
+                     SizedBox(
+                       height: 32,
+                     ),
 
 
-                        /// save change
-                        InkWell(
-                          onTap: () {
-                            save_changes();
-                          },
-                          child: Container(
-                            width: 200,
-                            height: 32,
-                            child: Center(child: Text("save pattern")),
-                            decoration: BoxDecoration(
-                                color: Colors.red[300],
-                                borderRadius: BorderRadius.circular(12)),
-                          ),
-                        ),
-                      ],
-                    )),
-                Container(
-                    width: w - 500,
-                    height: h,
-                    child: Column(
-                      children: [
-                        Container(
-                          width: w - 200,
-                          height: 142,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              /// mini fix draggable
-                              Draggable(
-                                feedback: Transform.scale(
-                                  scale: 0.7,
-                                  child: Transform.rotate(
-                                    angle: -3.14 / 2,
-                                    child: Container(
-                                      width: 300,
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                              width: 50,
-                                              height: 50,
-                                              child: Image.asset(
-                                                  "lib/assets/images/nut.png")),
-                                          Container(
-                                              width: 120,
-                                              height: 120,
-                                              child: Transform.rotate(
-                                                  angle: 3.14 / 2,
-                                                  child: Image.asset(
-                                                      "lib/assets/images/screw.png"))),
-                                          Container(
-                                              width: 50,
-                                              height: 50,
-                                              child: Transform.rotate(
-                                                  angle: 3.14 / 2,
-                                                  child: Image.asset(
-                                                      "lib/assets/images/blastic_nut.png"))),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Container(
-                                    width: 300,
-                                    color: Colors.grey[200],
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                            width: 50,
-                                            height: 50,
-                                            child: Image.asset(
-                                                "lib/assets/images/nut.png")),
-                                        Container(
-                                            width: 120,
-                                            height: 120,
-                                            child: Transform.rotate(
-                                                angle: 3.14 / 2,
-                                                child: Image.asset(
-                                                    "lib/assets/images/screw.png"))),
-                                        Container(
-                                            width: 50,
-                                            height: 50,
-                                            child: Transform.rotate(
-                                                angle: 3.14 / 2,
-                                                child: Image.asset(
-                                                    "lib/assets/images/blastic_nut.png"))),
-                                        SizedBox(
-                                          width: 12,
-                                        ),
-                                        InkWell(
-                                            onTap: () {
-                                              minifix_setting_dialog();
-                                            },
-                                            child: Container(
-                                                width: 50,
-                                                height: 50,
-                                                child: Icon(
-                                                  Icons.settings,
-                                                  size: 32,
-                                                ))),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                onDragEnd: (v) {
-                                  add_minifix(v.offset);
-                                  setState(() {});
-                                },
-                              ),
+                     /// save change
+                     InkWell(
+                       onTap: () {
+                         save_changes();
+                       },
+                       child: Container(
+                         width: 150,
+                         height: 32,
+                         child: Center(child: Text("save pattern")),
+                         decoration: BoxDecoration(
+                             color: Colors.red[300],
+                             borderRadius: BorderRadius.circular(12)),
+                       ),
+                     ),
+                   ],
+                 )),
+             Container(
+                 width: w - 500,
+                 height: h,
+                 child: Row(
+                   children: [
 
-                              /// dowel draggable
-                              Draggable(
-                                feedback: Transform.scale(
-                                  scale: 0.7,
-                                  child: Transform.rotate(
-                                    angle: -3.14 / 2,
-                                    child: Container(
-                                      width: 300,
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                              width: 120,
-                                              height: 120,
-                                              child: Transform.rotate(
-                                                  angle: 3.14 / 2,
-                                                  child: Image.asset(
-                                                      "lib/assets/images/dowel.png"))),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Container(
-                                    width: 262,
-                                    color: Colors.grey[200],
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                            width: 200,
-                                            height: 200,
-                                            child: Transform.rotate(
-                                                angle: 3.14 / 2,
-                                                child: Image.asset(
-                                                    "lib/assets/images/dowel.png"))),
-                                        SizedBox(
-                                          width: 12,
-                                        ),
-                                        InkWell(
-                                            onTap: () {
-                                              dowel_setting_dialog();
-                                            },
-                                            child: Container(
-                                                width: 50,
-                                                height: 50,
-                                                child: Icon(
-                                                  Icons.settings,
-                                                  size: 32,
-                                                ))),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                onDragEnd: (v) {
-                                  add_dowel(v.offset);
+                     Listener(
+                       onPointerSignal: (PointerSignalEvent event) {
+                         if (event is PointerScrollEvent) {
 
-                                  setState(() {});
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                            height: h - 200,
-                            width: w - 200,
-                            color: Colors.grey[300],
-                            child: Box_Fitting_Editor(
-                                w - 200,
-                                h - 200,
-                                corrent_join_pattern,
-                                draw_controller.box_repository.box_model.value
-                                    .init_material_thickness
-                            )
-                        ),
+                           if (draw_scale>0.2) {
+                             draw_scale += (event.scrollDelta.direction).toInt() / 10;
+                           }else{
+                             draw_scale=0.3;
+                           }
+setState(() {});
+                         }
+                       },
+                       child: Container(
+                           height: h ,
+                           width: w - 600,
+                           color: Colors.grey[300],
+                           child: Box_Fitting_Editor(
+                               w - 600,
+                               h ,
+                               corrent_join_pattern,
+                               draw_controller.box_repository.box_model.value
+                                   .init_material_thickness,
+                               draw_scale
+                           )
+                       ),
+                     ),
 
-                      ],
-                    )),
-              ],
-            ),
-          ),
-        ],
-      ),
+                     Container(
+                       width: 100,
+                       height: h,
+                       child: ListView(
+                         children: [
+                           /// mini fix draggable
+                           Draggable(
+                             feedback:
+                             Container(
+                               height: 260,width: 80,
+                               child:
+
+                               Column(
+                                 children: [
+                                   SizedBox(
+                                     height: 10,
+                                   ),
+                                   Container(
+                                       width: 40,
+                                       height: 40,
+                                       child: Image.asset(
+                                           "lib/assets/images/nut.png")),
+                                   Container(
+                                       width: 100,
+                                       height: 110,
+                                       child: Image.asset(
+                                           "lib/assets/images/screw.png")),
+                                   Container(
+                                       width: 50,
+                                       height: 50,
+                                       child: Image.asset(
+                                           "lib/assets/images/blastic_nut.png")),
+                                   SizedBox(
+                                     height: 10,
+                                   ),
+                                 ],
+                               ),
+                             ),
+                             child: Padding(
+                               padding: const EdgeInsets.all(16.0),
+                               child:
+                               Container(
+                                 height: 260,width: 80,
+                                 color: Colors.grey[200],
+                                 child:
+                                  /// //////   ///
+                                 Column(
+                                   children: [
+                                     SizedBox(
+                                       height: 10,
+                                     ),
+                                     Container(
+                                         width: 40,
+                                         height: 40,
+                                         child: Image.asset(
+                                             "lib/assets/images/nut.png")),
+                                     Container(
+                                         width: 100,
+                                         height: 110,
+                                         child: Image.asset(
+                                             "lib/assets/images/screw.png")),
+                                     Container(
+                                         width: 50,
+                                         height: 50,
+                                         child: Image.asset(
+                                             "lib/assets/images/blastic_nut.png")),
+                                     SizedBox(
+                                       height: 10,
+                                     ),
+                                     InkWell(
+                                         onTap: () {
+                                           minifix_setting_dialog();
+                                         },
+                                         child: Container(
+                                             width: 40,
+                                             height: 40,
+                                             child: Icon(
+                                               Icons.settings,
+                                               size: 32,
+                                             ))),
+                                   ],
+                                 ),
+                                 /// /////////
+                               ),
+                             ),
+                             onDragEnd: (v) {
+                               add_minifix(v.offset);
+                               setState(() {});
+                             },
+                           ),
+
+                           /// dowel draggable
+                           Draggable(
+                             feedback: Container(
+                               height: 80,width: 30,
+                               child: Container(
+                                   width: 100,
+                                   height: 120,
+                                   child: Image.asset(
+                                       "lib/assets/images/dowel.png")),
+                             ),
+                             child: Padding(
+                               padding: const EdgeInsets.all(16.0),
+                               child: Container(
+                                 height: 200,width: 80,
+                                 color: Colors.grey[200],
+                                 child: Column(
+                                   children: [
+                                     SizedBox(
+                                       height: 32,
+                                     ),
+                                     Container(
+                                         width: 50,
+                                         height: 100,
+                                         child: Image.asset(
+                                             "lib/assets/images/dowel.png")),
+                                     SizedBox(
+                                       height: 12,
+                                     ),
+                                     InkWell(
+                                         onTap: () {
+                                           dowel_setting_dialog();
+                                         },
+                                         child: Container(
+                                             width: 50,
+                                             height: 50,
+                                             child: Icon(
+                                               Icons.settings,
+                                               size: 32,
+                                             ))),
+                                   ],
+                                 ),
+                               ),
+                             ),
+                             onDragEnd: (v) {
+                               add_dowel(v.offset);
+
+                               setState(() {});
+                             },
+                           ),
+                         ],
+                       ),
+                     ),
+
+
+                   ],
+                 )),
+           ],
+         ),
+       ),
     );
   }
 }

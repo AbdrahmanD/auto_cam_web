@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Door_Model.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Group_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
@@ -26,6 +27,8 @@ class Box_model {
    List<List<Group_model> > drawer_groups=[];
    List<Piece_model> box_deleted_pieces=[];
    int piece_id=0;
+   List<Fastener> fasteners=[];
+
 
   Box_model(
       this.box_name,
@@ -62,6 +65,9 @@ class Box_model {
 
     else if(box_type=="standard_unit")
     { standard_unit();}
+
+
+    fasteners=[];
 
 
   }

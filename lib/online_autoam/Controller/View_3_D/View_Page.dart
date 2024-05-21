@@ -27,6 +27,7 @@ class _View_PageState extends State<View_Page> {
   late Size screen_size;
 
   late transform_controller transfomer = transform_controller(screen_size);
+
   Draw_Controller draw_controller = Get.find();
 
 
@@ -146,10 +147,10 @@ class _View_PageState extends State<View_Page> {
                       if (event is PointerScrollEvent) {
                         if ((draw_controller.drawing_scale.value +
                             event.scrollDelta.dy / 1000) >
-                            0.5 &&
+                            0.1 &&
                             (draw_controller.drawing_scale.value +
                                 event.scrollDelta.dy / 1000) <
-                                100) {
+                                200) {
                           draw_controller.drawing_scale.value +=
                               event.scrollDelta.dy / 500;
                           setState(() {});
@@ -444,7 +445,8 @@ onDoubleTap: (){
                       transfomer.a3 = math.pi / 12;
                       plane = 'X_Y';
                       draw_controller.view_port.value="P";
-
+                      draw_controller.x_move=0;
+                      draw_controller.y_move=0;
                       setState(() {});
                     },
                     child: Padding(

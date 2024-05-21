@@ -4,6 +4,7 @@ import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Cont
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Cut_List_Item.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Faces_model.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
  import 'package:get/get.dart';
@@ -30,8 +31,7 @@ this.project=project;
 
 
 
-
-   }
+  }
 
   clean_faces(Box_model box_model) {
     for (int p = 0; p < box_model.box_pieces.length; p++) {
@@ -48,25 +48,26 @@ this.project=project;
   ///  all pieces for loop
   all_face_check(Box_model box_model) {
     for (int mp = 0; mp < box_model.box_pieces.length; mp++) {
-      Piece_model mpiece = box_model.box_pieces[mp];
+      // Piece_model mpiece = box_model.box_pieces[mp];
 
-      if (mpiece.piece_name.contains("inner")||
-(          mpiece.piece_name.contains("back_panel") && !mpiece.piece_name.contains("full_back_panel")) ||
-          mpiece.piece_thickness==0 ||
-          mpiece.piece_name.contains("base_panel")
+      if (box_model.box_pieces[mp].piece_name.contains("inner")||
+(          box_model.box_pieces[mp].piece_name.contains("back_panel") &&
+    !box_model.box_pieces[mp].piece_name.contains("full_back_panel")) ||
+          box_model.box_pieces[mp].piece_thickness==0 ||
+          box_model.box_pieces[mp].piece_name.contains("base_panel")
       ) {
         continue;
       }
 
 
-      for (int mf = 0; mf < mpiece.piece_faces.faces.length; mf++)
+      for (int mf = 0; mf < box_model.box_pieces[mp].piece_faces.faces.length; mf++)
       {
-        Single_Face mface = mpiece.piece_faces.faces[mf];
+        Single_Face mface = box_model.box_pieces[mp].piece_faces.faces[mf];
 
         for (int sp = 0; sp < box_model.box_pieces.length; sp++) {
           Piece_model spiece = box_model.box_pieces[sp];
 
-          if (spiece.piece_id == mpiece.piece_id ||
+          if (spiece.piece_id == box_model.box_pieces[mp].piece_id ||
               spiece.piece_thickness==0 ||
 
               spiece.piece_name.contains("inner")) {
@@ -76,8 +77,8 @@ this.project=project;
             Single_Face sface = spiece.piece_faces.faces[sf];
 
             bool main_face_direction =
-                detect_face_direction(mpiece.piece_direction, mface) == "V" ||
-                    detect_face_direction(mpiece.piece_direction, mface) == "B";
+                detect_face_direction(box_model.box_pieces[mp].piece_direction, mface) == "V" ||
+                    detect_face_direction(box_model.box_pieces[mp].piece_direction, mface) == "B";
 
             bool second_face_direction =
                 detect_face_direction(spiece.piece_direction, sface) == "V" ||
@@ -93,11 +94,11 @@ this.project=project;
             late Line line;
             bool is_groove=false;
 
-            if (mpiece.piece_name.contains("Helper") || spiece.piece_name.contains("Helper"))
+            if (box_model.box_pieces[mp].piece_name.contains("Helper") || spiece.piece_name.contains("Helper"))
             {
                 if (
-              mpiece.piece_name.contains("back_panel") || spiece.piece_name.contains("back_panel")||
-                  mpiece.piece_name.contains("base_panel") || spiece.piece_name.contains("base_panel")
+                box_model.box_pieces[mp].piece_name.contains("back_panel") || spiece.piece_name.contains("back_panel")||
+                    box_model.box_pieces[mp].piece_name.contains("base_panel") || spiece.piece_name.contains("base_panel")
               ) {
                   is_groove=true;
               }}
@@ -118,14 +119,15 @@ this.project=project;
 
             late Join_Line join_line;
 
-            if (mpiece.piece_name.contains("Helper") || spiece.piece_name.contains("Helper"))
+            if (box_model.box_pieces[mp].piece_name.contains("Helper") || spiece.piece_name.contains("Helper"))
             {
 
               ///Door_Helper
               if (
-              mpiece.piece_name.contains("Door_Helper") || spiece.piece_name.contains("Door_Helper")) {
+              box_model.box_pieces[mp].piece_name.contains("Door_Helper") || spiece.piece_name.contains("Door_Helper"))
+              {
 
-                if(mpiece.piece_name.contains("Door") && !mpiece.piece_name.contains("Helper")){
+                if(box_model.box_pieces[mp].piece_name.contains("Door") && !box_model.box_pieces[mp].piece_name.contains("Helper")){
 
                   join_line = Join_Line(line.start_point, line.end_point, "Door_Hinges",line.line_width);
 
@@ -138,9 +140,9 @@ this.project=project;
 
               ///Drawer_Helper
               else if (
-              mpiece.piece_name.contains("Drawer_Helper") || spiece.piece_name.contains("Drawer_Helper"))
+              box_model.box_pieces[mp].piece_name.contains("Drawer_Helper") || spiece.piece_name.contains("Drawer_Helper"))
               {
-                if(mpiece.piece_name.contains("drawer")||spiece.piece_name.contains("drawer")){
+                if(box_model.box_pieces[mp].piece_name.contains("drawer")||spiece.piece_name.contains("drawer")){
                   join_line = Join_Line(line.start_point, line.end_point, "Drawer_Rail_Side",line.line_width);
                 }
                 else{
@@ -150,8 +152,8 @@ this.project=project;
 
               ///back_panel
               else if (
-              mpiece.piece_name.contains("back_panel") || spiece.piece_name.contains("back_panel")||
-              mpiece.piece_name.contains("base_panel") || spiece.piece_name.contains("base_panel")
+              box_model.box_pieces[mp].piece_name.contains("back_panel") || spiece.piece_name.contains("back_panel")||
+                  box_model.box_pieces[mp].piece_name.contains("base_panel") || spiece.piece_name.contains("base_panel")
               ) {
 
                 join_line = Join_Line(line.start_point, line.end_point, "Groove",line.line_width);
@@ -159,7 +161,7 @@ this.project=project;
               }
 
               /// drawer Helper
-              else if (mpiece.piece_name.contains("DBF") || spiece.piece_name.contains("DBF")) {
+              else if (box_model.box_pieces[mp].piece_name.contains("DBF") || spiece.piece_name.contains("DBF")) {
                 join_line = Join_Line(line.start_point, line.end_point, "DBF",line.line_width);
               }
 
@@ -181,7 +183,8 @@ this.project=project;
             }
 
             /// Drawer Face
-            else if (mpiece.piece_name.contains("Drawer Face") || spiece.piece_name.contains("Drawer Face"))
+            else if (box_model.box_pieces[mp].piece_name.contains("Drawer Face") ||
+                spiece.piece_name.contains("Drawer Face"))
             {
               join_line = Join_Line(line.start_point, line.end_point, "Drawer_Face",line.line_width);
             }
@@ -206,8 +209,8 @@ this.project=project;
                 double grove_depth=draw_controller.box_repository.pack_panel_grove_depth;
 
 
-                if(mpiece.piece_name.contains("Helper")){
-                  width=mpiece.piece_thickness;
+                if(box_model.box_pieces[mp].piece_name.contains("Helper")){
+                  width=box_model.box_pieces[mp].piece_thickness;
                 }
                 else if(spiece.piece_name.contains("Helper")){
                   width=spiece.piece_thickness;
@@ -237,9 +240,32 @@ this.project=project;
           }
         }
       }
+
     }
     add_drill_bores_to_faces(box_model);
+    add_fastener(box_model);
+
+
   }
+
+  add_fastener(Box_model box_model){
+
+    Point_model tp1=Point_model(
+        200,
+        200,
+        200
+    ).correct_cordinate();
+
+    Fastener f = Fastener("center", tp1,
+      "0" , Fastener_Hole(10,10), Fastener_Hole(10,10),
+       "1", Fastener_Hole(10,10), Fastener_Hole(10,10),Fastener_Hole(10,10));
+
+      box_model.fasteners.add(f);
+
+  }
+
+
+
 
   Line find_center_line(Single_Face face, double thickness,bool is_groove) {
     // print('thickness thickness thickness : $thickness');
@@ -1719,5 +1745,3 @@ else
     return resault;
   }
 }
-
-///2920 lines

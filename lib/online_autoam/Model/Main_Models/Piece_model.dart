@@ -1,5 +1,6 @@
 
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Faces_model.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 
 
@@ -20,9 +21,6 @@ class Piece_model{
 
 
   bool              piece_inable=true;
-
-  List<Point_model> cutting_boarder=[];
-
 
 
   Piece_model(
@@ -51,6 +49,7 @@ class Piece_model{
     double z0=piece_origin.z_coordinate;
 
 
+
     if(piece_direction=='V'){
 
       p_1=Point_model(x0, y0, z0).correct_cordinate();
@@ -61,6 +60,10 @@ class Piece_model{
       p_6=Point_model(x0+piece_thickness, y0, z0+piece_width).correct_cordinate();
       p_7=Point_model(x0+piece_thickness, y0+piece_height, z0+piece_width).correct_cordinate();
       p_8=Point_model(x0, y0+piece_height, z0+piece_width).correct_cordinate();
+
+
+      // fasteners.add(f);
+
 
     }
     else if(piece_direction=='H'){
@@ -97,8 +100,9 @@ class Piece_model{
       Single_Face(6,[p_5,p_6,p_7,p_8], [], [], []),
     ] ;
 
-    piece_faces=Faces_model(faces);
 
+    piece_faces=Faces_model(faces);
+// print("piece_name : $piece_name");
 
   }
 

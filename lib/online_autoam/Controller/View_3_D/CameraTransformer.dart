@@ -101,7 +101,7 @@ class CameraTransformer {
 
 
 
-  // Function to rotate a 3D shape about the X-axis in camera coordinates
+  /// Function to rotate a 3D shape about the X-axis in camera coordinates
 Point_model rotate_X(Point_model old_point, double angle) {
     final double cosAngle = cos(angle);
     final double sinAngle = sin(angle);

@@ -360,6 +360,8 @@ class JoinHolePattern {
       json['bores'].forEach((v) {
         bores!.add(new Bore_unit.fromJson(v));
       });
+    }else{
+      bores=[];
     }
     pattern_enable=json["pattern_enable"];
   }

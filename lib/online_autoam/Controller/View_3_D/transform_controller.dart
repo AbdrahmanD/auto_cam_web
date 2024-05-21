@@ -4,6 +4,7 @@ import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Cont
  import 'package:auto_cam_web/online_autoam/Controller/View_3_D/CameraTransformer.dart';
 import 'package:auto_cam_web/online_autoam/Controller/Painters/three_D_Painter.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,8 @@ class transform_controller {
 
   transform_controller(this.screen_size ){
      camera_position=Point_model(0, 0, 0);
-     // camera_position=Point_model(screen_size.width/2, screen_size.height/2, 0);
+
+
   }
 
 
@@ -46,45 +48,106 @@ class transform_controller {
     );
 
 
-    // print(a1);
-    // print(a2);
-    // print(a3);
-    // print("###########");
-
+    /// original box model
     Box_model b=draw_controller.box_repository.box_model.value;
 
+    /// instance of box model
     Box_model box_model=Box_model(b.box_name, b.box_type, b.box_width, b.box_height, b.box_depth,
         b.init_material_thickness, b.init_material_name, b.back_panel_thickness,
         b.grove_value, b.bac_panel_distence, b.top_base_piece_width, b.is_back_panel, Point_model(0,0,0));
 
     box_model.box_pieces=[];
 
+    /// stupid boy dont forget to try understand this
+    /// when its active
+    // box_model.fasteners=b.fasteners;
+
+    /// copy all pieces
     for(int i=0;i<b.box_pieces.length;i++){
-  Piece_model p = Piece_model(
+
+      Piece_model p = Piece_model(
       b.box_pieces[i].piece_id, b.box_pieces[i].piece_name,
       b.box_pieces[i].piece_direction, b.box_pieces[i].material_name,
       b.box_pieces[i].piece_width, b.box_pieces[i].piece_height,
       b.box_pieces[i].piece_thickness, b.box_pieces[i].piece_origin );
-  p.piece_inable=b.box_pieces[i].piece_inable;
-  box_model.box_pieces.add(p);
-}
+
+      p.piece_inable=b.box_pieces[i].piece_inable;
+
+      box_model.box_pieces.add(p);
+
+    }
+
+
+    /// transform all pieces corners
+    // for(int i=0;i<box_model.box_pieces.length;i++){
+    //
+    //   Piece_model p =box_model.box_pieces[i];
+    //
+    //    p.piece_faces.faces[4].corners[0]=cameraTransformer.transform(p.piece_faces.faces[4].corners[0]);
+    //    p.piece_faces.faces[4].corners[1]=cameraTransformer.transform(p.piece_faces.faces[4].corners[1]);
+    //    p.piece_faces.faces[4].corners[2]=cameraTransformer.transform(p.piece_faces.faces[4].corners[2]);
+    //    p.piece_faces.faces[4].corners[3]=cameraTransformer.transform(p.piece_faces.faces[4].corners[3]);
+    //    p.piece_faces.faces[5].corners[0]=cameraTransformer.transform(p.piece_faces.faces[5].corners[0]);
+    //    p.piece_faces.faces[5].corners[1]=cameraTransformer.transform(p.piece_faces.faces[5].corners[1]);
+    //    p.piece_faces.faces[5].corners[2]=cameraTransformer.transform(p.piece_faces.faces[5].corners[2]);
+    //    p.piece_faces.faces[5].corners[3]=cameraTransformer.transform(p.piece_faces.faces[5].corners[3]);
+    //    p.piece_origin=cameraTransformer.transform(p.piece_origin);
+    //
+    //    p.f.fastener_origin=cameraTransformer.transform(p.f.fastener_origin);
+    //
+    //
+    //    p.fasteners[0].fastener_origin=cameraTransformer.transform(p.fasteners[0].fastener_origin);
+    //
+    //
+    // }
 
     for(int i=0;i<box_model.box_pieces.length;i++){
 
       Piece_model p =box_model.box_pieces[i];
 
-       p.piece_faces.faces[4].corners[0]=cameraTransformer.transform(p.piece_faces.faces[4].corners[0]);
-       p.piece_faces.faces[4].corners[1]=cameraTransformer.transform(p.piece_faces.faces[4].corners[1]);
-       p.piece_faces.faces[4].corners[2]=cameraTransformer.transform(p.piece_faces.faces[4].corners[2]);
-       p.piece_faces.faces[4].corners[3]=cameraTransformer.transform(p.piece_faces.faces[4].corners[3]);
-       p.piece_faces.faces[5].corners[0]=cameraTransformer.transform(p.piece_faces.faces[5].corners[0]);
-       p.piece_faces.faces[5].corners[1]=cameraTransformer.transform(p.piece_faces.faces[5].corners[1]);
-       p.piece_faces.faces[5].corners[2]=cameraTransformer.transform(p.piece_faces.faces[5].corners[2]);
-       p.piece_faces.faces[5].corners[3]=cameraTransformer.transform(p.piece_faces.faces[5].corners[3]);
+      for(int f=0;f<p.piece_faces.faces.length;f++){
+        for(int c=0;c<p.piece_faces.faces[f].corners.length;c++){
+        p.piece_faces.faces[f].corners[c]=cameraTransformer.transform(p.piece_faces.faces[f].corners[c]);
 
+      }}
 
 
     }
+
+
+    for(int f=0;f<b.fasteners.length;f++){
+
+      Fastener fastener=Fastener(
+         b.fasteners[f].type,
+          cameraTransformer.transform(b.fasteners[f].fastener_origin),
+         b.fasteners[f].face_piece_id,
+         b.fasteners[f].face_1,
+         b.fasteners[f].face_2,
+         b.fasteners[f].side_piece_id,
+         b.fasteners[f].side_1,
+         b.fasteners[f].side_face_1,
+         b.fasteners[f].side_face_2
+      );
+
+      box_model.fasteners.add(fastener);
+
+
+
+
+      // box_model.fasteners[f].fastener_origin=cameraTransformer.transform(box_model.fasteners[f].fastener_origin);
+    }
+
+
+
+    /// transform fasteners
+    // for(int i=0;i<box_model.box_pieces.length;i++){
+    //
+    //   Piece_model p =box_model.box_pieces[i];
+    //
+    //   for(int f=0;f<p.fasteners.length;f++){
+    //        // p.fasteners[f].fastener_origin =cameraTransformer.transform(p.fasteners[f].fastener_origin);
+    //     }
+    // }
 
     List<LineWithType> NLineWithType=[];
 
@@ -105,15 +168,28 @@ class transform_controller {
       NLineWithType.add(LineWithType(new_lines, old_line.type, old_line.color));
 
     }
+
+
     List selected_pieces=draw_controller.selected_pieces.value;
+
+
+
     three_D_Painter camera_painter=
-    three_D_Painter(box_model,NLineWithType, screen_size, draw_controller.drawing_scale.value,
-        draw_controller.hover_id,draw_controller.mouse_position.value,selected_pieces,draw_controller.selected_faces,
-    draw_controller.start_select_window.value,draw_controller.end_select_window.value,
+    three_D_Painter(box_model,NLineWithType, screen_size,
+        draw_controller.drawing_scale.value,
+        draw_controller.hover_id,
+        draw_controller.mouse_position.value,
+        selected_pieces,
+        draw_controller.selected_faces,
+        draw_controller.start_select_window.value,
+        draw_controller.end_select_window.value,
       draw_controller.select_window.value,
       draw_controller.x_move,
       draw_controller.y_move,
-      draw_controller.view_port.value
+      draw_controller.view_port.value,
+
+
+
     );
 
 

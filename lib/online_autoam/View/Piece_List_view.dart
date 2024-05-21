@@ -23,7 +23,9 @@ class _Piece_List_viewState extends State<Piece_List_view> {
       pieces = draw_controller.box_repository.box_model.value.box_pieces;
 
 
-    // print(pieces.length);
+
+
+
   }
 
 

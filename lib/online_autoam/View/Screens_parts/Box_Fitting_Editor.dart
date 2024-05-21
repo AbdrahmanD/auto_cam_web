@@ -6,8 +6,9 @@ class Box_Fitting_Editor extends StatefulWidget {
   late double width;
   late double height;
   late double thickness;
+  late double draw_scale;
 
-  Box_Fitting_Editor(this.width, this.height, this.pattern,this.thickness);
+  Box_Fitting_Editor(this.width, this.height, this.pattern,this.thickness,this.draw_scale);
 
   @override
   State<Box_Fitting_Editor> createState() => _Box_Fitting_EditorState();
@@ -23,6 +24,7 @@ class _Box_Fitting_EditorState extends State<Box_Fitting_Editor> {
     double width = widget.width;
     double height = widget.height;
     double thickness = widget.thickness;
+    double scale = widget.draw_scale;
 
 bool init_state=true;
 
@@ -32,14 +34,14 @@ bool init_state=true;
     }
 
     List<Widget> list_text_editor() {
-      double scale = 1.5;
 
       List<Widget> widget = [];
+
 
       widget.add(
         Positioned(
             top: 20,
-            left: 200,
+            left: 100,
             child: Container(
               width: pattern.max_length * scale,
               height: 100,
@@ -51,10 +53,10 @@ bool init_state=true;
       widget.add(
         Positioned(
             top: 150,
-            left: 200,
+            left: 100,
             child: Container(
               width: pattern.max_length * scale,
-              height: height / 2,
+              height: 500* scale,
               decoration:
               BoxDecoration(border: Border.all(color: Colors.blueAccent)),
               child: Container(),
@@ -65,6 +67,7 @@ bool init_state=true;
 
         _controller.add(TextEditingController());
 
+        /// mini fix with nut
         if(pattern.bores[i].have_nut_bore){
           if (pattern.bores[i].center)
           {
@@ -73,7 +76,7 @@ bool init_state=true;
             ///face
             widget.add(Positioned(
                 top: 90-thickness*scale/2,
-                left: pattern.max_length * scale / 2 + 180,
+                left: pattern.max_length * scale / 2 + 80,
                 child: Container(
                   // color: Colors.blue,
                   width: 40,
@@ -83,20 +86,20 @@ bool init_state=true;
             ///screw or dowel
             widget.add(Positioned(
                 top: 133,
-                left: pattern.max_length * scale / 2 + 170,
+                left: pattern.max_length * scale / 2 + 80,
                 child: Container(
                   // color: Colors.blue,
-                  width: 60,
+                  width: 40,
                   height: 90,
                   child: Image.asset("lib/assets/images/screw.png"),
                 )));
             ///nut
             widget.add(Positioned(
                 top: 200,
-                left: pattern.max_length * scale / 2 + 182,
+                left: pattern.max_length * scale / 2 + 80,
                 child: Container(
                   // color: Colors.blue,
-                  width: 36,
+                  width: 40,
                   height: 36,
                   child: Image.asset("lib/assets/images/nut.png"),
                 )));
@@ -105,7 +108,7 @@ bool init_state=true;
             ///text edit field
             widget.add(Positioned(
                 top: 250,
-                left: pattern.max_length * scale / 2 + 160,
+                left: pattern.max_length * scale / 2 + 60,
                 child: Container(
                   width: 80,
                   height: 30,
@@ -135,7 +138,7 @@ bool init_state=true;
             /// delet bore button
             widget.add(Positioned(
                 top: 300,
-                left: pattern.max_length * scale / 2 - 11 + 200,
+                left: pattern.max_length * scale / 2+80,
                 child: InkWell(
                     onTap: () {
                       pattern.bores.removeAt(i);
@@ -144,21 +147,21 @@ bool init_state=true;
                     child: Icon(
                       Icons.cancel_outlined,
                       color: Colors.red,
-                      size: 22,
+                      size: 20,
                     ))));
           }
-          else {
-            if (pattern.bores[i].mirror)
-            {
+          else
+          {
+
               if(init_state)
                 _controller[i].text = "${pattern.bores[i].pre_distence}";
 
               /// main bore
               widget.add(Positioned(
                   top: 250,
-                  left: pattern.bores[i].pre_distence * scale + 170,
+                  left: pattern.bores[i].pre_distence * scale + 60,
                   child: Container(
-                    width: 60,
+                    width: 80,
                     height: 30,
                     child: TextFormField(
                       keyboardType: TextInputType.number,
@@ -188,7 +191,7 @@ bool init_state=true;
               /// delet bore button
               widget.add(Positioned(
                   top: 300,
-                  left: pattern.bores[i].pre_distence * scale + 188,
+                  left: pattern.bores[i].pre_distence * scale + 78,
                   child: InkWell(
                       onTap: () {
                         pattern.bores.removeAt(i);
@@ -203,7 +206,7 @@ bool init_state=true;
               ///face
               widget.add(Positioned(
                   top: 90-thickness*scale/2,
-                  left: pattern.bores[i].pre_distence * scale + 180,
+                  left: pattern.bores[i].pre_distence * scale + 80,
                   child: Container(
                     // color: Colors.blue,
                     width: 40,
@@ -213,7 +216,7 @@ bool init_state=true;
               ///screw or dowel
               widget.add(Positioned(
                   top: 133,
-                  left: pattern.bores[i].pre_distence * scale + 170,
+                  left: pattern.bores[i].pre_distence * scale + 70,
                   child: Container(
                     // color: Colors.blue,
                     width: 60,
@@ -223,7 +226,7 @@ bool init_state=true;
               ///nut
               widget.add(Positioned(
                   top: 200,
-                  left: pattern.bores[i].pre_distence * scale + 182,
+                  left: pattern.bores[i].pre_distence * scale + 82,
                   child: Container(
                     // color: Colors.blue,
                     width: 36,
@@ -236,11 +239,11 @@ bool init_state=true;
               ///mirror bore
               widget.add(Positioned(
                   top: 250,
-                  left: 170 +
+                  left: 60 +
                       pattern.max_length * scale -
                       (pattern.bores[i].pre_distence * scale),
                   child: Container(
-                    width: 60,
+                    width: 80,
                     height: 30,
                     child: TextFormField(
                       keyboardType: TextInputType.number,
@@ -270,7 +273,7 @@ bool init_state=true;
               /// delet bore button
               widget.add(Positioned(
                   top: 300,
-                  left: 188 +
+                  left: 78 +
                       pattern.max_length * scale -
                       (pattern.bores[i].pre_distence * scale),
                   child: InkWell(
@@ -287,9 +290,10 @@ bool init_state=true;
               ///face
               widget.add(Positioned(
                   top: 90-thickness*scale/2,
-                  left: 180 +
+                  left: 80 +
                       pattern.max_length * scale -
-                      (pattern.bores[i].pre_distence * scale),                child: Container(
+                      (pattern.bores[i].pre_distence * scale),
+                  child: Container(
                 // color: Colors.blue,
                 width: 40,
                 height: 40,
@@ -298,9 +302,10 @@ bool init_state=true;
               ///screw or dowel
               widget.add(Positioned(
                   top: 133,
-                  left: 170 +
+                  left: 70 +
                       pattern.max_length * scale -
-                      (pattern.bores[i].pre_distence * scale),                child: Container(
+                      (pattern.bores[i].pre_distence * scale),
+                  child: Container(
                 // color: Colors.blue,
                 width: 60,
                 height: 90,
@@ -309,108 +314,23 @@ bool init_state=true;
               ///nut
               widget.add(Positioned(
                   top: 200,
-                  left: 182 +
+                  left: 82 +
                       pattern.max_length * scale -
-                      (pattern.bores[i].pre_distence * scale),                child: Container(
+                      (pattern.bores[i].pre_distence * scale),
+                  child: Container(
                 // color: Colors.blue,
                 width: 36,
                 height: 36,
                 child: Image.asset("lib/assets/images/nut.png"),
               )));
 
-
-
-
             }
-            else
-            {
 
-              if(init_state)
-                _controller[i].text = "${pattern.bores[i].pre_distence}";
-
-              ///bore
-              widget.add(Positioned(
-                  top: 250,
-                  left: pattern.bores[i].pre_distence * scale + 170,
-                  child: Container(
-                    width: 60,
-                    height: 30,
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      controller: _controller[i],
-                      style: TextStyle(fontSize: 12),
-                      onChanged: (v) {
-                        pattern.bores[i].pre_distence =
-                            double.parse(_controller[i].text.toString());
-                        setState(() {});
-                      },
-                      onEditingComplete: () {
-                        _controller[i].text = "${pattern.bores[i].pre_distence}";
-                      },
-                      validator: (d) {
-                        if (d!.isEmpty) {
-                          return 'add value please';
-                        }
-                      },
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                    ),
-                  )));
-
-              /// delet bore button
-              widget.add(Positioned(
-                  top: 280,
-                  left: pattern.bores[i].pre_distence * scale + 192,
-                  child: InkWell(
-                      onTap: () {
-                        pattern.bores.removeAt(i);
-                        setState(() {});
-                      },
-                      child: Icon(
-                        Icons.cancel_outlined,
-                        color: Colors.red,
-                        size: 16,
-                      ))));
-
-              ///face
-              widget.add(Positioned(
-                  top: 70-thickness*scale/2,
-                  left: pattern.bores[i].pre_distence * scale + 175,
-                  child: Container(
-                    color: Colors.blue,
-                    width: 50,
-                    height: 50,
-                    child: Image.asset("lib/assets/images/face_nut.png"),
-                  )));
-              ///screw or dowel
-              widget.add(Positioned(
-                  top: 100,
-                  left: pattern.bores[i].pre_distence * scale + 175,
-                  child: Container(
-                    color: Colors.blue,
-                    width: 50,
-                    height: 50,
-                    child: Image.asset("lib/assets/images/screw.png"),
-                  )));
-              ///nut
-              widget.add(Positioned(
-                  top: 200,
-                  left: pattern.bores[i].pre_distence * scale + 175,
-                  child: Container(
-                    color: Colors.blue,
-                    width: 50,
-                    height: 50,
-                    child: Image.asset("lib/assets/images/nut.png"),
-                  )));
+        }
 
 
-
-            }
-          }
-        }else{
+        ///dowel
+        else{
           if (pattern.bores[i].center)
           {
             if(init_state)
@@ -418,7 +338,7 @@ bool init_state=true;
             ///face
             widget.add(Positioned(
                 top: 90-thickness*scale/2,
-                left: pattern.max_length * scale / 2 + 180,
+                left: pattern.max_length * scale / 2 + 80,
                 child: Container(
                   // color: Colors.blue,
                   width: 40,
@@ -428,21 +348,18 @@ bool init_state=true;
             ///screw or dowel
             widget.add(Positioned(
                 top: 133,
-                left: pattern.max_length * scale / 2 + 170,
+                left: pattern.max_length * scale / 2 + 80,
                 child: Container(
                   // color: Colors.blue,
-                  width: 60,
+                  width: 40,
                   height: 90,
                   child: Image.asset("lib/assets/images/dowel.png"),
                 )));
-            ///nut
 
-
-
-            ///text edit field
+            /// nut   text edit field
             widget.add(Positioned(
-                top: 250,
-                left: pattern.max_length * scale / 2 + 160,
+                top: 220,
+                left: pattern.max_length * scale / 2 + 60,
                 child: Container(
                   width: 80,
                   height: 30,
@@ -472,7 +389,7 @@ bool init_state=true;
             /// delet bore button
             widget.add(Positioned(
                 top: 300,
-                left: pattern.max_length * scale / 2 - 11 + 200,
+                left: pattern.max_length * scale / 2 - 11 + 100,
                 child: InkWell(
                     onTap: () {
                       pattern.bores.removeAt(i);
@@ -484,18 +401,18 @@ bool init_state=true;
                       size: 22,
                     ))));
           }
-          else {
-            if (pattern.bores[i].mirror)
-            {
+          else
+          {
+
               if(init_state)
                 _controller[i].text = "${pattern.bores[i].pre_distence}";
 
               /// main bore
               widget.add(Positioned(
-                  top: 250,
-                  left: pattern.bores[i].pre_distence * scale + 170,
+                  top: 220,
+                  left: pattern.bores[i].pre_distence * scale + 60,
                   child: Container(
-                    width: 60,
+                    width: 80,
                     height: 30,
                     child: TextFormField(
                       keyboardType: TextInputType.number,
@@ -525,7 +442,7 @@ bool init_state=true;
               /// delet bore button
               widget.add(Positioned(
                   top: 300,
-                  left: pattern.bores[i].pre_distence * scale + 188,
+                  left: pattern.bores[i].pre_distence * scale + 90,
                   child: InkWell(
                       onTap: () {
                         pattern.bores.removeAt(i);
@@ -534,13 +451,13 @@ bool init_state=true;
                       child: Icon(
                         Icons.cancel_outlined,
                         color: Colors.red,
-                        size: 22,
+                        size: 20,
                       ))));
 
               ///face
               widget.add(Positioned(
                   top: 90-thickness*scale/2,
-                  left: pattern.bores[i].pre_distence * scale + 180,
+                  left: pattern.bores[i].pre_distence * scale + 80,
                   child: Container(
                     // color: Colors.blue,
                     width: 40,
@@ -550,10 +467,10 @@ bool init_state=true;
               ///screw or dowel
               widget.add(Positioned(
                   top: 133,
-                  left: pattern.bores[i].pre_distence * scale + 170,
+                  left: pattern.bores[i].pre_distence * scale + 80,
                   child: Container(
                     // color: Colors.blue,
-                    width: 60,
+                    width: 40,
                     height: 90,
                     child: Image.asset("lib/assets/images/dowel.png"),
                   )));
@@ -563,12 +480,12 @@ bool init_state=true;
 
               ///mirror bore
               widget.add(Positioned(
-                  top: 250,
-                  left: 170 +
+                  top: 220,
+                  left: 60 +
                       pattern.max_length * scale -
                       (pattern.bores[i].pre_distence * scale),
                   child: Container(
-                    width: 60,
+                    width: 80,
                     height: 30,
                     child: TextFormField(
                       keyboardType: TextInputType.number,
@@ -598,7 +515,7 @@ bool init_state=true;
               /// delet bore button
               widget.add(Positioned(
                   top: 300,
-                  left: 188 +
+                  left: 90 +
                       pattern.max_length * scale -
                       (pattern.bores[i].pre_distence * scale),
                   child: InkWell(
@@ -609,15 +526,16 @@ bool init_state=true;
                       child: Icon(
                         Icons.cancel_outlined,
                         color: Colors.red,
-                        size: 22,
+                        size: 20,
                       ))));
 
               ///face
               widget.add(Positioned(
                   top: 90-thickness*scale/2,
-                  left: 180 +
+                  left: 80 +
                       pattern.max_length * scale -
-                      (pattern.bores[i].pre_distence * scale),                child: Container(
+                      (pattern.bores[i].pre_distence * scale),
+                  child: Container(
                 // color: Colors.blue,
                 width: 40,
                 height: 40,
@@ -626,11 +544,12 @@ bool init_state=true;
               ///screw or dowel
               widget.add(Positioned(
                   top: 133,
-                  left: 170 +
+                  left: 80 +
                       pattern.max_length * scale -
-                      (pattern.bores[i].pre_distence * scale),                child: Container(
+                      (pattern.bores[i].pre_distence * scale),
+                  child: Container(
                 // color: Colors.blue,
-                width: 60,
+                width: 40,
                 height: 90,
                 child: Image.asset("lib/assets/images/dowel.png"),
               )));
@@ -639,85 +558,8 @@ bool init_state=true;
 
 
 
-            }
-            else
-            {
-
-              if(init_state)
-                _controller[i].text = "${pattern.bores[i].pre_distence}";
-
-              ///bore
-              widget.add(Positioned(
-                  top: 250,
-                  left: pattern.bores[i].pre_distence * scale + 170,
-                  child: Container(
-                    width: 60,
-                    height: 30,
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      controller: _controller[i],
-                      style: TextStyle(fontSize: 12),
-                      onChanged: (v) {
-                        pattern.bores[i].pre_distence =
-                            double.parse(_controller[i].text.toString());
-                        setState(() {});
-                      },
-                      onEditingComplete: () {
-                        _controller[i].text = "${pattern.bores[i].pre_distence}";
-                      },
-                      validator: (d) {
-                        if (d!.isEmpty) {
-                          return 'add value please';
-                        }
-                      },
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                    ),
-                  )));
-
-              /// delet bore button
-              widget.add(Positioned(
-                  top: 280,
-                  left: pattern.bores[i].pre_distence * scale + 192,
-                  child: InkWell(
-                      onTap: () {
-                        pattern.bores.removeAt(i);
-                        setState(() {});
-                      },
-                      child: Icon(
-                        Icons.cancel_outlined,
-                        color: Colors.red,
-                        size: 16,
-                      ))));
-
-              ///face
-              widget.add(Positioned(
-                  top: 70-thickness*scale/2,
-                  left: pattern.bores[i].pre_distence * scale + 175,
-                  child: Container(
-                    color: Colors.blue,
-                    width: 50,
-                    height: 50,
-                    child: Image.asset("lib/assets/images/hole.png"),
-                  )));
-              ///screw or dowel
-              widget.add(Positioned(
-                  top: 100,
-                  left: pattern.bores[i].pre_distence * scale + 175,
-                  child: Container(
-                    color: Colors.blue,
-                    width: 50,
-                    height: 50,
-                    child: Image.asset("lib/assets/images/dowel.png"),
-                  )));
 
 
-
-
-            }
           }
         }
 

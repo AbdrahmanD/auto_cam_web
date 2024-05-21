@@ -51,8 +51,15 @@ class _Buy_PageState extends State<Buy_Page> {
               Row(
                 children: [
 
-                  SizedBox(
+
+                  Container(
                     width: (w / 3),
+                    // height: h - 200,
+                    child:
+                    Center(
+                        child: Image.asset(
+                          "lib/assets/images/app_fotos/logo.png",
+                        )),
                   ),
                   ///home page
                   Container(
@@ -149,27 +156,6 @@ class _Buy_PageState extends State<Buy_Page> {
                     width: (w / 9),
                   ),
 
-                  /// Sign in / out
-                  // Container(
-                  //   width: w / 18,
-                  //   child: Center(
-                  //       child: InkWell(
-                  //         onTap: () {
-                  //
-                  //           !sign_in?
-                  //           signInWithGoogle()
-                  //               :
-                  //           signOut();
-                  //
-                  //
-                  //         },
-                  //         child: Text(sign_in?"Sign out":"Sign in",
-                  //             style: GoogleFonts.aBeeZee(
-                  //                 fontSize: w/96, color: Colors.white)
-                  //         ),
-                  //       )),
-                  // ),
-
 
                   Container(width: w/6,
                     child: Text("$user",
@@ -181,7 +167,123 @@ class _Buy_PageState extends State<Buy_Page> {
             ),
 
             /// main content
-            Container(width: w,height: (h/4)*3,)
+            Container(              height:( h/4)*3,
+
+              child: Row(
+                children: [
+
+                  ///Sized box
+                  Expanded(
+                      flex: 1,
+                      child:
+                      Container(
+                        // height: h - 200,
+                      )),
+
+                  /// main title
+                  Expanded(
+                      flex: 10,
+                      child: Container(
+                        // height: h - 200,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 120),
+                          child: Center(
+                              child:
+                              RichText(
+                                text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: "AUTOCAM\n",
+                                        style: GoogleFonts.kalam(fontSize: w/20,color: Colors.white,fontWeight: FontWeight.bold),
+                                      ),
+                                      TextSpan(
+                                        text: "        SOFTWARE\n\n",
+                                        style: GoogleFonts.kalam(fontSize: w/32,color: Colors.white,fontWeight: FontWeight.bold),
+                                      ),
+                                      TextSpan(
+                                        text: "no cad , no cam ...\n\n",
+                                        style: GoogleFonts.arsenal(fontSize: w/36,color: Colors.white),
+                                      ),
+                                      TextSpan(
+                                        text: "only autocam\n",
+                                        style: GoogleFonts.arsenal(fontSize: w/36,color: Colors.white),
+                                      ),
+                                    ]
+                                ),
+
+                              )
+                          ),
+                        ),
+                      )),
+SizedBox(width: 28,),
+                  ///home
+                  Expanded(
+                      flex: 20,
+                      child: Container(
+                        height: h - 200,
+                        child:
+                        ListView(
+                          children: [
+                            Text("Chose your Plan",
+                              style: GoogleFonts.aclonica(fontSize: 32, color: Colors.white),),
+                            SizedBox(height: 18,),
+
+                            Text("all plan give you access to our accessories library \n"
+                                "all plan basically support BeamSaw and Drilling machine  \n"
+                                "you can add additional support for another machines like : \n"
+                                "cnc routers  or another type of BeamSaws or Drilling machines ",
+                              style: GoogleFonts.aBeeZee(fontSize: 22, color: Colors.white),),
+                            SizedBox(height: 24,),
+                            Text(" 1 - use AUTOCAM online with monthly limit (100 time) for 75\$ monthly .",
+                              style: GoogleFonts.adamina(fontSize: 18, color: Colors.white),),
+                            SizedBox(height: 12,),
+                            Text(" 2 - use AUTOCAM online Unlimited for 200\$ monthly.", style: GoogleFonts.adamina(fontSize: 18, color: Colors.white),),SizedBox(height: 12,),
+                            Text(" 3 - have desktop AUTOCAM for windows or mac for 2200\$ once .", style: GoogleFonts.adamina(fontSize: 18, color: Colors.white),),
+                            SizedBox(height: 24,),
+                            Text(" 4 - Additional support for another type of  machines for 500\$ once .", style: GoogleFonts.adamina(fontSize: 18, color: Colors.white),),SizedBox(height: 12,),
+
+                            ///  mobile num
+                            Container( height: 200,
+                              child: Row(
+                                children: [
+
+                                  // SizedBox(height: 32,),
+                                  Container(width: 42,height: 42,child:
+                                  Image.asset('lib/assets/images/icons8-whatsapp-480.png')
+                                  ),
+                                  SizedBox(width: 42,),
+
+                                  Container(width: 42,height: 42,child:
+                                  Icon(Icons.phone,size: 42,color: Colors.white,)                            ),
+                                  SizedBox(width: 56,),
+
+                                  Text("+971 566614432" ,
+                                    style: GoogleFonts.arsenal(fontSize: 32,color: Colors.white,fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(height: 32,),
+
+
+
+                                ],
+                              ),
+                            ),
+
+                          ],
+                        ),
+                      )),
+
+                  ///Sized box
+                  Expanded(
+                      flex: 1,
+                      child: Container(
+                          height: h - 200,
+                          child:
+                          SizedBox()                        )),
+
+
+                ],
+              ),
+            ),
           ],
         ),
       ),

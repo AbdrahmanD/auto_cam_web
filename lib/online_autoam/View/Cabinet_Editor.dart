@@ -1,9 +1,7 @@
 import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
 import 'package:auto_cam_web/online_autoam/Controller/View_3_D/View_Page.dart';
-import 'package:auto_cam_web/online_autoam/View/Screens_parts/Drawing_Screen.dart';
-import 'package:auto_cam_web/online_autoam/View/Screens_parts/Setting_Box_Size_Form.dart';
-import 'package:auto_cam_web/online_autoam/View/Screens_parts/View_option.dart';
-import 'package:flutter/material.dart';
+ import 'package:auto_cam_web/online_autoam/View/Screens_parts/Setting_Box_Size_Form.dart';
+ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class Cabinet_Editor extends StatelessWidget {
@@ -33,12 +31,8 @@ class Cabinet_Editor extends StatelessWidget {
                       width: !draw_controller.draw_3_D.value
                           ? screen_size.width - 500
                           : screen_size.width - 200,
-                      child: !draw_controller.draw_3_D.value
-                          ? Drawing_Screen(screen_size.width - 500)
-                          : View_Page(Size(
-                              !draw_controller.draw_3_D.value
-                                  ? screen_size.width - 500
-                                  : screen_size.width - 200,
+                      child: View_Page(Size(
+                               screen_size.width - 200,
                               screen_size.height))),
                 ),
               )),

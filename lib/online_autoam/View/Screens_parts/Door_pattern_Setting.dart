@@ -85,10 +85,10 @@ class _Door_pattern_SettingState extends State<Door_pattern_Setting> {
 
       // print("side_bore_units from settig = ${side_bore_units.length}");
 
-      await draw_controller.save_joinHolePattern(
-          door_joinHolePattern, "Door_Hinges");
-      await draw_controller.save_joinHolePattern(
-          side_joinHolePattern, "side_Hinges");
+      // await draw_controller.save_joinHolePattern(
+      //     door_joinHolePattern, "Door_Hinges");
+      // await draw_controller.save_joinHolePattern(
+      //     side_joinHolePattern, "side_Hinges");
 
       await draw_controller.read_pattern_files();
       selected_door_pattern = await draw_controller
@@ -106,8 +106,8 @@ class _Door_pattern_SettingState extends State<Door_pattern_Setting> {
 
   delete_pattern() async {
 
-      await   draw_controller.delete_joinHolePattern(list_Door_Hinges[selected_door_pattern],'Door_Hinges');
-      await  draw_controller.delete_joinHolePattern(list_side_Hinges[selected_door_pattern], 'side_Hinges');
+      // await   draw_controller.delete_joinHolePattern(list_Door_Hinges[selected_door_pattern],'Door_Hinges');
+      // await  draw_controller.delete_joinHolePattern(list_side_Hinges[selected_door_pattern], 'side_Hinges');
 
 
       list_Door_Hinges.removeAt((selected_door_pattern==0)?selected_door_pattern:selected_door_pattern-1);
@@ -384,7 +384,7 @@ selected_door_pattern=0;
               Text("Door patterns list",style: TextStyle(fontSize: 18),),
 
               Container(
-                  width: 200,
+                  width: 198,
                   height: h - 350,
                   color: Colors.grey[100],
                   child: Padding(
@@ -469,56 +469,13 @@ selected_door_pattern=0;
           Padding(
             padding: const EdgeInsets.only(left: 12.0),
             child: Container(
-                width: 280,
+                width: 250,
                 child: ListView(
                   children: [
 
-                    SizedBox(
-                      height: 24,
-                    ),
-
-                    /// pattern category
-                    Row(
-                      children: [
-                        Container(
-                          width: 100,
-                          child: Center(
-                            child: Text(
-                              'pattern category',
-                              style: TextStyle(fontSize: 12),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        Container(
-                          width: 100,
-                          height: 30,
-                          child: TextFormField(
-                            controller: category_controller,
-                            style: TextStyle(fontSize: 12),
-                            enabled: false,
-                            validator: (d) {
-                              if (d!.isEmpty) {
-                                return 'add value please';
-                              }
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 12,
-                        ),
-                      ],
-                    ),
 
                     SizedBox(
-                      height: 8,
+                      height: 38,
                     ),
 
                     /// pattern name
@@ -537,7 +494,7 @@ selected_door_pattern=0;
                           width: 12,
                         ),
                         Container(
-                          width: 150,
+                          width: 125,
                           height: 30,
                           child: TextFormField(
                             controller: name_controller,
@@ -1403,23 +1360,20 @@ selected_door_pattern=0;
           Container(color: Colors.grey[400],width: 2,),
 
           ///painter
-          Transform.rotate(angle: 3.14/2,
-            child: Container(
+          Container(
               child: Column(
                 children: [
-                  Container(width: h-250,
-                    height: 500,
+                  Container(width: w-700,
+                    height: h-250,
                     child: CustomPaint(
-                      painter: Door_Pattern_Painter(
-                          door_bore_units,
-                          side_bore_units,
-                          draw_controller.box_repository.box_model.value.init_material_thickness,
-                          max_length,
-                          h-300,
-                          max_length,
-                          "Doors"),
-                      child: Container(),
-                    ),
+                    painter: Door_Pattern_Painter(
+                        door_bore_units,
+                        side_bore_units,
+                      h-250,
+                      max_length,
+                        ),
+                    child: Container(),
+                                        )
                   ),
                   SizedBox(
                     height: 32,
@@ -1428,7 +1382,7 @@ selected_door_pattern=0;
                 ],
               )
             ),
-          ),
+
 
 
 

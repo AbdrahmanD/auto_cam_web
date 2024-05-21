@@ -4,8 +4,8 @@ import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dar
 
 class User_modle{
 
-  late String name;
-  late String password;
+  // late String name;
+  // late String password;
   late String email;
   // late bool   sign_in;
   late bool   active_account;
@@ -13,20 +13,20 @@ class User_modle{
   late String plan;
   List<JoinHolePattern> patterns=[];
 
-  User_modle(this.name, this.password, this.email,  this.active_account,
+  User_modle( this.email,  this.active_account,
       this.counter, this.plan)
 
   {
   }
 
   User_modle.fromjson(Map<String,dynamic> map){
-    this.name=map["name"];
-    this.name=map["password"];
-    this.name=map["email"];
+    // this.name=map["name"];
+    // this.name=map["password"];
+    this.email=map["email"];
     // this.name=map["sign_in"];
-    this.name=map["active_account"];
-    this.name=map["counter"];
-    this.name=map["plan"];
+    this.active_account=map["active_account"];
+    this.counter=map["counter"];
+    this.plan=map["plan"];
     map["patterns"].forEach((pattern){
       patterns.add(JoinHolePattern.fromJson(pattern));
     });
@@ -37,8 +37,8 @@ class User_modle{
 
     Map<String,dynamic> map={};
 
-    map["name"]=this.name  ;
-    map["password"]=this.password  ;
+    // map["name"]=this.name  ;
+    // map["password"]=this.password  ;
     map["email"]=this.email  ;
     // map["sign_in"]=this.sign_in  ;
     map["active_account"]=this.active_account  ;

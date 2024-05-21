@@ -4,29 +4,24 @@ import 'package:flutter/material.dart';
 class Door_Pattern_Painter extends CustomPainter {
   late List<Bore_unit> door_bore_unit;
   late List<Bore_unit> side_bore_unit;
-  late double thickness;
-  late double widh;
 
-  late double screen_width;
-  late double max_width;
-  late String type_name;
+  late double screen_height;
+  late double door_hight;
 
-  Door_Pattern_Painter(this.door_bore_unit,this.side_bore_unit, this.thickness, this.widh, this.screen_width,
-      this.max_width,this.type_name);
+  Door_Pattern_Painter(this.door_bore_unit,this.side_bore_unit, this.screen_height,
+      this.door_hight);
 
   @override
   void paint(Canvas canvas, Size size) {
     late double scal;
-    if (max_width > screen_width) {
-      scal = screen_width / max_width;
+    if (door_hight > screen_height) {
+      scal = screen_height / door_hight;
     } else {
-      scal = 1;
+      scal = 0.5 ;
     }
 
-    double pw = widh;
-    double pth = thickness;
 
-    draw_pattern(canvas, pw, pth, scal);
+    draw_pattern(canvas,door_hight, scal);
   }
 
   @override
@@ -34,7 +29,10 @@ class Door_Pattern_Painter extends CustomPainter {
     return true;
   }
 
-  draw_pattern(Canvas canvas, double w, double th, double scal) {
+  draw_pattern(Canvas canvas, double h, double scal) {
+
+
+
     Paint bore_painter = Paint()
       ..style = PaintingStyle.fill
       ..color = Colors.red;
@@ -50,21 +48,21 @@ class Door_Pattern_Painter extends CustomPainter {
 
     Path second_piece_face = Path();
 
-    Offset main_origin = Offset(50, 445);
+    Offset main_origin = Offset(200, 500);
 
-    Offset second_origin = Offset(50, 425);
+    Offset second_origin = Offset(500, 500);
 
-    main_piece_face.moveTo(main_origin.dx, main_origin.dy + 24 * th * scal);
+    main_piece_face.moveTo(main_origin.dx, main_origin.dy + 50 * h * scal);
     main_piece_face.lineTo(main_origin.dx, main_origin.dy);
-    main_piece_face.lineTo(main_origin.dx + w * scal, main_origin.dy);
-    main_piece_face.lineTo(main_origin.dx + w * scal, main_origin.dy + 24 * th * scal);
-    main_piece_face.lineTo(main_origin.dx, main_origin.dy + 24 * th * scal);
+    main_piece_face.lineTo(main_origin.dx + h/2 * scal, main_origin.dy);
+    main_piece_face.lineTo(main_origin.dx + h/2 * scal, main_origin.dy + 24 * h * scal);
+    main_piece_face.lineTo(main_origin.dx, main_origin.dy + 50 * h * scal);
 
-    second_piece_face.moveTo(second_origin.dx , second_origin.dy - 24 * th * scal);
+    second_piece_face.moveTo(second_origin.dx , second_origin.dy - 50 * h * scal);
     second_piece_face.lineTo(second_origin.dx, second_origin.dy);
-    second_piece_face.lineTo(second_origin.dx + w * scal, second_origin.dy);
-    second_piece_face.lineTo(second_origin.dx + w * scal , second_origin.dy - 24 * th * scal);
-    second_piece_face.lineTo(second_origin.dx , second_origin.dy - 24 * th * scal);
+    second_piece_face.lineTo(second_origin.dx + h/2 * scal, second_origin.dy);
+    second_piece_face.lineTo(second_origin.dx + h/2 * scal , second_origin.dy - 50 * h * scal);
+    second_piece_face.lineTo(second_origin.dx , second_origin.dy - 50 * h * scal);
 
      canvas.drawPath(main_piece_face, piece_painter);
     canvas.drawPath(second_piece_face, piece_painter);
@@ -113,7 +111,7 @@ class Door_Pattern_Painter extends CustomPainter {
 
         canvas.drawCircle(
             Offset(
-                ((widh-pre_distence)*scal+ main_origin.dx+unit.correct_x*scal),
+                ((h/2-pre_distence)*scal+ main_origin.dx+unit.correct_x*scal),
                 main_origin.dy +face_bore.origin.y_coordinate*scal ),
             face_bore.diameter * scal ,
 
@@ -124,7 +122,7 @@ class Door_Pattern_Painter extends CustomPainter {
       else{
         canvas.drawCircle(
             Offset(
-                center?(main_origin.dx +max_width/2* scal+unit.correct_x*scal):(pre_distence*scal+ main_origin.dx + face_bore.origin.x_coordinate*scal),
+                center?(main_origin.dx +door_hight/2* scal+unit.correct_x*scal):(pre_distence*scal+ main_origin.dx + face_bore.origin.x_coordinate*scal),
                 main_origin.dy +face_bore.origin.y_coordinate*scal ),
             face_bore.diameter * scal ,
 
@@ -137,12 +135,11 @@ class Door_Pattern_Painter extends CustomPainter {
 
 
 
-    canvas.rotate(-3.14/2);
-    draw_text(canvas, "Side", Offset(second_origin.dx-650, second_origin.dy+200 ), 3, 12);
+    draw_text(canvas, "Side", Offset(main_origin.dx, main_origin.dy ), 3, 12);
 
     // canvas.rotate(1);
 
-    draw_text(canvas, "Door", Offset(second_origin.dx-400, second_origin.dy +200), 3, 12);
+    draw_text(canvas, "Door", Offset(second_origin.dx, second_origin.dy), 3, 12);
 
 
 

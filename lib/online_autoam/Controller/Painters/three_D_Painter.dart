@@ -52,8 +52,12 @@ late String view_Port;
         }
       }
     }
+    double w = screen_size.width / 2;
+    double h = screen_size.height / 2;
 
 
+
+    draw_fasteners(canvas);
     draw_web(canvas, screen_size);
 
     draw_text(canvas, "X:${double.parse("${mouse_position.dx}").toStringAsFixed(2)}", Offset(400, screen_size.height - 50), 8, 18, Colors.grey);
@@ -75,6 +79,20 @@ late String view_Port;
     }
 
   }
+
+draw_fasteners(Canvas canvas){
+  double w = screen_size.width / 2;
+  double h = screen_size.height / 2;
+
+  if(box_model.fasteners.length>0){
+      canvas.drawCircle(
+          Offset(w+box_model.fasteners[0].fastener_origin.x_coordinate* scale,
+          h-box_model.fasteners[0].fastener_origin.y_coordinate* scale
+      ), 3, Paint());
+    }
+
+}
+
 
   draw_web  (Canvas canvas , Size screen_size){
 

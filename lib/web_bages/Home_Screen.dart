@@ -1,5 +1,5 @@
 
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Firebase_controller.dart';
+ import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Firebase_controller.dart';
 import 'package:auto_cam_web/online_autoam/View/Cabinet_Editor.dart';
 import 'package:auto_cam_web/web_bages/Buy_Page.dart';
 import 'package:auto_cam_web/web_bages/Contact_US_Page.dart';
@@ -30,6 +30,10 @@ class _Main_ScreenState extends State<Home_Screen> {
   String user="";
 
 
+
+  ScrollController scrollController = ScrollController();
+
+
   @override
   void initState() {
 
@@ -41,18 +45,33 @@ class _Main_ScreenState extends State<Home_Screen> {
       sign_in=true;
     }
 
+
     super.initState();
   }
+
+  sign_out(){
+
+    my_setting_data.write("user_name", "");
+    sign_in=false;
+
+
+    setState(() {
+
+    });
+  }
+
+
+
 
 
   @override
   Widget build(BuildContext context) {
 
-
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
 
 
+    double q=w/4;
 
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -80,9 +99,16 @@ class _Main_ScreenState extends State<Home_Screen> {
                       Row(
                         children: [
 
-                          SizedBox(
+                          Container(
                             width: (w / 3),
+                            // height: h - 200,
+                            child:
+                            Center(
+                                child: Image.asset(
+                                  "lib/assets/images/app_fotos/logo.png",
+                                )),
                           ),
+
                           ///home page
                           Container(
                             // color: Colors.blue,
@@ -189,7 +215,7 @@ class _Main_ScreenState extends State<Home_Screen> {
                                   onTap: () async{
                                    !sign_in? Get.to(Sign_Up_In_Page())
                                    :
-                                   firebase_caontroller.sign_out()
+                                   sign_out()
                                    ;
                                   },
                                   child: Text(!sign_in?"Sign in":user,
@@ -211,11 +237,7 @@ class _Main_ScreenState extends State<Home_Screen> {
                     ),
 
                     /// main content
-                    MouseRegion(
-                    onHover: (v){
-
-                    }
-                    ,child: Row(
+                    Row(
                         children: [
 
                           ///Sized box
@@ -268,17 +290,10 @@ class _Main_ScreenState extends State<Home_Screen> {
                               child: Container(
                                 height: h - 200,
                                 child:
-                                InkWell(
-                                onTap: ()async{
-                                  // firebase_caontroller.user_sign_in_up();
-                                }
-                                ,child: Center(
-                                      child: Text(
-                                    "home",
-                                    style: GoogleFonts.aBeeZee(
-                                        fontSize: 32, color: Colors.white),
-                                  )),
-                                ),
+                                Center(
+                                      child: Image.asset(
+                                    "lib/assets/images/app_fotos/logo.png",
+                                      )),
                               )),
 
                           ///Sized box
@@ -292,7 +307,6 @@ class _Main_ScreenState extends State<Home_Screen> {
 
                         ],
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -300,43 +314,58 @@ class _Main_ScreenState extends State<Home_Screen> {
 
               /// center part , explaining text
               Container(color: Color.fromRGBO(74, 101, 114,1),
-                width: w,
+                width: w/1.5,
                 child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 256,right: 256,top: 72,bottom: 72),
-                    child:
-                    Text(
-                      "AUTOCAM software is the perfect solution for furniture factories.\n    "
-                          " using AUTOCAM you will get :\n    "
-                          "     - Design capabilities . \n    "
-                          "     - Shop drawings.\n    "
-                          "     - Material Quantity lists. \n    "
-                          "     - Cutting files for cutting machines like : BeamSaw , CNC Routers .\n    "
-                          "     - Drilling files for Drilling machines.\n\n    "
-                          " with AUTOCAM \n    "
-                          " No more CAD or CAM softwares ....\n\n "
-                          " one place for all you work process \n\n"
-                          "  AUTOCAM \n    "
+                  child: Text(
+                    "\n \n "
+                        "AUTOCAM software is the perfect solution for furniture factories.\n    "
+                        " using AUTOCAM you can :\n    "
+                        "     - Design Product . \n    "
+                        "     - Get Shop drawings.\n    "
+                        "     - Get Material Quantity lists. \n    "
+                        "     - Get Cutting files for cutting machines like : BeamSaw , CNC Routers .\n    "
+                        "     - Get Drilling files for Drilling machines.\n\n    "
+                        " with AUTOCAM \n    "
+                        " No more CAD or CAM softwares ....\n\n "
+                        " one place for all you work process \n\n"
+                        "  AUTOCAM \n    "
 
-                      ,style: GoogleFonts.arsenal(fontSize: w/56,fontWeight: FontWeight.w100,color: Colors.white),
-                    )
-                    ,
+                    ,style: GoogleFonts.arsenal(fontSize: w/56,fontWeight: FontWeight.w100,color: Colors.white),
                   ),
                 ),
               ),
 
 
               /// process flow
-              Container(
-                width: w,height: h,
-                child: Container(),
-              ),
 
+              // Container(
+              //   width: w,height: h/2,
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(8.0),
+              //     child: ListView.builder(
+              //       scrollDirection: Axis.horizontal,
+              //        itemCount: foto_names.length-1,
+              //        itemBuilder: (context, index) {
+              //         return Padding(
+              //           padding: const EdgeInsets.all(32.0),
+              //           child: Image.asset(foto_names[index]),
+              //         );
+              //       },
+              //     ),
+              //   ),
+              // ),
+
+              Container(
+                  width: w,height: h/10,
+
+              )
+,
 
               /// bottom
 
               Container(
-                  width: w,height: h/2,
+                  width: w,
+                  height: h/3,
                   child: Contact_US_Page(true)
               )
 

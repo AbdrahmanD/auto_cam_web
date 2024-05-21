@@ -44,9 +44,7 @@ dependencies:
   file_picker:
   get_storage:
   firebase_core: ^2.27.0
-  firebase_auth: ^4.17.8
-  google_sign_in:
-  google_sign_in_web:
+
 
   flutter_widget_from_html:
   flutter_animate: ^4.5.0
@@ -76,27 +74,11 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - lib/assets/images/background.png
-    - lib/assets/images/app_icon.png
-    - lib/assets/images/pr.png
-    - lib/assets/images/sc.png
-    - lib/assets/images/sp.png
-    - lib/assets/images/Lamello_V_img.png
-    - lib/assets/images/Fraeser_Lamello.png
-    - lib/assets/images/Piece_Size.png
-    - lib/assets/images/X_Y.png
-    - lib/assets/images/range.png
     - lib/assets/images/shelfe.png
     - lib/assets/images/partition.png
-    - lib/assets/images/10ud.png
-    - lib/assets/images/10u.png
-    - lib/assets/images/normal.png
     - lib/assets/images/hinges.png
     - lib/assets/images/flexible_shelf.png
-    - lib/assets/images/sink_cabinet.png
-    - lib/assets/images/unit.png
     - lib/assets/images/support.png
-    - lib/assets/images/panel.png
     - lib/assets/images/full_cover_back_panel.png
     - lib/assets/images/groove_back_panel.png
     - lib/assets/images/box_slide.png
@@ -111,6 +93,30 @@ flutter:
     - lib/assets/images/drawer_rail.png
     - lib/assets/images/red_arrow.png
     - lib/assets/images/blue_arrow.png
+    - lib/assets/images/icons8-whatsapp-480.png
+
+    - lib/assets/images/app_fotos/a.png
+    - lib/assets/images/app_fotos/b.png
+    - lib/assets/images/app_fotos/c.png
+    - lib/assets/images/app_fotos/d.png
+    - lib/assets/images/app_fotos/e.png
+    - lib/assets/images/app_fotos/f.png
+    - lib/assets/images/app_fotos/g.png
+    - lib/assets/images/app_fotos/h.png
+    - lib/assets/images/app_fotos/i.png
+    - lib/assets/images/app_fotos/j.png
+    - lib/assets/images/app_fotos/k.png
+    - lib/assets/images/app_fotos/l.png
+    - lib/assets/images/app_fotos/m.png
+    - lib/assets/images/app_fotos/n.png
+    - lib/assets/images/app_fotos/o.png
+    - lib/assets/images/app_fotos/p.png
+    - lib/assets/images/app_fotos/q.png
+    - lib/assets/images/app_fotos/r.png
+    - lib/assets/images/app_fotos/s.png
+    - lib/assets/images/app_fotos/t.png
+    - lib/assets/images/app_fotos/w.png
+    - lib/assets/images/app_fotos/logo.png
 
   #   - images/a_dot_ham.jpeg
 

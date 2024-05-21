@@ -6,12 +6,14 @@ import 'package:archive/archive.dart';
 import 'dart:typed_data';
 
 import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/AnalyzeJoins.dart';
+import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Firebase_controller.dart';
 import 'package:auto_cam_web/online_autoam/Controller/Painters/Box_Painter.dart';
 import 'package:auto_cam_web/online_autoam/Controller/Repositories_Controllers/Box_Repository.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Door_Model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Drawer_Rail_Brand.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Faces_model.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Group_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Inner_Box.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
@@ -44,6 +46,8 @@ class Draw_Controller extends GetxController {
 
   RxList selected_pieces = [].obs;
   RxList selected_faces = [].obs;
+  RxList selected_fasteners = [].obs;
+  int selected_fasteners_id =0;
 
   String box_type = "wall_cabinet";
 
@@ -62,15 +66,15 @@ class Draw_Controller extends GetxController {
   double y_move = 0;
 
 
+  Firebase_caontroller firebase_controller=Get.find();
 
   Draw_Controller() {
-    read_pattern_files();
-    read_brands();
 
-    // drawing_origin.x_coordinate = screen_size.value.width / 2 -
-    //     box_repository.box_model.value.box_width * drawing_scale.value / 2;
-    // drawing_origin.y_coordinate = screen_size.value.height / 2 +
-    //     box_repository.box_model.value.box_height * drawing_scale.value / 2;
+    // read_pattern_files();
+    // read_brands();
+
+    firebase_controller.featch_user_patterns();
+
   }
 
   zoom_all() {
@@ -255,6 +259,14 @@ if(select_window.value){
       select_face_via_window();
 
   }
+  if(selected_pieces.value.length==0 && selected_faces.value.length==0){
+
+    select_fastener_via_window();
+
+  }
+
+  start_select_window.value = Offset(0, 0);
+  end_select_window.value = Offset(0, 0);
 
 }
 
@@ -317,17 +329,45 @@ if(select_window.value){
             // !p.piece_name.contains('Helper')
             ) {
           selected_faces.add(Selected_Face(p.piece_id, sface.name));
-
-          print("piece : ${p.piece_name} , face : ${sface.name}");
-
           gumball.value=true;
 
         }
       }
     }
 
-    start_select_window.value = Offset(0, 0);
-    end_select_window.value = Offset(0, 0);
+
+  }
+
+
+  select_fastener_via_window() {
+
+
+    selected_fasteners.value = [];
+
+
+    double ssx = start_select_window.value.dx;
+    double ssy = -start_select_window.value.dy;
+    double esx = end_select_window.value.dx;
+    double esy = -end_select_window.value.dy;
+
+
+    for (int f = 0; f < box_repository.box_model.value.fasteners.length; f++) {
+
+
+        bool x_compare =box_repository.box_model.value.fasteners[f].fastener_origin.x_coordinate < ssx && box_repository.box_model.value.fasteners[f].fastener_origin.x_coordinate > esx;
+        bool y_compare =box_repository.box_model.value.fasteners[f].fastener_origin.y_coordinate < ssy && box_repository.box_model.value.fasteners[f].fastener_origin.y_coordinate > esy;
+
+        if (x_compare && y_compare) {
+
+          selected_fasteners.add(box_repository.box_model.value.fasteners[f]);
+
+          selected_fasteners_id=f;
+          gumball.value=true;
+
+        }
+
+    }
+
   }
 
   ///
@@ -865,7 +905,7 @@ if(select_window.value){
 
 
 
-      if(selected_pieces.length>0){
+      if(selected_pieces.value.length>0){
 
         Piece_model p=selected_pieces.value[0];
 
@@ -921,13 +961,28 @@ if(select_window.value){
 
         }
 
-      }else {
+      }
+      else if(selected_faces.value.length>0) {
         move_face(double_move_value);
+      }
+      else if(selected_fasteners.value.length>0){
+
+        if(moving_axis=="X"){
+          move_fasteners( double_move_value,  0 );
+
+        }
+        else if(moving_axis=="Y"){
+          move_fasteners( 0,  double_move_value);
+
+        }
+
+
       }
 
 
     selected_pieces.value=[];
     selected_faces.value=[];
+    selected_fasteners.value=[];
 
     anlyze_inners();
 
@@ -1052,6 +1107,41 @@ if(select_window.value){
     }
   }
 
+
+  ///move fasteners
+
+  move_fasteners(double x_move_value,double y_move_value  ) {
+
+    ///
+
+    double dx = 0;
+    double dy = 0;
+    double dz = 0;
+
+
+      if (view_port == 'F') {
+          dx = x_move_value;
+          dy = y_move_value;
+          dz = 0;
+      }
+      else if (view_port == 'R') {
+          dx = 0;
+          dy = y_move_value;
+          dz = x_move_value;
+      }
+      else if (view_port == 'T')  {
+          dx = x_move_value;
+          dy = 0;
+          dz = y_move_value;
+        }
+
+      box_repository.box_model.value.fasteners[selected_fasteners_id].fastener_origin.x_coordinate += dx;
+      box_repository.box_model.value.fasteners[selected_fasteners_id].fastener_origin.y_coordinate += dy;
+      box_repository.box_model.value.fasteners[selected_fasteners_id].fastener_origin.z_coordinate += dz;
+
+
+
+  }
 
   update_piece(Piece_model p, int face_name, double move_value) {
     double n_width = 0;
@@ -1302,197 +1392,195 @@ if(select_window.value){
     return bfr;
   }
 
-  save_joinHolePattern(JoinHolePattern joinHolePattern, String category) async {
-    bool windows_platform = Platform.isWindows;
-    final directory = await getApplicationDocumentsDirectory();
+  // save_joinHolePattern(JoinHolePattern joinHolePattern, String category) async {
+  //   bool windows_platform = Platform.isWindows;
+  //   final directory = await getApplicationDocumentsDirectory();
+  //
+  //   final Directory oldDirectory = windows_platform
+  //       ? (Directory('${directory.path}\\Auto_Cam'))
+  //       : (Directory('${directory.path}/Auto_Cam'));
+  //   oldDirectory.createSync();
+  //
+  //   final Directory newDirectory = windows_platform
+  //       ? (Directory('${oldDirectory.path}\\Setting'))
+  //       : (Directory('${oldDirectory.path}/Setting'));
+  //   newDirectory.createSync();
+  //
+  //   final Directory finalDirectory0 = windows_platform
+  //       ? (Directory('${newDirectory.path}\\Join_Patterns'))
+  //       : (Directory('${newDirectory.path}/Join_Patterns'));
+  //   finalDirectory0.createSync();
+  //
+  //   final Directory finalDirectory = windows_platform
+  //       ? (Directory('${finalDirectory0.path}\\${category}'))
+  //       : (Directory('${finalDirectory0.path}/${category}'));
+  //   finalDirectory.createSync();
+  //
+  //   final path = await finalDirectory.path;
+  //   String file_path = windows_platform
+  //       ? ('$path\\${joinHolePattern.name}-pattern')
+  //       : ('$path/${joinHolePattern.name}-pattern');
+  //   // writeJsonToFile(joinHolePattern.toJson(),file_path);
+  //   File file = File(file_path);
+  //
+  //   try {
+  //     // Convert the data to a JSON string
+  //     String jsonData = jsonEncode(joinHolePattern.toJson());
+  //
+  //     // Write the JSON data to the file
+  //     file.writeAsStringSync(jsonData);
+  //
+  //     print('JSON data has been written to $file_path');
+  //   } catch (e) {
+  //     print('Error writing JSON data to the file: $e');
+  //   }
+  // }
+  // save_joinHolePattern_list(List<JoinHolePattern> joinHolePatterns, String category) async {
+  //   bool windows_platform = Platform.isWindows;
+  //   final directory = await getApplicationDocumentsDirectory();
+  //
+  //   final Directory oldDirectory = windows_platform
+  //       ? (Directory('${directory.path}\\Auto_Cam'))
+  //       : (Directory('${directory.path}/Auto_Cam'));
+  //   oldDirectory.createSync();
+  //
+  //   final Directory newDirectory = windows_platform
+  //       ? (Directory('${oldDirectory.path}\\Setting'))
+  //       : (Directory('${oldDirectory.path}/Setting'));
+  //   newDirectory.createSync();
+  //
+  //   final Directory finalDirectory0 = windows_platform
+  //       ? (Directory('${newDirectory.path}\\Join_Patterns'))
+  //       : (Directory('${newDirectory.path}/Join_Patterns'));
+  //   finalDirectory0.createSync();
+  //
+  //   final Directory finalDirectory = windows_platform
+  //       ? (Directory('${finalDirectory0.path}\\${category}'))
+  //       : (Directory('${finalDirectory0.path}/${category}'));
+  //   finalDirectory.createSync();
+  //
+  //   for (var p = 0; p < joinHolePatterns.length; p++) {
+  //     JoinHolePattern joinHolePattern = joinHolePatterns[p];
+  //     final path = await finalDirectory.path;
+  //     String file_path = windows_platform
+  //         ? ('$path\\${joinHolePattern.name}-pattern')
+  //         : ('$path/${joinHolePattern.name}-pattern');
+  //     // writeJsonToFile(joinHolePattern.toJson(),file_path);
+  //     File file = File(file_path);
+  //
+  //     try {
+  //       // Convert the data to a JSON string
+  //       String jsonData = jsonEncode(joinHolePattern.toJson());
+  //
+  //       // Write the JSON data to the file
+  //       file.writeAsStringSync(jsonData);
+  //
+  //       print('JSON data has been written to $file_path');
+  //     } catch (e) {
+  //       print('Error writing JSON data to the file: $e');
+  //     }
+  //   }
+  // }
+  //
+  // delete_joinHolePattern(
+  //     JoinHolePattern joinHolePattern, String category) async {
+  //   bool windows_platform = Platform.isWindows;
+  //   final directory = await getApplicationDocumentsDirectory();
+  //
+  //   final Directory oldDirectory = windows_platform
+  //       ? (Directory('${directory.path}\\Auto_Cam'))
+  //       : (Directory('${directory.path}/Auto_Cam'));
+  //   oldDirectory.createSync();
+  //
+  //   final Directory newDirectory = windows_platform
+  //       ? (Directory('${oldDirectory.path}\\Setting'))
+  //       : (Directory('${oldDirectory.path}/Setting'));
+  //   newDirectory.createSync();
+  //
+  //   final Directory finalDirectory0 = windows_platform
+  //       ? (Directory('${newDirectory.path}\\Join_Patterns'))
+  //       : (Directory('${newDirectory.path}/Join_Patterns'));
+  //   finalDirectory0.createSync();
+  //
+  //   final Directory finalDirectory = windows_platform
+  //       ? (Directory('${finalDirectory0.path}\\${category}'))
+  //       : (Directory('${finalDirectory0.path}/${category}'));
+  //   finalDirectory.createSync();
+  //
+  //   final path = await finalDirectory.path;
+  //   String file_path = windows_platform
+  //       ? ('$path\\${joinHolePattern.name}-pattern')
+  //       : ('$path/${joinHolePattern.name}-pattern');
+  //
+  //   final dir = Directory(file_path);
+  //   dir.deleteSync(recursive: true);
+  //
+  //   box_repository.join_patterns[category]!.remove(joinHolePattern);
+  //   await read_pattern_files();
+  // }
 
-    final Directory oldDirectory = windows_platform
-        ? (Directory('${directory.path}\\Auto_Cam'))
-        : (Directory('${directory.path}/Auto_Cam'));
-    oldDirectory.createSync();
-
-    final Directory newDirectory = windows_platform
-        ? (Directory('${oldDirectory.path}\\Setting'))
-        : (Directory('${oldDirectory.path}/Setting'));
-    newDirectory.createSync();
-
-    final Directory finalDirectory0 = windows_platform
-        ? (Directory('${newDirectory.path}\\Join_Patterns'))
-        : (Directory('${newDirectory.path}/Join_Patterns'));
-    finalDirectory0.createSync();
-
-    final Directory finalDirectory = windows_platform
-        ? (Directory('${finalDirectory0.path}\\${category}'))
-        : (Directory('${finalDirectory0.path}/${category}'));
-    finalDirectory.createSync();
-
-    final path = await finalDirectory.path;
-    String file_path = windows_platform
-        ? ('$path\\${joinHolePattern.name}-pattern')
-        : ('$path/${joinHolePattern.name}-pattern');
-    // writeJsonToFile(joinHolePattern.toJson(),file_path);
-    File file = File(file_path);
-
-    try {
-      // Convert the data to a JSON string
-      String jsonData = jsonEncode(joinHolePattern.toJson());
-
-      // Write the JSON data to the file
-      file.writeAsStringSync(jsonData);
-
-      print('JSON data has been written to $file_path');
-    } catch (e) {
-      print('Error writing JSON data to the file: $e');
-    }
-  }
-
-  save_joinHolePattern_list(
-      List<JoinHolePattern> joinHolePatterns, String category) async {
-    bool windows_platform = Platform.isWindows;
-    final directory = await getApplicationDocumentsDirectory();
-
-    final Directory oldDirectory = windows_platform
-        ? (Directory('${directory.path}\\Auto_Cam'))
-        : (Directory('${directory.path}/Auto_Cam'));
-    oldDirectory.createSync();
-
-    final Directory newDirectory = windows_platform
-        ? (Directory('${oldDirectory.path}\\Setting'))
-        : (Directory('${oldDirectory.path}/Setting'));
-    newDirectory.createSync();
-
-    final Directory finalDirectory0 = windows_platform
-        ? (Directory('${newDirectory.path}\\Join_Patterns'))
-        : (Directory('${newDirectory.path}/Join_Patterns'));
-    finalDirectory0.createSync();
-
-    final Directory finalDirectory = windows_platform
-        ? (Directory('${finalDirectory0.path}\\${category}'))
-        : (Directory('${finalDirectory0.path}/${category}'));
-    finalDirectory.createSync();
-
-    for (var p = 0; p < joinHolePatterns.length; p++) {
-      JoinHolePattern joinHolePattern = joinHolePatterns[p];
-      final path = await finalDirectory.path;
-      String file_path = windows_platform
-          ? ('$path\\${joinHolePattern.name}-pattern')
-          : ('$path/${joinHolePattern.name}-pattern');
-      // writeJsonToFile(joinHolePattern.toJson(),file_path);
-      File file = File(file_path);
-
-      try {
-        // Convert the data to a JSON string
-        String jsonData = jsonEncode(joinHolePattern.toJson());
-
-        // Write the JSON data to the file
-        file.writeAsStringSync(jsonData);
-
-        print('JSON data has been written to $file_path');
-      } catch (e) {
-        print('Error writing JSON data to the file: $e');
-      }
-    }
-  }
-
-  delete_joinHolePattern(
-      JoinHolePattern joinHolePattern, String category) async {
-    bool windows_platform = Platform.isWindows;
-    final directory = await getApplicationDocumentsDirectory();
-
-    final Directory oldDirectory = windows_platform
-        ? (Directory('${directory.path}\\Auto_Cam'))
-        : (Directory('${directory.path}/Auto_Cam'));
-    oldDirectory.createSync();
-
-    final Directory newDirectory = windows_platform
-        ? (Directory('${oldDirectory.path}\\Setting'))
-        : (Directory('${oldDirectory.path}/Setting'));
-    newDirectory.createSync();
-
-    final Directory finalDirectory0 = windows_platform
-        ? (Directory('${newDirectory.path}\\Join_Patterns'))
-        : (Directory('${newDirectory.path}/Join_Patterns'));
-    finalDirectory0.createSync();
-
-    final Directory finalDirectory = windows_platform
-        ? (Directory('${finalDirectory0.path}\\${category}'))
-        : (Directory('${finalDirectory0.path}/${category}'));
-    finalDirectory.createSync();
-
-    final path = await finalDirectory.path;
-    String file_path = windows_platform
-        ? ('$path\\${joinHolePattern.name}-pattern')
-        : ('$path/${joinHolePattern.name}-pattern');
-
-    final dir = Directory(file_path);
-    dir.deleteSync(recursive: true);
-
-    box_repository.join_patterns[category]!.remove(joinHolePattern);
-    await read_pattern_files();
-  }
-
-  enable_pattern(JoinHolePattern joinHolePattern, String category) async {
-    bool windows_platform = Platform.isWindows;
-    final directory = await getApplicationDocumentsDirectory();
-
-    final Directory oldDirectory = windows_platform
-        ? (Directory('${directory.path}\\Auto_Cam'))
-        : (Directory('${directory.path}/Auto_Cam'));
-    oldDirectory.createSync();
-
-    final Directory newDirectory = windows_platform
-        ? (Directory('${oldDirectory.path}\\Setting'))
-        : (Directory('${oldDirectory.path}/Setting'));
-    newDirectory.createSync();
-
-    final Directory finalDirectory0 = windows_platform
-        ? (Directory('${newDirectory.path}\\Join_Patterns'))
-        : (Directory('${newDirectory.path}/Join_Patterns'));
-    finalDirectory0.createSync();
-
-    final Directory finalDirectory = windows_platform
-        ? (Directory('${finalDirectory0.path}\\${category}'))
-        : (Directory('${finalDirectory0.path}/${category}'));
-    finalDirectory.createSync();
-
-    JoinHolePattern new_join_pattern = joinHolePattern;
-    new_join_pattern.pattern_enable = true;
-
-    box_repository.join_patterns[category]!.remove(joinHolePattern);
-
-    save_joinHolePattern(new_join_pattern, category);
-  }
-
-  disable_pattern(JoinHolePattern joinHolePattern, String category) async {
-    bool windows_platform = Platform.isWindows;
-    final directory = await getApplicationDocumentsDirectory();
-
-    final Directory oldDirectory = windows_platform
-        ? (Directory('${directory.path}\\Auto_Cam'))
-        : (Directory('${directory.path}/Auto_Cam'));
-    oldDirectory.createSync();
-
-    final Directory newDirectory = windows_platform
-        ? (Directory('${oldDirectory.path}\\Setting'))
-        : (Directory('${oldDirectory.path}/Setting'));
-    newDirectory.createSync();
-
-    final Directory finalDirectory0 = windows_platform
-        ? (Directory('${newDirectory.path}\\Join_Patterns'))
-        : (Directory('${newDirectory.path}/Join_Patterns'));
-    finalDirectory0.createSync();
-
-    final Directory finalDirectory = windows_platform
-        ? (Directory('${finalDirectory0.path}\\${category}'))
-        : (Directory('${finalDirectory0.path}/${category}'));
-    finalDirectory.createSync();
-    JoinHolePattern new_join_pattern = joinHolePattern;
-    new_join_pattern.pattern_enable = false;
-
-    box_repository.join_patterns[category]!.remove(joinHolePattern);
-
-    save_joinHolePattern(new_join_pattern, category);
-  }
+  // enable_pattern(JoinHolePattern joinHolePattern, String category) async {
+  //   bool windows_platform = Platform.isWindows;
+  //   final directory = await getApplicationDocumentsDirectory();
+  //
+  //   final Directory oldDirectory = windows_platform
+  //       ? (Directory('${directory.path}\\Auto_Cam'))
+  //       : (Directory('${directory.path}/Auto_Cam'));
+  //   oldDirectory.createSync();
+  //
+  //   final Directory newDirectory = windows_platform
+  //       ? (Directory('${oldDirectory.path}\\Setting'))
+  //       : (Directory('${oldDirectory.path}/Setting'));
+  //   newDirectory.createSync();
+  //
+  //   final Directory finalDirectory0 = windows_platform
+  //       ? (Directory('${newDirectory.path}\\Join_Patterns'))
+  //       : (Directory('${newDirectory.path}/Join_Patterns'));
+  //   finalDirectory0.createSync();
+  //
+  //   final Directory finalDirectory = windows_platform
+  //       ? (Directory('${finalDirectory0.path}\\${category}'))
+  //       : (Directory('${finalDirectory0.path}/${category}'));
+  //   finalDirectory.createSync();
+  //
+  //   JoinHolePattern new_join_pattern = joinHolePattern;
+  //   new_join_pattern.pattern_enable = true;
+  //
+  //   box_repository.join_patterns[category]!.remove(joinHolePattern);
+  //
+  //   save_joinHolePattern(new_join_pattern, category);
+  // }
+  //
+  // disable_pattern(JoinHolePattern joinHolePattern, String category) async {
+  //   bool windows_platform = Platform.isWindows;
+  //   final directory = await getApplicationDocumentsDirectory();
+  //
+  //   final Directory oldDirectory = windows_platform
+  //       ? (Directory('${directory.path}\\Auto_Cam'))
+  //       : (Directory('${directory.path}/Auto_Cam'));
+  //   oldDirectory.createSync();
+  //
+  //   final Directory newDirectory = windows_platform
+  //       ? (Directory('${oldDirectory.path}\\Setting'))
+  //       : (Directory('${oldDirectory.path}/Setting'));
+  //   newDirectory.createSync();
+  //
+  //   final Directory finalDirectory0 = windows_platform
+  //       ? (Directory('${newDirectory.path}\\Join_Patterns'))
+  //       : (Directory('${newDirectory.path}/Join_Patterns'));
+  //   finalDirectory0.createSync();
+  //
+  //   final Directory finalDirectory = windows_platform
+  //       ? (Directory('${finalDirectory0.path}\\${category}'))
+  //       : (Directory('${finalDirectory0.path}/${category}'));
+  //   finalDirectory.createSync();
+  //   JoinHolePattern new_join_pattern = joinHolePattern;
+  //   new_join_pattern.pattern_enable = false;
+  //
+  //   box_repository.join_patterns[category]!.remove(joinHolePattern);
+  //
+  //   save_joinHolePattern(new_join_pattern, category);
+  // }
 
   read_pattern_files() async {
     box_repository.join_patterns["Box_Fitting_DRILL"]!.clear();

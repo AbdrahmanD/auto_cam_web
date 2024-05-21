@@ -1,5 +1,6 @@
 import 'package:auto_cam_web/online_autoam/Controller/DecimalTextInputFormatter.dart';
 import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
+import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Firebase_controller.dart';
 import 'package:auto_cam_web/online_autoam/Controller/Painters/Flexible_Shelf_Pattern_Painter.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,7 @@ class _Flixable_Shelf_EditorState extends State<Flixable_Shelf_Editor> {
 
 
   Draw_Controller draw_controller = Get.find();
+  Firebase_caontroller firebase_caontroller =Get.find();
 
   int corrent_pattern=0;
 
@@ -41,7 +43,7 @@ class _Flixable_Shelf_EditorState extends State<Flixable_Shelf_Editor> {
 
   read_patterns() async {
 
-    await draw_controller.read_pattern_files();
+    await draw_controller.firebase_controller.featch_user_patterns();
 
     Map<String, List<JoinHolePattern>> join_patterns =
         draw_controller.box_repository.join_patterns;
@@ -51,10 +53,11 @@ class _Flixable_Shelf_EditorState extends State<Flixable_Shelf_Editor> {
     corrent_pattern=0;
 
    refresh();
+    // print("Box_Fitting_DRILL :${draw_controller.box_repository.join_patterns["Box_Fitting_DRILL"]!.length}");
+    // print("Flexible_Shelves :${draw_controller.box_repository.join_patterns["Flexible_Shelves"]!.length}");
 
 
   }
-
 
   refresh(){
 
@@ -68,7 +71,9 @@ class _Flixable_Shelf_EditorState extends State<Flixable_Shelf_Editor> {
       max_distence_controller.text="${list_Flexible_Shelves[corrent_pattern].max_length}";
 
       Flexible_Shelf_A_controller.text="${list_Flexible_Shelves[corrent_pattern].bores[0].pre_distence}";
+
       Flexible_Shelf_B_controller.text="${list_Flexible_Shelves[corrent_pattern].bores[0].correct_y}";
+
       Flexible_Shelf_C_controller.text="${
           (list_Flexible_Shelves[corrent_pattern].bores.length>1)?
           (
@@ -89,8 +94,6 @@ class _Flixable_Shelf_EditorState extends State<Flixable_Shelf_Editor> {
 
     });
   }
-
-
 
   add_new_pattern(){
 
@@ -115,11 +118,11 @@ setState(() {
 
   preview_Flexible_shelf_pattern() {
 
+    min_length=double.parse(mini_distence_controller.text.toString());
+    max_length=double.parse(max_distence_controller.text.toString());
 
     double Shelf_A = double.parse(Flexible_Shelf_A_controller.text.toString());
-    double Shelf_B = double.parse(Flexible_Shelf_B_controller.text.toString()) +
-        draw_controller.box_repository.box_model.value.init_material_thickness /
-            2;
+    double Shelf_B = double.parse(Flexible_Shelf_B_controller.text.toString());
     double Shelf_C = double.parse(Flexible_Shelf_C_controller.text.toString());
     double Depth =
     double.parse(Flexible_Shelf_Depth_controller.text.toString());
@@ -156,7 +159,7 @@ setState(() {
       Flexible_Shelf_units.add(bore_unit_0);
 
       for (int i = 1; i < (Quantity) / 2; i++) {
-        Bore_unit bore_unit_1 = Bore_unit(Shelf_A, 0, Shelf_B + -i * Shelf_C,
+        Bore_unit bore_unit_1 = Bore_unit(Shelf_A, 0, Shelf_B - i * Shelf_C,
             emety_bore, false, 0, emety_bore, bore_model, false, true);
         Bore_unit bore_unit_2 = Bore_unit(Shelf_A, 0, Shelf_B + i * Shelf_C,
             emety_bore, false, 0, emety_bore, bore_model, false, true);
@@ -166,27 +169,46 @@ setState(() {
     }
   }
 
-
   save_pattern()async{
-    JoinHolePattern drawer_joinHolePattern = JoinHolePattern(
+
+    min_length=double.parse(mini_distence_controller.text.toString());
+    max_length=double.parse(max_distence_controller.text.toString());
+
+    JoinHolePattern Flexible_Shelf_joinHolePattern = JoinHolePattern(
         name_controller.text.toString(),
         min_length,
         max_length,0,0,
         Flexible_Shelf_units,
         true);
 
-    await draw_controller.save_joinHolePattern(
-        drawer_joinHolePattern, "Flexible_Shelves");
+    await firebase_caontroller.save_pattern_to_cloud(
+        Flexible_Shelf_joinHolePattern, "Flexible_Shelves");
 
-    await draw_controller.read_pattern_files();
+    // await draw_controller.read_pattern_files();
 
     read_patterns();
 
   }
 
+  enable_change() async {
+    JoinHolePattern joinHolePattern=list_Flexible_Shelves[corrent_pattern];
+
+    joinHolePattern.pattern_enable=!    joinHolePattern.pattern_enable;
+
+
+    await firebase_caontroller.save_pattern_to_cloud(
+        joinHolePattern, "Flexible_Shelves");
+
+    // await draw_controller.read_pattern_files();
+
+    read_patterns();
+
+  }
+
+
   delete_pattern()async{
 
-    await  draw_controller.delete_joinHolePattern(list_Flexible_Shelves[corrent_pattern],"Flexible_Shelves");
+    await  draw_controller.firebase_controller.delete_Pattern_from_cloud(list_Flexible_Shelves[corrent_pattern],"Flexible_Shelves");
     list_Flexible_Shelves.removeAt(corrent_pattern);
     read_patterns();
 
@@ -237,12 +259,14 @@ setState(() {
                                   Checkbox(
                                       value: enable_pattern,
                                       onChanged: (v) {
-                                        // list_Flexible_Shelves =
-                                        // list_Flexible_Shelves[i];
-                                        // corrent_join_pattern_id = i;
-                                        // selected_pattern = i;
-                                        // setState(() {});
-                                        // enable_or_diable_pattern();
+
+                                        corrent_pattern = i;
+
+
+                                        enable_change();
+                                        setState(() {});
+
+
                                       }),
                                   SizedBox(
                                     width: 12,
@@ -270,6 +294,8 @@ setState(() {
                               ),
                             ),
                           );
+
+
                         }),
                   )
               ),
@@ -293,50 +319,6 @@ setState(() {
                       height: 32,
                     ),
 
-                    /// pattern category
-                    Row(
-                      children: [
-                        Container(
-                          width: 100,
-                          child: Center(
-                            child: Text(
-                              'pattern category',
-                              style: TextStyle(fontSize: 12),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        Container(
-                          width: 150,
-                          height: 30,
-                          child: TextFormField(
-                            controller: category_controller,
-                            style: TextStyle(fontSize: 12),
-                            onChanged: (_) {},
-                            enabled: false,
-                            validator: (d) {
-                              if (d!.isEmpty) {
-                                return 'add value please';
-                              }
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 12,
-                        ),
-                      ],
-                    ),
-
-                    SizedBox(
-                      height: 8,
-                    ),
 
                     /// pattern name
                     Row(
@@ -407,7 +389,7 @@ setState(() {
                             controller: mini_distence_controller,
                             style: TextStyle(fontSize: 12),
                             onChanged: (_) {
-                              refresh();
+                              // refresh();
                             },
                             validator: (d) {
                               if (d!.isEmpty) {
@@ -456,7 +438,7 @@ setState(() {
                             controller: max_distence_controller,
                             style: TextStyle(fontSize: 12),
                             onChanged: (_) {
-                              refresh();
+                              // refresh();
                             },
                             validator: (d) {
                               if (d!.isEmpty) {
@@ -825,7 +807,7 @@ setState(() {
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
                         onTap: () {
-                          save_pattern();
+                          save_pattern( );
                         },
                         child: Container(
                           width: 100,
@@ -902,8 +884,7 @@ setState(() {
                 child: CustomPaint(
                   painter: Flexible_Shelf_Pattern_Painter(
                       Flexible_Shelf_units,
-                      draw_controller
-                          .box_repository.box_model.value.init_material_thickness,
+                      draw_controller.box_repository.box_model.value.init_material_thickness,
                        max_length,
                       400,
                        max_length,

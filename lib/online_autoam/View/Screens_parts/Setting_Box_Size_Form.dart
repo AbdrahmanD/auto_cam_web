@@ -2,8 +2,8 @@ import 'package:auto_cam_web/online_autoam/Controller/DecimalTextInputFormatter.
 import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
    import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
   import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
- import 'package:auto_cam_web/online_autoam/View/Screens_parts/Box_Type.dart';
- import 'package:auto_cam_web/online_autoam/View/Screens_parts/Cut_List_review.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
+  import 'package:auto_cam_web/online_autoam/View/Screens_parts/Cut_List_review.dart';
 import 'package:auto_cam_web/online_autoam/View/Setting_Page.dart';
  import 'package:auto_cam_web/online_autoam/View/Piece_List_view.dart';
 import 'package:auto_cam_web/web_bages/Home_Screen.dart';
@@ -48,7 +48,73 @@ class _Setting_Box_Size_FormState extends State<Setting_Box_Size_Form> {
   TextEditingController top_base_piece_width_controller =
       TextEditingController();
 
+bool chosing_box_type=false;
+List<String> box_types=[
+  "standard_unit",
+  "base_cabinet",
+  "wall_cabinet",
+  "sink_cabinet",
+  "inner_cabinet"
+];
+String box_type="";
 
+
+
+draw_box_in_screen(){
+  if (form_key.currentState!.validate()) {
+    String box_name = box_name_controller.text.toString();
+    double width_value =
+    double.parse(width_controller.text.toString());
+    double hight_value =
+    double.parse(hight_controller.text.toString());
+    double depth_value =
+    double.parse(depth_controller.text.toString());
+    double material_thickness_value = double.parse(
+        material_thickness_controller.text.toString());
+    String material_name_value =
+    material_name_controller.text.toString();
+    double pack_panel_thickness_value = double.parse(
+        back_panel_thickness_controller.text.toString());
+
+    double pack_panel_grove_depth = double.parse(
+        pack_panel_grove_depth_controller.text.toString());
+    double pack_panel_distence = double.parse(
+        pack_panel_distence_controller.text.toString());
+    double top_base_piece_width = double.parse(
+        top_base_piece_width_controller.text.toString());
+
+    draw_Controller.box_repository.pack_panel_distence =
+        pack_panel_distence;
+    draw_Controller.box_repository.pack_panel_grove_depth =
+        pack_panel_grove_depth;
+    draw_Controller.box_repository.top_base_piece_width =
+        top_base_piece_width;
+    draw_Controller.box_repository.box_model.value
+        .init_material_thickness = material_thickness_value;
+
+    String nbn= draw_Controller.first_chart_every_word_with_random_num(box_name);
+
+    Box_model b = Box_model(
+        nbn,
+        draw_Controller.box_type,
+        width_value,
+        hight_value,
+        depth_value,
+        material_thickness_value,
+        material_name_value,
+        pack_panel_thickness_value,
+        pack_panel_grove_depth,
+        pack_panel_distence,
+        top_base_piece_width,
+        is_back_panel,
+        Point_model(0, 0, 0));
+
+    draw_Controller.add_Box(b);
+
+
+  }
+
+}
 
 
 
@@ -447,89 +513,74 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
             padding: const EdgeInsets.only(left: 24,right: 24,top: 6,bottom: 6),
             child: InkWell(
               onTap: () {
+chosing_box_type=true;
+setState(() {
 
-                Get.defaultDialog(
-                  title: "chose type of box",
-                  content: Container(
-                    width: w,height: h/2,
-                    child:Box_Type(true) ,
-                  )
-                );
+});
+                // Get.defaultDialog(
+                //   title: "chose type of box",
+                //   content: Container(
+                //     width: 300,height: h/2,
+                //     child:Box_Type(true) ,
+                //   )
+                // );
 
               },
-              child: Container(
-                width: 532,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: Colors.teal[500],
-                  borderRadius: BorderRadius.circular(12),
-                ),
+              child: chosing_box_type?
+              Container(
+                width: 532,color: Colors.grey[200],
+                height: box_types.length*40,
                 child: Center(
-                    child: Text(
+                    child: ListView.builder(
+                        itemCount: box_types.length,
+                        itemBuilder: (context,i){
+                      return Container(height: 40,
+                        child: Center(
+                          child: InkWell(onTap: (){
+                            draw_controller.box_type=box_types[i];
+                            box_type=box_types[i];
+                            chosing_box_type=false;
+                            setState(() {
+
+                            });
+                            draw_box_in_screen();
+
+                          },
+                            child: Text(
+                              box_types[i],
+                              style: TextStyle(fontSize: 16, color: Colors.black),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+              )):
+              Container(
+                width: 532,
+                height: 40,decoration: BoxDecoration(borderRadius: BorderRadius.circular(12),color: Colors.teal[300]),
+                child: Center(
+                    child: (box_type=="")?Text(
                       'chose type of box',
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    )),
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    ):
+                    Text(
+                      box_type,
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    )
+                ),
               ),
-            ),
-          ),
+
+
+
+          ),),
 
           ///Draw in the Screen button
           Padding(
             padding: const EdgeInsets.all(24),
             child: InkWell(
               onTap: () {
-                if (form_key.currentState!.validate()) {
-                  String box_name = box_name_controller.text.toString();
-                  double width_value =
-                      double.parse(width_controller.text.toString());
-                  double hight_value =
-                      double.parse(hight_controller.text.toString());
-                  double depth_value =
-                      double.parse(depth_controller.text.toString());
-                  double material_thickness_value = double.parse(
-                      material_thickness_controller.text.toString());
-                  String material_name_value =
-                      material_name_controller.text.toString();
-                  double pack_panel_thickness_value = double.parse(
-                      back_panel_thickness_controller.text.toString());
 
-                  double pack_panel_grove_depth = double.parse(
-                      pack_panel_grove_depth_controller.text.toString());
-                  double pack_panel_distence = double.parse(
-                      pack_panel_distence_controller.text.toString());
-                  double top_base_piece_width = double.parse(
-                      top_base_piece_width_controller.text.toString());
-
-                  draw_Controller.box_repository.pack_panel_distence =
-                      pack_panel_distence;
-                  draw_Controller.box_repository.pack_panel_grove_depth =
-                      pack_panel_grove_depth;
-                  draw_Controller.box_repository.top_base_piece_width =
-                      top_base_piece_width;
-                  draw_Controller.box_repository.box_model.value
-                      .init_material_thickness = material_thickness_value;
-
-                 String nbn= draw_Controller.first_chart_every_word_with_random_num(box_name);
-
-                  Box_model b = Box_model(
-                      nbn,
-                      draw_Controller.box_type,
-                      width_value,
-                      hight_value,
-                      depth_value,
-                      material_thickness_value,
-                      material_name_value,
-                      pack_panel_thickness_value,
-                      pack_panel_grove_depth,
-                      pack_panel_distence,
-                      top_base_piece_width,
-                      is_back_panel,
-                      Point_model(0, 0, 0));
-
-                  draw_Controller.add_Box(b);
-
-
-                }
+                draw_box_in_screen();
               },
               child: Container(
                 width: 532,
@@ -590,7 +641,7 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
 
           SizedBox(height: 16,),
 
-          ///review boring drawing
+          /// show boring in the  drawing
           Container(
             child: Row(
               children: [
@@ -599,7 +650,45 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
                 ),
                 Container(
                     width: 120,
-                    child: Text('Review drilling files ',
+                    child: Text('show fasteners ',
+                        style: TextStyle(
+                          fontSize: 14,
+                        ))),
+                SizedBox(
+                  width: 18,
+                ),
+                InkWell(
+                    onTap: () {
+                      draw_Controller.analyze();
+
+                      setState(() {
+
+                      });
+                    },
+                    child: Icon(
+                      Icons.auto_fix_off_sharp,
+                      size: 36,
+                      color: Colors.teal,
+                    )),
+              ],
+            ),
+          ),
+
+          SizedBox(
+            height: 12,
+          ),
+
+
+          ///review boring drawing pages
+          Container(
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 18,
+                ),
+                Container(
+                    width: 120,
+                    child: Text('drilling files ',
                         style: TextStyle(
                           fontSize: 14,
                         ))),
@@ -738,218 +827,6 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
             height: 12,
           ),
 
-          // /// list of all pieces
-          // Container(height: 400,
-          //   child: ListView.builder(
-          //       itemCount: draw_controller
-          //           .box_repository.box_model.value.box_pieces.length,
-          //       itemBuilder: (context, i) {
-          //         bool selected_piece=false;
-          //         if(draw_controller.selected_pieces.value.contains(draw_controller
-          //             .box_repository.box_model.value.box_pieces[i])){
-          //           selected_piece=true;
-          //         }
-          //         if (
-          //         !(draw_controller.box_repository.box_model.value.box_pieces[i].piece_name.contains('inner') ) &&
-          //             !(draw_controller.box_repository.box_model.value.box_pieces[i].piece_name.contains('Helper')) &&
-          //             (draw_controller.box_repository.box_model.value.box_pieces[i].piece_thickness!=0)
-          //         ) {
-          //           return Padding(
-          //             padding: const EdgeInsets.all(8.0),
-          //             child: Column(
-          //               children: [
-          //
-          //                 /// name and select the piece and material name
-          //                 Row(
-          //                   children: [
-          //                     Container(width: 12,height: 12,
-          //                       child: Checkbox(value: selected_piece,
-          //
-          //
-          //                           onChanged: (v){
-          //
-          //                             if(selected_piece){
-          //                               draw_controller.selected_pieces.value.remove(
-          //                                   draw_controller
-          //                                       .box_repository.box_model.value.box_pieces[i]
-          //                               );
-          //                             }
-          //                             else{
-          //                               draw_controller.selected_pieces.value.add(
-          //                                   draw_controller
-          //                                       .box_repository.box_model.value.box_pieces[i]
-          //                               );
-          //
-          //                             }
-          //
-          //
-          //                             setState(() {
-          //
-          //                             });
-          //                           }),
-          //                     ),
-          //                     SizedBox(width: 8,),
-          //                     Text(
-          //                       '${draw_controller.box_repository.box_model.value.box_pieces[i].piece_name}',
-          //                       style: TextStyle(
-          //                           fontSize: text_size*1.24,
-          //                           fontWeight: FontWeight.bold),
-          //                     ),
-          //                     Text(
-          //                       ' / ${draw_controller.box_repository.box_model.value.box_pieces[i].material_name}',
-          //                       style: TextStyle(fontSize: 12),
-          //                     ),
-          //                   ],
-          //                 ),
-          //                 Container(
-          //                   height: 0.5,
-          //                   width: 100,
-          //                   color: Colors.grey,
-          //                 ),
-          //
-          //                 ///x y z
-          //                 // Row(
-          //                 //   children: [
-          //                 //     Text(
-          //                 //       'X :',
-          //                 //       style: TextStyle(fontSize: text_size),
-          //                 //     ),
-          //                 //     Text(
-          //                 //       '${draw_controller.box_repository.box_model.value.box_pieces[i].piece_origin.x_coordinate}',
-          //                 //       style: TextStyle(
-          //                 //           fontSize: text_size,
-          //                 //           fontWeight: FontWeight.bold),
-          //                 //     ),
-          //                 //   ],
-          //                 // ),
-          //                 // Row(
-          //                 //   children: [
-          //                 //     Text(
-          //                 //       'Y :',
-          //                 //       style: TextStyle(fontSize: text_size),
-          //                 //     ),
-          //                 //     Text(
-          //                 //       '${draw_controller.box_repository.box_model.value.box_pieces[i].piece_origin.y_coordinate}',
-          //                 //       style: TextStyle(
-          //                 //           fontSize: text_size,
-          //                 //           fontWeight: FontWeight.bold),
-          //                 //     ),
-          //                 //   ],
-          //                 // ),
-          //                 // Row(
-          //                 //   children: [
-          //                 //     Text(
-          //                 //       'Z :',
-          //                 //       style: TextStyle(fontSize: text_size),
-          //                 //     ),
-          //                 //     Text(
-          //                 //       '${draw_controller.box_repository.box_model.value.box_pieces[i].piece_origin.z_coordinate}',
-          //                 //       style: TextStyle(
-          //                 //           fontSize: text_size,
-          //                 //           fontWeight: FontWeight.bold),
-          //                 //     ),
-          //                 //   ],
-          //                 // ),
-          //
-          //
-          //
-          //                 Container(
-          //                   height: 0.5,
-          //                   width: 100,
-          //                   color: Colors.grey,
-          //                 ),
-          //                 Row(
-          //                   children: [
-          //                     Text(
-          //                       'W :',
-          //                       style: TextStyle(fontSize: 12),
-          //                     ),
-          //                     Text(
-          //                       '${draw_controller.box_repository.box_model.value.box_pieces[i].piece_width}',
-          //                       style: TextStyle(fontSize: 12),
-          //                     ),
-          //
-          //                     Text(
-          //                       ' / H :',
-          //                       style: TextStyle(fontSize: 12),
-          //                     ),
-          //                     Text(
-          //                       '${draw_controller.box_repository.box_model.value.box_pieces[i].piece_height}',
-          //                       style: TextStyle(fontSize: 12),
-          //                     ),
-          //                     Text(
-          //                       ' / TH :',
-          //                       style: TextStyle(fontSize: 12),
-          //                     ),
-          //                     Text(
-          //                       '${draw_controller.box_repository.box_model.value.box_pieces[i].piece_thickness}',
-          //                       style: TextStyle(fontSize: 12),
-          //                     ),
-          //
-          //
-          //
-          //                   ],
-          //                 ),
-          //
-          //                 SizedBox(
-          //                   height: 6,
-          //                 ),
-          //
-          //                 // /// origin
-          //                 // Row(
-          //                 //   children: [
-          //                 //     Text(
-          //                 //       'origin :',
-          //                 //       style: TextStyle(fontSize: text_size),
-          //                 //     ),
-          //                 //     Text(
-          //                 //       'x=${draw_controller.box_repository.box_model.value.box_pieces[i].piece_origin.x_coordinate}\n'
-          //                 //           'y=${draw_controller.box_repository.box_model.value.box_pieces[i].piece_origin.y_coordinate}\n'
-          //                 //           'z=${draw_controller.box_repository.box_model.value.box_pieces[i].piece_origin.z_coordinate}\n',
-          //                 //       style: TextStyle(fontSize: text_size),
-          //                 //     ),
-          //                 //   ],
-          //                 // ),
-          //                 // SizedBox(
-          //                 //   height: 6,
-          //                 // ),
-          //
-          //
-          //                 Divider(
-          //                   height: 2,
-          //                   color: Colors.black,
-          //                 ),
-          //
-          //                 ///
-          //
-          //                 // Row(
-          //                 //   children: [
-          //                 //     Text(
-          //                 //       'X${draw_controller.box_repository.box_model.value.box_pieces[i].piece_origin.x_coordinate} \n, '
-          //                 //           'Y:${draw_controller.box_repository.box_model.value.box_pieces[i].piece_origin.y_coordinate} \n, '
-          //                 //           'Z:${draw_controller.box_repository.box_model.value.box_pieces[i].piece_origin.z_coordinate} \n',
-          //                 //       style: TextStyle(fontSize: text_size),
-          //                 //     ),
-          //                 //   ],
-          //                 // ),
-          //                 // SizedBox(
-          //                 //   height: 6,
-          //                 // ),
-          //                 // Divider(
-          //                 //   height: 2,
-          //                 //   color: Colors.black,
-          //                 // ),
-          //
-          //
-          //
-          //               ],
-          //             ),
-          //           );
-          //         } else {
-          //           return SizedBox();
-          //         }
-          //       }),
-          // )
 
         ],
       ),
