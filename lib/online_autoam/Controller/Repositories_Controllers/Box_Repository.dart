@@ -2,6 +2,7 @@
  import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_Pieces_Arrang.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Cut_List_Item.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
  import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
  import 'package:get/get.dart';
@@ -22,6 +23,17 @@ class Box_Repository extends GetxController {
 
   String back_panel_type = "full_cover";
 
+
+  Fastener_Templet fastener_templet=
+  Fastener_Templet(
+      "confirm_screw",
+      Fastener_Hole(12,12),
+      Fastener_Hole(12,12),
+      Fastener_Hole(12,12),
+      24,
+      Fastener_Hole(12,12),
+      Fastener_Hole(12,12)
+  );
 
   Map<String, List<JoinHolePattern>> join_patterns =
   {

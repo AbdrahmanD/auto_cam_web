@@ -19,7 +19,6 @@ class Piece_model{
 
   late double       back_distance;
 
-
   bool              piece_inable=true;
 
 

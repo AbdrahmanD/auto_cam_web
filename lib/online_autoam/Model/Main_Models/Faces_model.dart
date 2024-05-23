@@ -1,6 +1,7 @@
 import 'dart:ui';
 
- import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
+ import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 
 
 class Faces_model{
@@ -41,6 +42,9 @@ class Single_Face {
   late List<Bore_model> bores;
   late List<Groove_model> groves;
   late List<Join_Line> joines;
+
+
+  List<Fastener_Hole> fasteners_holes=[];
 
 
   Single_Face(this.name, this.corners,this.joines,this.groves,this.bores);

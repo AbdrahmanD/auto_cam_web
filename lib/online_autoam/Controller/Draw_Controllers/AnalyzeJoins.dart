@@ -248,21 +248,103 @@ this.project=project;
 
   }
 
+
+  /// FASTENERS block  ////////////////
+
   add_fastener(Box_model box_model){
 
-    Point_model tp1=Point_model(
-        0,
-        0,
-        0
-    ).correct_cordinate();
+    Fastener f = Fastener(0, draw_controller.box_repository.fastener_templet,
+        Point_model(18,9,32),
+        "X",
+        true,
+        draw_controller.box_repository.box_model.value.init_material_thickness);
 
-    Fastener f = Fastener("center", tp1,
-      "0" , Fastener_Hole(10,10), Fastener_Hole(10,10),
-       "1", Fastener_Hole(10,10), Fastener_Hole(10,10),Fastener_Hole(10,10));
+    box_model.fasteners.add(f);
 
-      box_model.fasteners.add(f);
+    if (box_model.fasteners.length>0) {
+
+      transform_fastener_to_hole(f);
+
+    }
+
+
 
   }
+
+  transform_fastener_to_hole(Fastener fastener){
+
+    Piece_model face_piece=draw_controller.box_repository.box_model.value.box_pieces[3];
+    Piece_model side_piece=draw_controller.box_repository.box_model.value.box_pieces[1];
+
+    int face_id =0 ;
+    int side_id =0 ;
+
+
+
+
+    for(int i =0;i<face_piece.piece_faces.faces.length;i++){
+      if(check_if_point_in_face(face_piece.piece_faces.faces[i], fastener.fastener_origin)){
+        face_id=i;
+      }
+    }
+
+    for(int i =0;i<side_piece.piece_faces.faces.length;i++){
+      if(check_if_point_in_face(side_piece.piece_faces.faces[i], fastener.fastener_origin)){
+        side_id=i;
+      }
+    }
+
+
+    Single_Face face=face_piece.piece_faces.faces[face_id];
+    face.fasteners_holes.add(fastener.fastener_templet.face_1);
+    Single_Face face_parallel=face_piece.piece_faces.faces[finde_parallel_face(face_id)];
+    face_parallel.fasteners_holes.add(fastener.fastener_templet.face_2);
+
+
+
+    Single_Face side=side_piece.piece_faces.faces[side_id];
+    Single_Face side_perpendiculer_1=side_piece.piece_faces.faces[finde_perpendiculer_face(side_id)];
+    Single_Face side_perpendiculer_2=side_piece.piece_faces.faces[finde_parallel_face(finde_perpendiculer_face(side_id))];
+
+
+
+    side.fasteners_holes.add(fastener.fastener_templet.side);
+    side_perpendiculer_1.fasteners_holes.add(fastener.fastener_templet.side_face_1);
+    side_perpendiculer_2.fasteners_holes.add(fastener.fastener_templet.side_face_2);
+
+
+
+
+  }
+
+  int finde_parallel_face(int face){
+    int resault=0;
+    if(face==0){resault=2;}
+    if(face==1){resault=3;}
+    if(face==2){resault=0;}
+    if(face==3){resault=1;}
+    if(face==4){resault=5;}
+    if(face==5){resault=4;}
+
+    return resault;
+  }
+
+  int finde_perpendiculer_face(int face){
+    int resault=0;
+    if(face==0){resault=1;}
+    if(face==1){resault=2;}
+    if(face==2){resault=3;}
+    if(face==3){resault=0;}
+    if(face==4){resault=3;}
+    if(face==5){resault=1;}
+
+    return resault;
+  }
+
+
+
+  /// /////////////////////////////////
+
 
 
 
@@ -460,7 +542,7 @@ this.project=project;
       bool compair_z = (mp0.z_coordinate <= p.z_coordinate) &&
           (mp2.z_coordinate >= p.z_coordinate);
 
-      if (compair_x && compair_y) {
+      if (compair_x && compair_y && compair_z) {
         in_face = true;
       }
     }
@@ -477,7 +559,7 @@ this.project=project;
       bool compair_z = (mp0.z_coordinate <= p.z_coordinate) &&
           (mp2.z_coordinate >= p.z_coordinate);
 
-      if (compair_x && compair_z) {
+      if (compair_x && compair_y && compair_z) {
         in_face = true;
       }
     }
@@ -494,7 +576,8 @@ this.project=project;
       bool compair_z = (mp0.z_coordinate <= p.z_coordinate) &&
           (mp2.z_coordinate >= p.z_coordinate);
 
-      if (compair_y && compair_z) {
+
+      if (compair_x && compair_y && compair_z) {
         in_face = true;
       }
     }

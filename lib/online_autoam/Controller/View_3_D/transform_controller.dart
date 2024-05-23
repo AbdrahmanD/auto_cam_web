@@ -117,16 +117,15 @@ class transform_controller {
 
     for(int f=0;f<b.fasteners.length;f++){
 
+
       Fastener fastener=Fastener(
-         b.fasteners[f].type,
+         b.fasteners[f].id,
+         b.fasteners[f].fastener_templet,
           cameraTransformer.transform(b.fasteners[f].fastener_origin),
-         b.fasteners[f].face_piece_id,
-         b.fasteners[f].face_1,
-         b.fasteners[f].face_2,
-         b.fasteners[f].side_piece_id,
-         b.fasteners[f].side_1,
-         b.fasteners[f].side_face_1,
-         b.fasteners[f].side_face_2
+         b.fasteners[f].fastener_axis,
+         b.fasteners[f].fastener_direction,
+         b.fasteners[f].material_thickness,
+
       );
 
       box_model.fasteners.add(fastener);
