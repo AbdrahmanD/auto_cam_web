@@ -1,8 +1,7 @@
 import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
-import 'package:auto_cam_web/online_autoam/Model/Main_Models/Faces_model.dart';
-import 'package:auto_cam_web/online_autoam/Model/Main_Models/Group_model.dart';
-import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
-import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
+ import 'package:auto_cam_web/online_autoam/Model/Main_Models/Group_model.dart';
+ import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
 import 'package:get/get.dart';
 
 class Drawers_group_model {

@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Door_Model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Group_model.dart';
-import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
-import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
+ import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

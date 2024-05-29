@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
 import 'package:auto_cam_web/online_autoam/Controller/View_3_D/transform_controller.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
  import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Gumball.dart';
 import 'package:auto_cam_web/online_autoam/View/Screens_parts/Box_Pieces_List.dart';
 import 'package:flutter/gestures.dart';

@@ -1,6 +1,6 @@
  import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
   import 'package:auto_cam_web/online_autoam/Controller/Painters/Faces_Painter.dart';
-import 'package:auto_cam_web/online_autoam/Model/Main_Models/Cut_List_Item.dart';
+ import 'package:auto_cam_web/online_autoam/Model/Main_Models/Cut_List_Item.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
  import 'package:flutter/material.dart';
 import 'package:get/get.dart';

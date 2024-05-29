@@ -1,5 +1,6 @@
 import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
 import 'package:get/get.dart';
 
 class Drawer_Rail_Brand{

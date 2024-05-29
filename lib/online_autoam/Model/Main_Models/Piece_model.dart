@@ -2,6 +2,7 @@
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Faces_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
 
 
 class Piece_model{

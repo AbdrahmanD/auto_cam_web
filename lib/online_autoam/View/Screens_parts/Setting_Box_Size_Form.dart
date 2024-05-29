@@ -3,6 +3,7 @@ import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Cont
    import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
   import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
   import 'package:auto_cam_web/online_autoam/View/Screens_parts/Cut_List_review.dart';
 import 'package:auto_cam_web/online_autoam/View/Setting_Page.dart';
  import 'package:auto_cam_web/online_autoam/View/Piece_List_view.dart';
@@ -49,6 +50,7 @@ class _Setting_Box_Size_FormState extends State<Setting_Box_Size_Form> {
       TextEditingController();
 
 bool chosing_box_type=false;
+bool chosing_fastener_type=false;
 List<String> box_types=[
   "standard_unit",
   "base_cabinet",
@@ -517,13 +519,6 @@ chosing_box_type=true;
 setState(() {
 
 });
-                // Get.defaultDialog(
-                //   title: "chose type of box",
-                //   content: Container(
-                //     width: 300,height: h/2,
-                //     child:Box_Type(true) ,
-                //   )
-                // );
 
               },
               child: chosing_box_type?
@@ -641,7 +636,67 @@ setState(() {
 
           SizedBox(height: 16,),
 
-          /// show boring in the  drawing
+          /// choose fasteners
+          Padding(
+            padding: const EdgeInsets.only(left: 24,right: 24,top: 6,bottom: 6),
+            child: InkWell(
+              onTap: () {
+                chosing_fastener_type=true;
+                setState(() {
+
+                });
+
+              },
+              child: chosing_fastener_type?
+              Container(
+                  width: 532,color: Colors.grey[200],
+                  height: draw_controller.box_repository.fasteners_namae.length*40,
+                  child: Center(
+                    child: ListView.builder(
+                        itemCount: draw_controller.box_repository.fasteners_namae.length,
+                        itemBuilder: (context,i){
+                          return Container(height: 40,
+                            child: Center(
+                              child: InkWell(onTap: (){
+                                draw_controller.box_repository.corrent_fastener=draw_controller.box_repository.fasteners_namae[i];
+                                chosing_fastener_type=false;
+                                setState(() {
+
+                                });
+
+                              },
+                                child: Text(
+                                  draw_controller.box_repository.fasteners_namae[i],
+                                  style: TextStyle(fontSize: 16, color: Colors.black),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  )):
+              Container(
+                  width: 120,
+                  child:
+
+                  (draw_controller.box_repository.corrent_fastener=="")?
+                  Text('choose fasteners',
+                      style: TextStyle(
+                        fontSize: 14,
+                      )):
+                  Text(draw_controller.box_repository.corrent_fastener,
+                      style: TextStyle(
+                        fontSize: 14,
+                      ))
+
+
+              ),
+
+
+            ),),
+
+
+
+          /// install fasteners
           Container(
             child: Row(
               children: [
@@ -650,7 +705,7 @@ setState(() {
                 ),
                 Container(
                     width: 120,
-                    child: Text('show fasteners ',
+                    child: Text('install fasteners ',
                         style: TextStyle(
                           fontSize: 14,
                         ))),
@@ -673,6 +728,7 @@ setState(() {
               ],
             ),
           ),
+
 
           SizedBox(
             height: 12,
@@ -697,10 +753,7 @@ setState(() {
                 ),
                 InkWell(
                     onTap: () {
-                      draw_Controller.analyze();
-                      Future.delayed(Duration(milliseconds: 1000))
-                          .then((value) => Get.to(Piece_List_view()));
-                    },
+                      Get.to(Piece_List_view());},
                     child: Icon(
                       Icons.draw,
                       size: 36,

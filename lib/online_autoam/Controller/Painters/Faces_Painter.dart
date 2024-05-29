@@ -1,12 +1,13 @@
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class Faces_Painter extends CustomPainter {
   late Piece_model piece_model;
 
-  double scal=1;
+  double scal=0.6;
 
   Faces_Painter(this.piece_model);
 
@@ -89,16 +90,16 @@ class Faces_Painter extends CustomPainter {
       draw_face(canvas, p_1_w, p_1_h, view_1,lines_1);
 
       int f=5;
-      if(piece_model.piece_faces.faces[f].fasteners_holes.length>0){
+      if(piece_model.piece_faces.faces[f].bores.length>0){
 
 
-        for(int i=0;i<piece_model.piece_faces.faces[f].fasteners_holes.length;i++){
+        for(int i=0;i<piece_model.piece_faces.faces[f].bores.length;i++){
 
-          double x=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_1.dx;
-          double y= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_1.dy;
-          double z= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_1.dy;
+          double x=  (piece_model.piece_faces.faces[f].bores[i].origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_1.dx;
+          double y= -(piece_model.piece_faces.faces[f].bores[i].origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_1.dy;
+          double z= -(piece_model.piece_faces.faces[f].bores[i].origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_1.dy;
 
-          canvas.drawCircle(Offset(x, y), piece_model.piece_faces.faces[f].fasteners_holes[i].diameter*my_scale/2, bore_painter);
+          canvas.drawCircle(Offset(x, y), piece_model.piece_faces.faces[f].bores[i].diameter*my_scale/2, bore_painter);
 
         }
       }
@@ -129,18 +130,18 @@ class Faces_Painter extends CustomPainter {
       draw_face(canvas, p_2_w, p_2_h, view_2,lines_2);
 
        f=3;
-      if(piece_model.piece_faces.faces[f].fasteners_holes.length>0){
+      if(piece_model.piece_faces.faces[f].bores.length>0){
 
 
 
-        for(int i=0;i<piece_model.piece_faces.faces[f].fasteners_holes.length;i++){
+        for(int i=0;i<piece_model.piece_faces.faces[f].bores.length;i++){
 
 
-          double x=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_2.dy;
-          double y=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_2.dx;
-          double z= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_2.dy;
+          double x=  (piece_model.piece_faces.faces[f].bores[i]. origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_2.dy;
+          double y=  (piece_model.piece_faces.faces[f].bores[i]. origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_2.dx;
+          double z= -(piece_model.piece_faces.faces[f].bores[i]. origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_2.dy;
 
-          canvas.drawCircle(Offset(y, z), piece_model.piece_faces.faces[f].fasteners_holes[i].diameter*my_scale/2, bore_painter);
+          canvas.drawCircle(Offset(y, z), piece_model.piece_faces.faces[f].bores[i].diameter*my_scale/2, bore_painter);
 
         }
       }
@@ -172,16 +173,16 @@ class Faces_Painter extends CustomPainter {
       draw_face(canvas, p_3_w, p_3_h, view_3,lines_3);
 
        f=0;
-      if(piece_model.piece_faces.faces[f].fasteners_holes.length>0){
+      if(piece_model.piece_faces.faces[f].bores.length>0){
 
 
-        for(int i=0;i<piece_model.piece_faces.faces[f].fasteners_holes.length;i++){
+        for(int i=0;i<piece_model.piece_faces.faces[f].bores.length;i++){
 
-          double x=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_3.dx;
-          double y= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_3.dy;
-          double z= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_3.dy;
+          double x=  (piece_model.piece_faces.faces[f].bores[i]. origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_3.dx;
+          double y= -(piece_model.piece_faces.faces[f].bores[i]. origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_3.dy;
+          double z= -(piece_model.piece_faces.faces[f].bores[i]. origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_3.dy;
 
-          canvas.drawCircle(Offset(x, z), piece_model.piece_faces.faces[f].fasteners_holes[i].diameter*my_scale/2, bore_painter);
+          canvas.drawCircle(Offset(x, z), piece_model.piece_faces.faces[f].bores[i].diameter*my_scale/2, bore_painter);
 
         }
       }
@@ -209,18 +210,18 @@ class Faces_Painter extends CustomPainter {
       }
       draw_face(canvas, p_4_w, p_4_h, view_4,lines_4);
       f=1;
-      if(piece_model.piece_faces.faces[f].fasteners_holes.length>0){
+      if(piece_model.piece_faces.faces[f].bores.length>0){
 
 
-        for(int i=0;i<piece_model.piece_faces.faces[f].fasteners_holes.length;i++){
+        for(int i=0;i<piece_model.piece_faces.faces[f].bores.length;i++){
 
 
 
-          double x=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_4.dx;
-          double y=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_4.dx;
-          double z= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_4.dy;
+          double x=  (piece_model.piece_faces.faces[f].bores[i]. origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_4.dx;
+          double y=  (piece_model.piece_faces.faces[f].bores[i]. origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_4.dx;
+          double z= -(piece_model.piece_faces.faces[f].bores[i]. origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_4.dy;
 
-          canvas.drawCircle(Offset(y, z), piece_model.piece_faces.faces[f].fasteners_holes[i].diameter*my_scale/2, bore_painter);
+          canvas.drawCircle(Offset(y, z), piece_model.piece_faces.faces[f].bores[i].diameter*my_scale/2, bore_painter);
 
         }
       }
@@ -248,16 +249,16 @@ class Faces_Painter extends CustomPainter {
       draw_face(canvas, p_5_w, p_5_h, view_5,lines_5);
 
       f=4;
-      if(piece_model.piece_faces.faces[f].fasteners_holes.length>0){
+      if(piece_model.piece_faces.faces[f].bores.length>0){
 
 
-        for(int i=0;i<piece_model.piece_faces.faces[f].fasteners_holes.length;i++){
+        for(int i=0;i<piece_model.piece_faces.faces[f].bores.length;i++){
 
-          double x=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_5.dx;
-          double y= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_5.dy;
-          double z= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_5.dy;
+          double x=  (piece_model.piece_faces.faces[f].bores[i]. origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_5.dx;
+          double y= -(piece_model.piece_faces.faces[f].bores[i]. origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_5.dy;
+          double z= -(piece_model.piece_faces.faces[f].bores[i]. origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_5.dy;
 
-          canvas.drawCircle(Offset(x, y), piece_model.piece_faces.faces[f].fasteners_holes[i].diameter*my_scale/2, bore_painter);
+          canvas.drawCircle(Offset(x, y), piece_model.piece_faces.faces[f].bores[i].diameter*my_scale/2, bore_painter);
 
         }
       }
@@ -285,16 +286,16 @@ class Faces_Painter extends CustomPainter {
       draw_face(canvas, p_6_w, p_6_h, view_6,lines_6);
 
       f=2;
-      if(piece_model.piece_faces.faces[f].fasteners_holes.length>0){
+      if(piece_model.piece_faces.faces[f].bores.length>0){
 
 
-        for(int i=0;i<piece_model.piece_faces.faces[f].fasteners_holes.length;i++){
+        for(int i=0;i<piece_model.piece_faces.faces[f].bores.length;i++){
 
-          double x=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_6.dx;
-          double y= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_6.dy;
-          double z= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_6.dy;
+          double x=  (piece_model.piece_faces.faces[f].bores[i]. origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_6.dx;
+          double y= -(piece_model.piece_faces.faces[f].bores[i]. origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_6.dy;
+          double z= -(piece_model.piece_faces.faces[f].bores[i]. origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_6.dy;
 
-          canvas.drawCircle(Offset(x, z), piece_model.piece_faces.faces[f].fasteners_holes[i].diameter*my_scale/2, bore_painter);
+          canvas.drawCircle(Offset(x, z), piece_model.piece_faces.faces[f].bores[i].diameter*my_scale/2, bore_painter);
 
         }
       }
@@ -341,15 +342,15 @@ class Faces_Painter extends CustomPainter {
       draw_face(canvas, p_1_w, p_1_h, view_1,lines_1);
 
       int f=0;
-      if(piece_model.piece_faces.faces[f].fasteners_holes.length>0){
+      if(piece_model.piece_faces.faces[f].bores.length>0){
 
-        for(int i=0;i<piece_model.piece_faces.faces[f].fasteners_holes.length;i++){
+        for(int i=0;i<piece_model.piece_faces.faces[f].bores.length;i++){
 
-          double x=  -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_1.dy;
-          double y=  -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_1.dy;
-          double z=   (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_1.dx;
+          double x=  -(piece_model.piece_faces.faces[f].bores[i]. origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_1.dy;
+          double y=  -(piece_model.piece_faces.faces[f].bores[i]. origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_1.dy;
+          double z=   (piece_model.piece_faces.faces[f].bores[i]. origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_1.dx;
 
-          canvas.drawCircle(Offset(z, x), piece_model.piece_faces.faces[f].fasteners_holes[i].diameter*my_scale/2, bore_painter);
+          canvas.drawCircle(Offset(z, x), piece_model.piece_faces.faces[f].bores[i].diameter*my_scale/2, bore_painter);
 
         }
       }
@@ -378,16 +379,16 @@ class Faces_Painter extends CustomPainter {
 
        f=4;
 
-      if(piece_model.piece_faces.faces[f].fasteners_holes.length>0){
+      if(piece_model.piece_faces.faces[f].bores.length>0){
 
 
-        for(int i=0;i<piece_model.piece_faces.faces[f].fasteners_holes.length;i++){
+        for(int i=0;i<piece_model.piece_faces.faces[f].bores.length;i++){
 
-          double x=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_2.dx;
-          double y= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_2.dy;
-          double z=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_2.dx;
+          double x=  (piece_model.piece_faces.faces[f].bores[i].origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_2.dx;
+          double y= -(piece_model.piece_faces.faces[f].bores[i].origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_2.dy;
+          double z=  (piece_model.piece_faces.faces[f].bores[i].origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_2.dx;
 
-          canvas.drawCircle(Offset(x, y), piece_model.piece_faces.faces[f].fasteners_holes[i].diameter*my_scale/2, bore_painter);
+          canvas.drawCircle(Offset(x, y), piece_model.piece_faces.faces[f].bores[i].diameter*my_scale/2, bore_painter);
 
         }
       }
@@ -417,16 +418,16 @@ class Faces_Painter extends CustomPainter {
 
       f=3;
 
-      if(piece_model.piece_faces.faces[f].fasteners_holes.length>0){
+      if(piece_model.piece_faces.faces[f].bores.length>0){
 
 
-        for(int i=0;i<piece_model.piece_faces.faces[f].fasteners_holes.length;i++){
+        for(int i=0;i<piece_model.piece_faces.faces[f].bores.length;i++){
 
-          double x=   (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_3.dx;
-          double y=  -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_3.dy;
-          double z=   (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_3.dx;
+          double x=   (piece_model.piece_faces.faces[f].bores[i]. origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_3.dx;
+          double y=  -(piece_model.piece_faces.faces[f].bores[i]. origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_3.dy;
+          double z=   (piece_model.piece_faces.faces[f].bores[i]. origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_3.dx;
 
-          canvas.drawCircle(Offset(z, y), piece_model.piece_faces.faces[f].fasteners_holes[i].diameter*my_scale/2, bore_painter);
+          canvas.drawCircle(Offset(z, y), piece_model.piece_faces.faces[f].bores[i].diameter*my_scale/2, bore_painter);
 
         }
       }
@@ -456,16 +457,16 @@ class Faces_Painter extends CustomPainter {
 
       f=5;
 
-      if(piece_model.piece_faces.faces[f].fasteners_holes.length>0){
+      if(piece_model.piece_faces.faces[f].bores.length>0){
 
 
-        for(int i=0;i<piece_model.piece_faces.faces[f].fasteners_holes.length;i++){
+        for(int i=0;i<piece_model.piece_faces.faces[f].bores.length;i++){
 
-          double x=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_4.dx;
-          double y= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_4.dy;
-          double z=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_4.dx;
+          double x=  (piece_model.piece_faces.faces[f].bores[i]. origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_4.dx;
+          double y= -(piece_model.piece_faces.faces[f].bores[i]. origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_4.dy;
+          double z=  (piece_model.piece_faces.faces[f].bores[i]. origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_4.dx;
 
-          canvas.drawCircle(Offset(x, y), piece_model.piece_faces.faces[f].fasteners_holes[i].diameter*my_scale/2, bore_painter);
+          canvas.drawCircle(Offset(x, y), piece_model.piece_faces.faces[f].bores[i].diameter*my_scale/2, bore_painter);
 
         }
       }
@@ -492,15 +493,15 @@ class Faces_Painter extends CustomPainter {
       draw_face(canvas, p_5_w, p_5_h, view_5,lines_5);
 
       f=2;
-      if(piece_model.piece_faces.faces[f].fasteners_holes.length>0) {
+      if(piece_model.piece_faces.faces[f].bores.length>0) {
 
-        for(int i=0;i<piece_model.piece_faces.faces[f].fasteners_holes.length;i++){
+        for(int i=0;i<piece_model.piece_faces.faces[f].bores.length;i++){
 
-          double x=  -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_5.dy;
-          double y=  -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_5.dy;
-          double z=   (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_5.dx;
+          double x=  -(piece_model.piece_faces.faces[f].bores[i]. origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_5.dy;
+          double y=  -(piece_model.piece_faces.faces[f].bores[i]. origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_5.dy;
+          double z=   (piece_model.piece_faces.faces[f].bores[i]. origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_5.dx;
 
-          canvas.drawCircle(Offset(z, x), piece_model.piece_faces.faces[f].fasteners_holes[i].diameter*my_scale/2, bore_painter);
+          canvas.drawCircle(Offset(z, x), piece_model.piece_faces.faces[f].bores[i].diameter*my_scale/2, bore_painter);
 
         }
       }
@@ -522,20 +523,26 @@ class Faces_Painter extends CustomPainter {
         String line_type=piece_model.piece_faces.faces[1].joines[i].join_type;
         double line_width=piece_model.piece_faces.faces[1].joines[i].join_width;
 
-        lines_6.add(tow_D_Line(sof,eof,line_type,line_width));      }
+        lines_6.add(tow_D_Line(sof,eof,line_type,line_width));
+
+      }
+
       draw_face(canvas, p_6_w, p_6_h, view_6,lines_6);
 
       f=1;
-      if(piece_model.piece_faces.faces[f].fasteners_holes.length>0){
+      if(piece_model.piece_faces.faces[f].bores.length>0){
 
 
-        for(int i=0;i<piece_model.piece_faces.faces[f].fasteners_holes.length;i++){
+        for(int i=0;i<piece_model.piece_faces.faces[f].bores.length;i++){
 
-          double x=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_6.dx;
-          double y= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_6.dy;
-          double z=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_6.dx;
 
-          canvas.drawCircle(Offset(z, y), piece_model.piece_faces.faces[f].fasteners_holes[i].diameter*my_scale/2, bore_painter);
+          double x=  (piece_model.piece_faces.faces[f].bores[i]. origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_6.dx;
+          double y= -(piece_model.piece_faces.faces[f].bores[i]. origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_6.dy;
+          double z=  (piece_model.piece_faces.faces[f].bores[i]. origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_6.dx;
+
+          canvas.drawCircle(Offset(z, y), piece_model.piece_faces.faces[f].bores[i].diameter*my_scale/2, bore_painter);
+
+
 
         }
       }
@@ -580,16 +587,16 @@ class Faces_Painter extends CustomPainter {
 
 
       int f=0;
-      if(piece_model.piece_faces.faces[f].fasteners_holes.length>0){
+      if(piece_model.piece_faces.faces[f].bores.length>0){
 
 
-        for(int i=0;i<piece_model.piece_faces.faces[f].fasteners_holes.length;i++){
+        for(int i=0;i<piece_model.piece_faces.faces[f].bores.length;i++){
 
-          double x=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_1.dx;
-          double y= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_1.dy;
-          double z= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_1.dy;
+          double x=  (piece_model.piece_faces.faces[f].bores[i]. origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_1.dx;
+          double y= -(piece_model.piece_faces.faces[f].bores[i]. origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_1.dy;
+          double z= -(piece_model.piece_faces.faces[f].bores[i]. origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_1.dy;
 
-          canvas.drawCircle(Offset(x, z), piece_model.piece_faces.faces[f].fasteners_holes[i].diameter*my_scale/2, bore_painter);
+          canvas.drawCircle(Offset(x, z), piece_model.piece_faces.faces[f].bores[i].diameter*my_scale/2, bore_painter);
 
         }
       }
@@ -617,16 +624,16 @@ class Faces_Painter extends CustomPainter {
 
 
       f=3;
-      if(piece_model.piece_faces.faces[f].fasteners_holes.length>0){
+      if(piece_model.piece_faces.faces[f].bores.length>0){
 
 
-        for(int i=0;i<piece_model.piece_faces.faces[f].fasteners_holes.length;i++){
+        for(int i=0;i<piece_model.piece_faces.faces[f].bores.length;i++){
 
-          double x=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_2.dx;
-          double y= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_2.dy;
-          double z=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_2.dx;
+          double x=  (piece_model.piece_faces.faces[f].bores[i].origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_2.dx;
+          double y= -(piece_model.piece_faces.faces[f].bores[i].origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_2.dy;
+          double z=  (piece_model.piece_faces.faces[f].bores[i].origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_2.dx;
 
-          canvas.drawCircle(Offset(z, y), piece_model.piece_faces.faces[f].fasteners_holes[i].diameter*my_scale/2, bore_painter);
+          canvas.drawCircle(Offset(z, y), piece_model.piece_faces.faces[f].bores[i].diameter*my_scale/2, bore_painter);
 
         }
       }
@@ -654,16 +661,16 @@ class Faces_Painter extends CustomPainter {
       draw_face(canvas, p_3_w, p_3_h, view_3,lines_3);
 
       f=4;
-      if(piece_model.piece_faces.faces[f].fasteners_holes.length>0){
+      if(piece_model.piece_faces.faces[f].bores.length>0){
 
 
-        for(int i=0;i<piece_model.piece_faces.faces[f].fasteners_holes.length;i++){
+        for(int i=0;i<piece_model.piece_faces.faces[f].bores.length;i++){
 
-          double x=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_3.dx;
-          double y= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_3.dy;
-          double z=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_3.dx;
+          double x=  (piece_model.piece_faces.faces[f].bores[i]. origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_3.dx;
+          double y= -(piece_model.piece_faces.faces[f].bores[i]. origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_3.dy;
+          double z=  (piece_model.piece_faces.faces[f].bores[i]. origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_3.dx;
 
-          canvas.drawCircle(Offset(x, y), piece_model.piece_faces.faces[f].fasteners_holes[i].diameter*my_scale/2, bore_painter);
+          canvas.drawCircle(Offset(x, y), piece_model.piece_faces.faces[f].bores[i].diameter*my_scale/2, bore_painter);
 
         }
       }
@@ -694,16 +701,16 @@ class Faces_Painter extends CustomPainter {
       draw_face(canvas, p_4_w, p_4_h, view_4,lines_4);
 
       f=1;
-      if(piece_model.piece_faces.faces[f].fasteners_holes.length>0){
+      if(piece_model.piece_faces.faces[f].bores.length>0){
 
 
-        for(int i=0;i<piece_model.piece_faces.faces[f].fasteners_holes.length;i++){
+        for(int i=0;i<piece_model.piece_faces.faces[f].bores.length;i++){
 
-          double x=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_4.dx;
-          double y= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_4.dy;
-          double z=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_4.dx;
+          double x=  (piece_model.piece_faces.faces[f].bores[i]. origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_4.dx;
+          double y= -(piece_model.piece_faces.faces[f].bores[i]. origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_4.dy;
+          double z=  (piece_model.piece_faces.faces[f].bores[i]. origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_4.dx;
 
-          canvas.drawCircle(Offset(z, y), piece_model.piece_faces.faces[f].fasteners_holes[i].diameter*my_scale/2, bore_painter);
+          canvas.drawCircle(Offset(z, y), piece_model.piece_faces.faces[f].bores[i].diameter*my_scale/2, bore_painter);
 
         }
       }
@@ -728,16 +735,16 @@ class Faces_Painter extends CustomPainter {
       draw_face(canvas, p_5_w, p_5_h, view_5,lines_5);
 
       f=2;
-      if(piece_model.piece_faces.faces[f].fasteners_holes.length>0){
+      if(piece_model.piece_faces.faces[f].bores.length>0){
 
 
-        for(int i=0;i<piece_model.piece_faces.faces[f].fasteners_holes.length;i++){
+        for(int i=0;i<piece_model.piece_faces.faces[f].bores.length;i++){
 
-          double x=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_5.dx;
-          double y= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_5.dy;
-          double z= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_5.dy;
+          double x=  (piece_model.piece_faces.faces[f].bores[i]. origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_5.dx;
+          double y= -(piece_model.piece_faces.faces[f].bores[i]. origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_5.dy;
+          double z= -(piece_model.piece_faces.faces[f].bores[i]. origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_5.dy;
 
-          canvas.drawCircle(Offset(x, z), piece_model.piece_faces.faces[f].fasteners_holes[i].diameter*my_scale/2, bore_painter);
+          canvas.drawCircle(Offset(x, z), piece_model.piece_faces.faces[f].bores[i].diameter*my_scale/2, bore_painter);
 
         }
       }
@@ -765,16 +772,16 @@ class Faces_Painter extends CustomPainter {
       draw_face(canvas, p_6_w, p_6_h, view_6,lines_6);
 
       f=5;
-      if(piece_model.piece_faces.faces[f].fasteners_holes.length>0){
+      if(piece_model.piece_faces.faces[f].bores.length>0){
 
 
-        for(int i=0;i<piece_model.piece_faces.faces[f].fasteners_holes.length;i++){
+        for(int i=0;i<piece_model.piece_faces.faces[f].bores.length;i++){
 
-          double x=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_6.dx;
-          double y= -(piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_6.dy;
-          double z=  (piece_model.piece_faces.faces[f].fasteners_holes[i].fastener_hole_origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_6.dx;
+          double x=  (piece_model.piece_faces.faces[f].bores[i]. origin.x_coordinate-piece_model.piece_origin.x_coordinate)*my_scale+view_6.dx;
+          double y= -(piece_model.piece_faces.faces[f].bores[i]. origin.y_coordinate-piece_model.piece_origin.y_coordinate)*my_scale+view_6.dy;
+          double z=  (piece_model.piece_faces.faces[f].bores[i]. origin.z_coordinate-piece_model.piece_origin.z_coordinate)*my_scale+view_6.dx;
 
-          canvas.drawCircle(Offset(x, y), piece_model.piece_faces.faces[f].fasteners_holes[i].diameter*my_scale/2, bore_painter);
+          canvas.drawCircle(Offset(x, y), piece_model.piece_faces.faces[f].bores[i].diameter*my_scale/2, bore_painter);
 
         }
       }

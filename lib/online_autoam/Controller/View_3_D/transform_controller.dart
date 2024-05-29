@@ -7,6 +7,7 @@ import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -78,28 +79,7 @@ class transform_controller {
     }
 
 
-    /// transform all pieces corners
-    // for(int i=0;i<box_model.box_pieces.length;i++){
-    //
-    //   Piece_model p =box_model.box_pieces[i];
-    //
-    //    p.piece_faces.faces[4].corners[0]=cameraTransformer.transform(p.piece_faces.faces[4].corners[0]);
-    //    p.piece_faces.faces[4].corners[1]=cameraTransformer.transform(p.piece_faces.faces[4].corners[1]);
-    //    p.piece_faces.faces[4].corners[2]=cameraTransformer.transform(p.piece_faces.faces[4].corners[2]);
-    //    p.piece_faces.faces[4].corners[3]=cameraTransformer.transform(p.piece_faces.faces[4].corners[3]);
-    //    p.piece_faces.faces[5].corners[0]=cameraTransformer.transform(p.piece_faces.faces[5].corners[0]);
-    //    p.piece_faces.faces[5].corners[1]=cameraTransformer.transform(p.piece_faces.faces[5].corners[1]);
-    //    p.piece_faces.faces[5].corners[2]=cameraTransformer.transform(p.piece_faces.faces[5].corners[2]);
-    //    p.piece_faces.faces[5].corners[3]=cameraTransformer.transform(p.piece_faces.faces[5].corners[3]);
-    //    p.piece_origin=cameraTransformer.transform(p.piece_origin);
-    //
-    //    p.f.fastener_origin=cameraTransformer.transform(p.f.fastener_origin);
-    //
-    //
-    //    p.fasteners[0].fastener_origin=cameraTransformer.transform(p.fasteners[0].fastener_origin);
-    //
-    //
-    // }
+
 
     for(int i=0;i<box_model.box_pieces.length;i++){
 
@@ -115,6 +95,8 @@ class transform_controller {
     }
 
 
+    List<Fastener> converted_fasteners=[];
+
     for(int f=0;f<b.fasteners.length;f++){
 
 
@@ -125,28 +107,17 @@ class transform_controller {
          b.fasteners[f].fastener_axis,
          b.fasteners[f].fastener_direction,
          b.fasteners[f].material_thickness,
+        b.fasteners[f].facee_name,
+        b.fasteners[f].side_name,
+        b.fasteners[f].face_pice_id,
+        b.fasteners[f].side_pice_id
 
       );
 
-      box_model.fasteners.add(fastener);
-
-
-
-
-      // box_model.fasteners[f].fastener_origin=cameraTransformer.transform(box_model.fasteners[f].fastener_origin);
+      converted_fasteners.add(fastener);
     }
 
 
-
-    /// transform fasteners
-    // for(int i=0;i<box_model.box_pieces.length;i++){
-    //
-    //   Piece_model p =box_model.box_pieces[i];
-    //
-    //   for(int f=0;f<p.fasteners.length;f++){
-    //        // p.fasteners[f].fastener_origin =cameraTransformer.transform(p.fasteners[f].fastener_origin);
-    //     }
-    // }
 
     List<LineWithType> NLineWithType=[];
 
@@ -187,6 +158,7 @@ class transform_controller {
       draw_controller.y_move,
       draw_controller.view_port.value,
 
+        converted_fasteners
 
 
     );

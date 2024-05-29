@@ -2,8 +2,10 @@ import 'dart:ui';
 
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Faces_model.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -25,11 +27,13 @@ late bool select_window;
 late double X_move;
 late double Y_move;
 late String view_Port;
+late List<Fastener> converted_fasteners;
 
 
   three_D_Painter(this.box_model,this.lines_with_type, this.screen_size,
       this.scale,this.hover_id,this.mouse_position,this.selected_pieces,this.selected_faces,this.start_select_window,this
-.end_select_window,this.select_window,this.X_move,this.Y_move,this.view_Port);
+.end_select_window,this.select_window,this.X_move,this.Y_move,this.view_Port
+    ,this.converted_fasteners  );
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -84,11 +88,13 @@ draw_fasteners(Canvas canvas){
   double w = screen_size.width / 2;
   double h = screen_size.height / 2;
 
-  if(box_model.fasteners.length>0){
-      canvas.drawCircle(
-          Offset(w+box_model.fasteners[0].fastener_origin.x_coordinate* scale,
-          h-box_model.fasteners[0].fastener_origin.y_coordinate* scale
-      ), 3, Paint());
+  if(converted_fasteners.length>0){
+     for(int f=0;f<converted_fasteners.length;f++){
+       canvas.drawCircle(
+           Offset(w+converted_fasteners[f].fastener_origin.x_coordinate* scale,
+                  h-converted_fasteners[f].fastener_origin.y_coordinate* scale
+           ),       converted_fasteners[f].fastener_templet.face_1_diameter*scale/2, Paint());
+     }
     }
 
 }

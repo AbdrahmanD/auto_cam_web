@@ -19,6 +19,7 @@ import 'package:auto_cam_web/online_autoam/Model/Main_Models/Inner_Box.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
 import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/kdt_file.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Support_Filler.dart';
 import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Main_Edit_Dialog.dart';
 import 'package:file_picker/file_picker.dart';
