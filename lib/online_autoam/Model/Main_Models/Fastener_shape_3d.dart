@@ -20,15 +20,15 @@ class Fastener_shape_3d {
 
   Fastener_shape_3d(this.fastener) {
     if (fastener.face_1_bore.diameter > 0) {
-      face_1_cylinder = generate_cylinder_from_bore(fastener.face_1_bore,true,false);
+      face_1_cylinder = generate_cylinder_from_bore(fastener.face_1_bore,!fastener.fastener_direction,false);
       cylinders.add(face_1_cylinder);
     }
     if (fastener.face_2_bore.diameter > 0) {
-      face_2_cylinder = generate_cylinder_from_bore(fastener.face_2_bore,false,false);
+      face_2_cylinder = generate_cylinder_from_bore(fastener.face_2_bore,fastener.fastener_direction,false);
       cylinders.add(face_2_cylinder);
     }
     if (fastener.side_bore.diameter > 0) {
-      side_cylinder = generate_cylinder_from_bore(fastener.side_bore,false,false);
+      side_cylinder = generate_cylinder_from_bore(fastener.side_bore,fastener.fastener_direction,false);
       cylinders.add(side_cylinder);
     }
     if (fastener.side_face_1_bore.diameter > 0) {
@@ -38,26 +38,25 @@ class Fastener_shape_3d {
     }
     if (fastener.side_face_2_bore.diameter > 0) {
       side_face_2_cylinder =
-          generate_cylinder_from_bore(fastener.side_face_2_bore,false,true);
+          generate_cylinder_from_bore(fastener.side_face_2_bore,true,true);
       cylinders.add(side_face_2_cylinder);
     }
   }
 
-  Cylinder generate_cylinder_from_bore(Bore_model bore,bool face,bool side_face) {
+  Cylinder generate_cylinder_from_bore(Bore_model bore,bool hole_directtion,bool side_face) {
 
 
 
 
     double r = bore.diameter / 2;
-    double d = fastener.fastener_direction ? -bore.depth : bore.depth;
-    face?(d=d):(d=-d);
+    double d = hole_directtion ? bore.depth : -bore.depth;
 
    late List<Point_model> main_circle_points=[] ;
    late List<Point_model> second_circle_points =[];
 
     if (fastener.fastener_axis == "X") {
       if(side_face){
-        d=-bore.depth;
+
         main_circle_points   =  generate_circle_point(bore.origin,
             "XZ", r);
         second_circle_points =generate_circle_point(
@@ -77,6 +76,48 @@ class Fastener_shape_3d {
     }
 
 
+    else if (fastener.fastener_axis == "Y") {
+      if(side_face){
+
+        main_circle_points   =  generate_circle_point(bore.origin,
+            "YZ", r);
+        second_circle_points =generate_circle_point(
+            Point_model(
+                bore.origin.x_coordinate+d,
+                bore.origin.y_coordinate,
+                bore.origin.z_coordinate),
+            "YZ",r);
+
+      }
+      else {
+        main_circle_points   =  generate_circle_point(bore.origin, "XZ", r);
+        second_circle_points =generate_circle_point(
+            Point_model(bore.origin.x_coordinate, bore.origin.y_coordinate+d, bore.origin.z_coordinate), "XZ",r);
+
+      }
+    }
+
+
+    else if (fastener.fastener_axis == "Z") {
+      if(side_face){
+
+        // main_circle_points   =  generate_circle_point(bore.origin,
+        //     "YZ", r);
+        // second_circle_points =generate_circle_point(
+        //     Point_model(
+        //         bore.origin.x_coordinate,
+        //         bore.origin.y_coordinate+d,
+        //         bore.origin.z_coordinate),
+        //     "YZ",r);
+
+      }
+      else {
+        main_circle_points   =  generate_circle_point(bore.origin, "XY", r);
+        second_circle_points =generate_circle_point(
+            Point_model(bore.origin.x_coordinate, bore.origin.y_coordinate, bore.origin.z_coordinate+d), "XY",r);
+
+      }
+    }
 
 
     ///
@@ -118,7 +159,7 @@ class Fastener_shape_3d {
       }
 
     }
-    else     if(plane=="XZ"){
+    else if(plane=="XZ"){
 
       for (int i = 0; i < 8; i++) {
         double angle = (i * 45) * pi / 180; // Convert degrees to radians
@@ -130,7 +171,18 @@ class Fastener_shape_3d {
       }
 
     }
+    else if(plane=="XY"){
 
+      for (int i = 0; i < 8; i++) {
+        double angle = (i * 45) * pi / 180; // Convert degrees to radians
+        List<double> point = generatePointOnCircle(center.x_coordinate, center.y_coordinate, radius, angle);
+
+        Point_model resault_point=Point_model(point[0], point[1],center.z_coordinate);
+
+        resault.add(resault_point);
+      }
+
+    }
 
 
 

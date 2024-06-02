@@ -113,8 +113,8 @@ class transform_controller {
         b.fasteners[f].facee_name,
         b.fasteners[f].side_name,
         b.fasteners[f].face_pice_id,
-        b.fasteners[f].side_pice_id
-
+        b.fasteners[f].side_pice_id,
+false
       );
 
       converted_fasteners.add(fastener);

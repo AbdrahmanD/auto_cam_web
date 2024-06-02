@@ -35,6 +35,7 @@ class AnalyzeJoins {
   clean ( ) {
 
     draw_controller.box_repository.box_model.value.fasteners.clear() ;
+    draw_controller.box_repository.box_model.value.fasteners_shape_3d.clear() ;
 
     for(int p=0;p<draw_controller.box_repository.box_model.value.box_pieces.length;p++){
       for(int f=0;f<6;f++){
@@ -249,7 +250,6 @@ class AnalyzeJoins {
 
 
 
-  /// only fastener adder
   transform_line_into_fasteners(Line l , int mp,int sp,int mf,int sf ){
 
 
@@ -260,7 +260,8 @@ class AnalyzeJoins {
     late Fastener_Templet fastener_templet;
     if(draw_controller.box_repository.corrent_fastener==""){
       Get.defaultDialog(title: "ALERT" , content: Container(height: 50,width: 200,child: Text("choose fasteners type"),));
-    }else if(draw_controller.box_repository.corrent_fastener=="mini_fix"){
+    }
+    else if(draw_controller.box_repository.corrent_fastener=="mini_fix"){
       fastener_templet=draw_controller.box_repository.mini_fix;
     }
     else if(draw_controller.box_repository.corrent_fastener=="confirm_screw"){
@@ -295,7 +296,7 @@ class AnalyzeJoins {
             fastener_direction,
             material_thickness
             ,mp,sp,mf,sf
-
+,true
         );
       }
       if(join_line_axis=="Y"){
@@ -311,7 +312,7 @@ class AnalyzeJoins {
             fastener_direction,
             material_thickness
             ,mp,sp,mf,sf
-
+            ,true
         );
       }
       if(join_line_axis=="X"){
@@ -327,7 +328,7 @@ class AnalyzeJoins {
             fastener_direction,
             material_thickness
             ,mp,sp,mf,sf
-
+            ,true
         );
       }
 

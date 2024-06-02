@@ -32,14 +32,23 @@ late  Bore_model side_bore;
 late  Bore_model side_face_1_bore;
 late  Bore_model side_face_2_bore;
 
-
+late bool rebuild;
 
   Fastener(
       this.id, this.fastener_templet, this.fastener_origin,
       this.fastener_axis, this.fastener_direction, this.material_thickness,
       this.face_pice_id, this.side_pice_id, this.facee_name, this.side_name
+      ,this.rebuild
       ){
-    transform_fastener_to_hole();
+    if (rebuild) {
+      transform_fastener_to_hole();
+    }else{
+      face_1_bore=Bore_model(0, Point_model(0,0,0), 0, 0);
+      face_2_bore=Bore_model(0, Point_model(0,0,0), 0, 0);
+      side_bore=Bore_model(0, Point_model(0,0,0), 0, 0);
+      side_face_1_bore=Bore_model(0, Point_model(0,0,0), 0, 0);
+      side_face_2_bore=Bore_model(0, Point_model(0,0,0), 0, 0);
+    }
   }
 
 
@@ -66,7 +75,10 @@ late  Bore_model side_face_2_bore;
 
        side_face_1_bore=Bore_model(id,
           Point_model(
-              fastener_direction?(fastener_origin.x_coordinate+fastener_templet.side_to_face):fastener_origin.x_coordinate-fastener_templet.side_to_face,
+              fastener_direction?
+              (fastener_origin.x_coordinate+fastener_templet.side_to_face):
+              fastener_origin.x_coordinate-fastener_templet.side_to_face,
+
               fastener_origin.y_coordinate+material_thickness/2,
               fastener_origin.z_coordinate
           ),
