@@ -344,6 +344,8 @@ class AnalyzeJoins {
 
   generate_3d_shape_fastener(){
 
+    draw_controller.box_repository.box_model.value.fasteners_shape_3d.clear();
+
     for(int f=0;f<draw_controller.box_repository.box_model.value.fasteners.length;f++){
 
       Fastener fastener = draw_controller.box_repository.box_model.value.fasteners[f];

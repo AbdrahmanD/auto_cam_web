@@ -22,6 +22,8 @@ import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
 import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/kdt_file.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Support_Filler.dart';
+import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Edit_Fastener_dialog.dart';
+import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Edit_Piece_Dialog.dart';
 import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Main_Edit_Dialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +50,7 @@ class Draw_Controller extends GetxController {
 
   RxList selected_pieces = [].obs;
   RxList selected_faces = [].obs;
-  RxList selected_fasteners = [].obs;
+  List<Fastener> selected_fasteners = [];
   int selected_fasteners_id =0;
 
   String box_type = "wall_cabinet";
@@ -264,7 +266,7 @@ if(select_window.value){
   select_fastener_via_window() {
 
 
-    selected_fasteners.value = [];
+    selected_fasteners  = [];
 
 
     double ssx = start_select_window.value.dx;
@@ -523,12 +525,13 @@ if(select_window.value){
           .contains('inner')) {
         my_widget = Main_Edit_Dialog();
       }
-      else {
-        my_widget = Container(
-          // child: Edit_Piece_Dialog(),
-        );
-      }
-    } else {
+
+    }else if(selected_fasteners.length>0) {
+      my_widget = Container(
+        child: Edit_Fastener_dialog(),
+      );
+    }
+    else {
       my_widget = Container(
         child: Out_Box_Menu(),
       );
@@ -1006,7 +1009,7 @@ if(select_window.value){
       else if(selected_faces.value.length>0) {
         move_face(double_move_value);
       }
-      else if(selected_fasteners.value.length>0){
+      else if(selected_fasteners .length>0){
 
         if(moving_axis=="X"){
           move_fasteners( double_move_value,  0 );
@@ -1023,7 +1026,7 @@ if(select_window.value){
 
     selected_pieces.value=[];
     selected_faces.value=[];
-    selected_fasteners.value=[];
+    selected_fasteners =[];
 
     anlyze_inners();
 
@@ -1186,12 +1189,12 @@ if(select_window.value){
 
 
 
-        selected_fasteners.value[f].fastener_origin.x_coordinate += dx;
-        selected_fasteners.value[f].fastener_origin.y_coordinate += dy;
-        selected_fasteners.value[f].fastener_origin.z_coordinate += dz;
+        selected_fasteners[f].fastener_origin.x_coordinate += dx;
+        selected_fasteners[f].fastener_origin.y_coordinate += dy;
+        selected_fasteners[f].fastener_origin.z_coordinate += dz;
 
-        move_fasteners_relted_bore(selected_fasteners.value[f].id,dx,dy,dz);
-        move_fasteners_relted_3d_shape(selected_fasteners.value[f]);
+        move_fasteners_relted_bore(selected_fasteners [f].id,dx,dy,dz);
+        move_fasteners_relted_3d_shape(selected_fasteners [f]);
 
       }
 
@@ -1208,7 +1211,33 @@ analayzejoins.generate_3d_shape_fastener();
 
 
 
+  change_fastener_templet(Fastener_Templet temp){
+    for(int i=0;i<selected_fasteners.length;i++){
+      Fastener nf=Fastener(
+         selected_fasteners[i]. id,
+          temp,
+         selected_fasteners[i]. fastener_origin,
+         selected_fasteners[i]. fastener_axis,
+         selected_fasteners[i]. fastener_direction,
+         selected_fasteners[i]. material_thickness,
+         selected_fasteners[i]. face_pice_id,
+         selected_fasteners[i]. side_pice_id,
+         selected_fasteners[i]. facee_name,
+         selected_fasteners[i]. side_name,
+         selected_fasteners[i]. rebuild
+      );
+      box_repository.box_model.value.fasteners.removeWhere((f) => f.id==selected_fasteners[i].id);
+      box_repository.box_model.value.fasteners.add(nf);
+    }
+    analayzejoins.generate_3d_shape_fastener();
 
+
+    for(Fastener f in box_repository.box_model.value.fasteners){
+      print(f.fastener_templet.name);
+    }
+
+
+  }
 
   update_piece(Piece_model p, int face_name, double move_value) {
     double n_width = 0;

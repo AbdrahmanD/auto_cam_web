@@ -263,7 +263,8 @@ class _View_PageState extends State<View_Page> {
                         /// right click
                         onSecondaryTapUp: (v) {
                           if (
-                          (!( draw_controller.hover_id == 100) &&  draw_controller.box_repository.box_model.value.box_pieces[ draw_controller.hover_id].piece_name
+                          (!( draw_controller.hover_id == 100) &&
+                              draw_controller.box_repository.box_model.value.box_pieces[ draw_controller.hover_id].piece_name
                               .contains('inner'))
                           || ( draw_controller.hover_id == 100)
 
