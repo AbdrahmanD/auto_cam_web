@@ -14,6 +14,7 @@ import 'package:auto_cam_web/online_autoam/Model/Main_Models/Door_Model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Drawer_Rail_Brand.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Faces_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener_shape_3d.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Group_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Inner_Box.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
@@ -69,12 +70,10 @@ class Draw_Controller extends GetxController {
 
   Firebase_caontroller firebase_controller=Get.find();
 
+  late  AnalyzeJoins analayzejoins;
+
   Draw_Controller() {
-
-    // read_pattern_files();
-    // read_brands();
-
-    firebase_controller.featch_user_patterns();
+    // analayzejoins = AnalyzeJoins(false, false);
 
   }
 
@@ -833,16 +832,29 @@ if(select_window.value){
     //
     // Piece_model p = selected_pieces[0];
     // if (selected_pieces.length == 1)
-    for(Piece_model p in selected_pieces)
-    {
+    if (selected_pieces.length>0) {
+      for(Piece_model p in selected_pieces)
+      {
 
 
-      box_repository.box_model.value.box_pieces.remove(p);
+        box_repository.box_model.value.box_pieces.remove(p);
 
-      box_repository.add_box_to_repo(b);
-      selected_pieces.value = [];
-      draw_Box();
-    }
+        box_repository.add_box_to_repo(b);
+        selected_pieces.value = [];
+        draw_Box();
+      }
+    }else if(selected_fasteners.length>0){
+
+      for (int f = 0; f < selected_fasteners.length; f++) {
+        box_repository.box_model.value.fasteners.remove(selected_fasteners[f]);
+        Fastener fff = selected_fasteners[f];
+
+        delete_fasteners_relted_bore(fff.id);
+
+
+      }
+
+      }
 
     selected_pieces.value=[];
     gumball.value=false;
@@ -850,6 +862,85 @@ if(select_window.value){
 
   }
 
+  move_fasteners_relted_bore(int f_id , double dx,double dy,double dz){
+
+    for(int i=0;i<box_repository.box_model.value.box_pieces.length;i++){
+      for (var f=0 ; f<6; f++) {
+       for(int b=0;b<box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores.length;b++){
+          if(box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores[b].fastener_id==f_id){
+
+
+            if(
+            box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores[b].origin.x_coordinate==box_repository.box_model.value.fasteners.where((fas) =>fas.id==f_id).first.fastener_origin.x_coordinate &&
+            box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores[b].origin.y_coordinate==box_repository.box_model.value.fasteners.where((fas) =>fas.id==f_id).first.fastener_origin.y_coordinate &&
+            box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores[b].origin.z_coordinate==box_repository.box_model.value.fasteners.where((fas) =>fas.id==f_id).first.fastener_origin.z_coordinate
+
+
+
+            ){
+              continue;
+            }else{
+            box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores[b].origin.x_coordinate+=dx;
+            box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores[b].origin.y_coordinate+=dy;
+            box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores[b].origin.z_coordinate+=dz;
+          }}
+         }
+      }
+      // print("======================");
+
+    }
+  }
+
+
+  delete_fasteners_relted_bore(int f_id){
+
+    for(int i=0;i<box_repository.box_model.value.box_pieces.length;i++){
+      print("piece : ${box_repository.box_model.value.box_pieces[i].piece_name} ");
+
+      for (var f=0 ; f<6; f++) {
+        print("    face : ${box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].name} ");
+
+        print("       bore : ${box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores.length}");
+
+        for(int b=0;b<box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores.length;b++){
+
+          if(box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores[b].fastener_id==f_id){
+            box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores.remove(
+                box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores[b]
+            );
+          }
+
+         }
+      }
+      print("======================");
+
+    }
+  }
+
+
+  // refresh_fasteners(){
+  //
+  //   int t=box_repository.box_model.value.fasteners.length;
+  //   for(int f=0;f<t;f++){
+  //
+  //     Fastener new_fastener=Fastener(
+  //         box_repository.box_model.value.fasteners[f].id,
+  //         box_repository.box_model.value.fasteners[f].fastener_templet,
+  //         box_repository.box_model.value.fasteners[f].fastener_origin,
+  //         box_repository.box_model.value.fasteners[f].fastener_axis,
+  //         box_repository.box_model.value.fasteners[f].fastener_direction,
+  //         box_repository.box_model.value.fasteners[f].material_thickness,
+  //         box_repository.box_model.value.fasteners[f].face_pice_id,
+  //         box_repository.box_model.value.fasteners[f].side_pice_id,
+  //         box_repository.box_model.value.fasteners[f].facee_name,
+  //         box_repository.box_model.value.fasteners[f].side_name);
+  //
+  //     box_repository.box_model.value.fasteners.remove(box_repository.box_model.value.fasteners[f]);
+  //     box_repository.box_model.value.fasteners.add( new_fastener) ;
+  //
+  //
+  //   }
+  // }
 
   move(double double_move_value, String moving_axis){
 
@@ -1090,13 +1181,34 @@ if(select_window.value){
         dz = 0;
       }
 
-      box_repository.box_model.value.fasteners[selected_fasteners_id].fastener_origin.x_coordinate += dx;
-      box_repository.box_model.value.fasteners[selected_fasteners_id].fastener_origin.y_coordinate += dy;
-      box_repository.box_model.value.fasteners[selected_fasteners_id].fastener_origin.z_coordinate += dz;
+
+      for(int f=0;f<selected_fasteners.length;f++) {
+
+
+
+        selected_fasteners.value[f].fastener_origin.x_coordinate += dx;
+        selected_fasteners.value[f].fastener_origin.y_coordinate += dy;
+        selected_fasteners.value[f].fastener_origin.z_coordinate += dz;
+
+        move_fasteners_relted_bore(selected_fasteners.value[f].id,dx,dy,dz);
+        move_fasteners_relted_3d_shape(selected_fasteners.value[f]);
+
+      }
 
 
 
   }
+
+  move_fasteners_relted_3d_shape(Fastener fastener){
+
+    box_repository.box_model.value.fasteners_shape_3d=[];
+analayzejoins.generate_3d_shape_fastener();
+
+  }
+
+
+
+
 
   update_piece(Piece_model p, int face_name, double move_value) {
     double n_width = 0;
@@ -1164,7 +1276,7 @@ if(select_window.value){
 
   /// analyze box
   analyze() {
-    AnalyzeJoins analayzejoins = AnalyzeJoins(false, false);
+      analayzejoins = AnalyzeJoins(false, false);
   }
 
   /// move_box

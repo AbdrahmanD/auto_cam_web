@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Door_Model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener_shape_3d.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Group_model.dart';
  import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
@@ -28,6 +29,7 @@ class Box_model {
    List<Piece_model> box_deleted_pieces=[];
    int piece_id=0;
    List<Fastener> fasteners=[];
+   List<Fastener_shape_3d> fasteners_shape_3d=[];
 
 
   Box_model(

@@ -5,6 +5,7 @@ import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Cont
 import 'package:auto_cam_web/online_autoam/Controller/Painters/three_D_Painter.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener_shape_3d.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
@@ -58,6 +59,7 @@ class transform_controller {
         b.grove_value, b.bac_panel_distence, b.top_base_piece_width, b.is_back_panel, Point_model(0,0,0));
 
     box_model.box_pieces=[];
+    box_model.fasteners_shape_3d=draw_controller.box_repository.box_model.value.fasteners_shape_3d;
 
     /// stupid boy dont forget to try understand this
     /// when its active
@@ -96,6 +98,7 @@ class transform_controller {
 
 
     List<Fastener> converted_fasteners=[];
+    List<Cylinder> converted_cylinder=[];
 
     for(int f=0;f<b.fasteners.length;f++){
 
@@ -115,6 +118,48 @@ class transform_controller {
       );
 
       converted_fasteners.add(fastener);
+    }
+
+
+    if (b.fasteners_shape_3d.length>0) {
+
+      for(int f3d=0;f3d<b.fasteners_shape_3d.length;f3d++){
+
+        for (var c = 0; c<b.fasteners_shape_3d[f3d].cylinders.length; c++) {
+
+          Cylinder original_cylinder=b.fasteners_shape_3d[f3d].cylinders[c];
+
+          Cylinder new_cylinder=Cylinder([], [], [], Colors.red);
+
+          for(int cf=0;cf<original_cylinder.main_circle.length;cf++){
+
+
+            basic_line m_c    = basic_line(
+                cameraTransformer.transform(original_cylinder.main_circle[cf].start_point),
+                cameraTransformer.transform(original_cylinder.main_circle[cf].end_point)
+            );
+
+            basic_line s_c     = basic_line(
+                cameraTransformer.transform(original_cylinder.second_circle[cf].start_point),
+                cameraTransformer.transform(original_cylinder.second_circle[cf].end_point)
+            );
+
+            basic_line c_l     = basic_line(
+                cameraTransformer.transform(original_cylinder.connect_lines[cf].start_point),
+                cameraTransformer.transform(original_cylinder.connect_lines[cf].end_point)
+            );
+
+            new_cylinder.main_circle.add(m_c);
+            new_cylinder.second_circle.add(s_c);
+            new_cylinder.connect_lines.add(c_l);
+
+          }
+
+          converted_cylinder.add(new_cylinder);
+
+        }
+
+      }
     }
 
 
@@ -158,7 +203,8 @@ class transform_controller {
       draw_controller.y_move,
       draw_controller.view_port.value,
 
-        converted_fasteners
+        converted_fasteners,
+        converted_cylinder
 
 
     );

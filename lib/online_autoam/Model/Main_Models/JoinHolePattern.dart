@@ -454,13 +454,16 @@ class Bore_unit {
 }
 
 class Bore_model {
+
+
+  late int fastener_id;
   late  Point_model origin;
   late double diameter;
   late double depth;
 
 
 
-  Bore_model(this.origin,this.diameter, this.depth);
+  Bore_model(this.fastener_id,this.origin,this.diameter, this.depth);
 
   Bore_model.fromJson(Map<String, dynamic> json) {
 

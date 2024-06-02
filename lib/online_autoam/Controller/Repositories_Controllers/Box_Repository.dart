@@ -24,6 +24,18 @@ class Box_Repository extends GetxController {
 
   String back_panel_type = "full_cover";
 
+
+
+
+
+
+
+
+  /// //////////
+
+  List<Fastener_Point> fasteners_points=[];
+
+
   String corrent_fastener="";
 
   List<String> fasteners_namae=["confirm_screw","mini_fix"];

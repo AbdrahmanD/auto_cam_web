@@ -438,11 +438,11 @@ class _Box_Fitting_SettingState extends State<Box_Fitting_Setting> {
         pre_distance,
         0,
         0,
-        Bore_model(Point_model(0, 0, 0), dowel_diameter, dowel_depth),
+        Bore_model(900,Point_model(0, 0, 0), dowel_diameter, dowel_depth),
         false,
         0,
-        Bore_model(Point_model(0, 0, 0), 0, 0),
-        Bore_model(Point_model(0, 0, 0), dowel_diameter, 10),
+        Bore_model(900,Point_model(0, 0, 0), 0, 0),
+        Bore_model(900,Point_model(0, 0, 0), dowel_diameter, 10),
         center,
         true);
     list_boxes_fitting[pattern_index].bores.add(bore_unit);
@@ -469,11 +469,11 @@ class _Box_Fitting_SettingState extends State<Box_Fitting_Setting> {
         pre_distance,
         0,
         0,
-        Bore_model(Point_model(0, 0, 0), screw_diameter, screw_length),
+        Bore_model(900,Point_model(0, 0, 0), screw_diameter, screw_length),
         true,
         nut_distance,
-        Bore_model(Point_model(0, 0, 0), nut_diameter, nut_depth),
-        Bore_model(
+        Bore_model(900,Point_model(0, 0, 0), nut_diameter, nut_depth),
+        Bore_model(900,
             Point_model(0, 0, 0), blastic_nut_diameeter, blastic_nut_depth),
         center,
         true);

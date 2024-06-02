@@ -5,6 +5,7 @@ import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Cut_List_Item.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Faces_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener_shape_3d.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
@@ -330,17 +331,31 @@ class AnalyzeJoins {
         );
       }
 
-      fastener.transform_fastener_to_hole();
       draw_controller.box_repository.box_model.value.fasteners.add(fastener);
-
-
 
 
     }
 
 
+    generate_3d_shape_fastener();
 
   }
+
+  generate_3d_shape_fastener(){
+
+    for(int f=0;f<draw_controller.box_repository.box_model.value.fasteners.length;f++){
+
+      Fastener fastener = draw_controller.box_repository.box_model.value.fasteners[f];
+
+      Fastener_shape_3d f3d =Fastener_shape_3d(fastener);
+
+      draw_controller.box_repository.box_model.value.fasteners_shape_3d.add(f3d);
+
+    }
+
+  }
+
+
 
   List<Fastener_Point> generate_fasteners_points(Line l,String join_line_axis){
 

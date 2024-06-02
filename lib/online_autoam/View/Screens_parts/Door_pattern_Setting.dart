@@ -137,18 +137,18 @@ class _Door_pattern_SettingState extends State<Door_pattern_Setting> {
     double J_value = double.parse(J_controller.text.toString());
 
     Bore_model main_hole =
-    Bore_model(Point_model(0, 22.5 - B_value, 0), A_value, A_depth_value);
+    Bore_model(900,Point_model(0, 22.5 - B_value, 0), A_value, A_depth_value);
     Bore_model main_hole_support_1 = Bore_model(
-        Point_model(0, C_value - B_value, 0), H_value, H_depth_value);
+        900,  Point_model(0, C_value - B_value, 0), H_value, H_depth_value);
     Bore_model main_hole_support_2 = Bore_model(
-        Point_model(0, C_value - B_value, 0), H_value, H_depth_value);
+        900,    Point_model(0, C_value - B_value, 0), H_value, H_depth_value);
 
     Bore_model side_hole_1 =
-    Bore_model(Point_model(0, E_value, 0), J_value, J_depth_value);
+    Bore_model(900,Point_model(0, E_value, 0), J_value, J_depth_value);
     Bore_model side_hole_2 =
-    Bore_model(Point_model(0, E_value, 0), J_value, J_depth_value);
+    Bore_model(900,Point_model(0, E_value, 0), J_value, J_depth_value);
 
-    Bore_model emety_bore = Bore_model(Point_model(0, 22, 0), 0, 0);
+    Bore_model emety_bore = Bore_model(900,Point_model(0, 22, 0), 0, 0);
 
     Bore_unit Door_unit_1 = Bore_unit(Pre_distance, 0, 0, emety_bore, false, 0,
         emety_bore, main_hole, false, false);

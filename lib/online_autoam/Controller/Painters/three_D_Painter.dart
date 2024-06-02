@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Faces_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener_shape_3d.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
@@ -28,12 +29,15 @@ late double X_move;
 late double Y_move;
 late String view_Port;
 late List<Fastener> converted_fasteners;
+late List<Cylinder> converted_cylinder;
 
 
   three_D_Painter(this.box_model,this.lines_with_type, this.screen_size,
       this.scale,this.hover_id,this.mouse_position,this.selected_pieces,this.selected_faces,this.start_select_window,this
 .end_select_window,this.select_window,this.X_move,this.Y_move,this.view_Port
-    ,this.converted_fasteners  );
+    ,this.converted_fasteners
+    ,this.converted_cylinder
+      );
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -88,14 +92,66 @@ draw_fasteners(Canvas canvas){
   double w = screen_size.width / 2;
   double h = screen_size.height / 2;
 
+  Paint fp=Paint();
+  fp.color=Colors.redAccent;
+
   if(converted_fasteners.length>0){
      for(int f=0;f<converted_fasteners.length;f++){
-       canvas.drawCircle(
-           Offset(w+converted_fasteners[f].fastener_origin.x_coordinate* scale,
+
+       canvas.drawCircle(Offset(w+converted_fasteners[f].fastener_origin.x_coordinate* scale,
                   h-converted_fasteners[f].fastener_origin.y_coordinate* scale
-           ),       converted_fasteners[f].fastener_templet.face_1_diameter*scale/2, Paint());
+           ), converted_fasteners[f].fastener_templet.face_1_diameter*scale/4, fp);
      }
     }
+
+  if (converted_cylinder.length>0) {
+    for(int c=0;c<converted_cylinder.length;c++){
+
+      for(int cf=0;cf<converted_cylinder[c].main_circle.length;cf++){
+
+        canvas.drawLine(
+            Offset(
+                w+converted_cylinder[c].main_circle[cf].start_point.x_coordinate* scale,
+                h-converted_cylinder[c].main_circle[cf].start_point.y_coordinate* scale
+            ),
+            Offset(
+                w+ converted_cylinder[c].main_circle[cf].end_point.x_coordinate* scale,
+                h- converted_cylinder[c].main_circle[cf].end_point.y_coordinate* scale
+            ),
+            Paint());
+
+
+        canvas.drawLine(
+            Offset(
+                w+converted_cylinder[c].second_circle[cf].start_point.x_coordinate* scale,
+                h-converted_cylinder[c].second_circle[cf].start_point.y_coordinate* scale
+            ),
+            Offset(
+                w+converted_cylinder[c].second_circle[cf].end_point.x_coordinate* scale,
+                h-converted_cylinder[c].second_circle[cf].end_point.y_coordinate* scale
+            ),
+            Paint());
+
+
+        canvas.drawLine(
+            Offset(
+                w+converted_cylinder[c].connect_lines[cf].start_point.x_coordinate* scale,
+                h-converted_cylinder[c].connect_lines[cf].start_point.y_coordinate* scale
+            ),
+            Offset(
+                w+ converted_cylinder[c].connect_lines[cf].end_point.x_coordinate* scale,
+                h- converted_cylinder[c].connect_lines[cf].end_point.y_coordinate* scale
+            ),
+            Paint());
+
+
+
+      }
+
+
+    }
+  }
+
 
 }
 

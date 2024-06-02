@@ -1,0 +1,181 @@
+import 'dart:ui';
+import 'dart:math';
+
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
+import 'package:flutter/material.dart';
+
+class Fastener_shape_3d {
+
+  late Fastener fastener;
+
+  List<Cylinder> cylinders = [];
+
+  late Cylinder face_1_cylinder;
+  late Cylinder face_2_cylinder;
+  late Cylinder side_cylinder;
+  late Cylinder side_face_1_cylinder;
+  late Cylinder side_face_2_cylinder;
+
+  Fastener_shape_3d(this.fastener) {
+    if (fastener.face_1_bore.diameter > 0) {
+      face_1_cylinder = generate_cylinder_from_bore(fastener.face_1_bore,true,false);
+      cylinders.add(face_1_cylinder);
+    }
+    if (fastener.face_2_bore.diameter > 0) {
+      face_2_cylinder = generate_cylinder_from_bore(fastener.face_2_bore,false,false);
+      cylinders.add(face_2_cylinder);
+    }
+    if (fastener.side_bore.diameter > 0) {
+      side_cylinder = generate_cylinder_from_bore(fastener.side_bore,false,false);
+      cylinders.add(side_cylinder);
+    }
+    if (fastener.side_face_1_bore.diameter > 0) {
+      side_face_1_cylinder =
+          generate_cylinder_from_bore(fastener.side_face_1_bore,false,true);
+      cylinders.add(side_face_1_cylinder);
+    }
+    if (fastener.side_face_2_bore.diameter > 0) {
+      side_face_2_cylinder =
+          generate_cylinder_from_bore(fastener.side_face_2_bore,false,true);
+      cylinders.add(side_face_2_cylinder);
+    }
+  }
+
+  Cylinder generate_cylinder_from_bore(Bore_model bore,bool face,bool side_face) {
+
+
+
+
+    double r = bore.diameter / 2;
+    double d = fastener.fastener_direction ? -bore.depth : bore.depth;
+    face?(d=d):(d=-d);
+
+   late List<Point_model> main_circle_points=[] ;
+   late List<Point_model> second_circle_points =[];
+
+    if (fastener.fastener_axis == "X") {
+      if(side_face){
+        d=-bore.depth;
+        main_circle_points   =  generate_circle_point(bore.origin,
+            "XZ", r);
+        second_circle_points =generate_circle_point(
+            Point_model(
+                bore.origin.x_coordinate,
+                bore.origin.y_coordinate+d,
+                bore.origin.z_coordinate),
+            "XZ",r);
+
+      }
+      else {
+        main_circle_points   =  generate_circle_point(bore.origin, "YZ", r);
+        second_circle_points =generate_circle_point(
+            Point_model(bore.origin.x_coordinate+d, bore.origin.y_coordinate, bore.origin.z_coordinate), "YZ",r);
+
+      }
+    }
+
+
+
+
+    ///
+
+    List<basic_line> main_circle=[];
+    List<basic_line> second_circle=[];
+    List<basic_line> connect_lines=[];
+
+     if (main_circle_points.length>0) {
+
+       main_circle   = draw_circle(main_circle_points  );
+       second_circle = draw_circle(second_circle_points);
+       for(int i=0;i<main_circle.length;i++){
+         basic_line c = basic_line(main_circle[i].start_point, second_circle[i].start_point);
+         connect_lines.add(c);
+       }
+
+     }
+
+
+
+    Cylinder cylinder = Cylinder(main_circle, second_circle, connect_lines, Colors.red);
+
+    return cylinder;
+  }
+
+  List<Point_model> generate_circle_point(Point_model center , String plane ,double radius){
+    List<Point_model> resault=[];
+
+    if(plane=="YZ"){
+
+      for (int i = 0; i < 6; i++) {
+        double angle = (i * 60) * pi / 180; // Convert degrees to radians
+        List<double> point = generatePointOnCircle(center.z_coordinate, center.y_coordinate, radius, angle);
+
+        Point_model resault_point=Point_model(center.x_coordinate,point[1], point[0]);
+
+        resault.add(resault_point);
+      }
+
+    }
+    else     if(plane=="XZ"){
+
+      for (int i = 0; i < 8; i++) {
+        double angle = (i * 45) * pi / 180; // Convert degrees to radians
+        List<double> point = generatePointOnCircle(center.x_coordinate, center.z_coordinate, radius, angle);
+
+        Point_model resault_point=Point_model(point[0],center.y_coordinate, point[1]);
+
+        resault.add(resault_point);
+      }
+
+    }
+
+
+
+
+    return resault;
+  }
+
+  List<double> generatePointOnCircle(double cx, double cy, double radius, double angle) {
+    double x = cx + radius * cos(angle);
+    double y = cy + radius * sin(angle);
+    return [x, y];
+  }
+
+  List<basic_line> draw_circle(List<Point_model> points){
+    List<basic_line> circle=[];
+
+    for(int p=0;p<points.length-1;p++){
+      basic_line l = basic_line(points[p],points[p+1]);
+      circle.add(l);
+    }
+    basic_line l = basic_line(points[points.length-1],points[0]);
+    circle.add(l);
+
+
+
+    return circle;
+  }
+
+
+
+
+}
+
+class Cylinder {
+  late List<basic_line> main_circle;
+  late List<basic_line> second_circle;
+  late List<basic_line> connect_lines;
+  late Color color;
+
+  Cylinder(
+      this.main_circle, this.second_circle, this.connect_lines, this.color);
+}
+
+class basic_line {
+  late Point_model start_point;
+  late Point_model end_point;
+
+  basic_line(this.start_point, this.end_point);
+}

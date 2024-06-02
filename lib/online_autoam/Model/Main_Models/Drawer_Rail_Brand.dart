@@ -82,8 +82,8 @@ class Drawer_Rail_Brand{
 
     List<JoinHolePattern> drawer_patterns=[];
 
-    Bore_model main_hole=Bore_model(Point_model(0,0,0), diameter, depth);
-    Bore_model empty_hole=Bore_model(Point_model(0,0,0), 0, 0);
+    Bore_model main_hole=Bore_model(900,Point_model(0,0,0), diameter, depth);
+    Bore_model empty_hole=Bore_model(900,Point_model(0,0,0), 0, 0);
 
 
     // distances[0]
@@ -125,8 +125,8 @@ class Drawer_Rail_Brand{
 
     List<JoinHolePattern> drawer_patterns=[];
 
-    Bore_model main_hole=Bore_model(Point_model(0,0,0), diameter, depth);
-    Bore_model empty_hole=Bore_model(Point_model(0,0,0), 0, 0);
+    Bore_model main_hole=Bore_model(900,Point_model(0,0,0), diameter, depth);
+    Bore_model empty_hole=Bore_model(900,Point_model(0,0,0), 0, 0);
 
 
 

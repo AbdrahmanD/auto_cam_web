@@ -132,8 +132,8 @@ setState(() {
     double Quantity =
     double.parse(Flexible_Shelf_Quantity_controller.text.toString());
 
-    Bore_model bore_model = Bore_model(Point_model(0, 0, 0), Diameter, Depth);
-    Bore_model emety_bore = Bore_model(Point_model(0, 0, 0), 0, 0);
+    Bore_model bore_model = Bore_model(900,Point_model(0, 0, 0), Diameter, Depth);
+    Bore_model emety_bore = Bore_model(900,Point_model(0, 0, 0), 0, 0);
 
     if (Quantity == 1) {
       Bore_unit bore_unit = Bore_unit(Shelf_A, 0, Shelf_B, emety_bore, false, 0,

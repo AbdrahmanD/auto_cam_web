@@ -512,23 +512,41 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
 
           ///chose type of box
           Padding(
-            padding: const EdgeInsets.only(left: 24,right: 24,top: 6,bottom: 6),
-            child: InkWell(
-              onTap: () {
-chosing_box_type=true;
-setState(() {
+            padding: const EdgeInsets.only(left: 24,right: 24),
+            child: InkWell(onTap: (){
+              chosing_box_type=!chosing_box_type;setState(() {
 
-});
-
-              },
-              child: chosing_box_type?
-              Container(
-                width: 532,color: Colors.grey[200],
-                height: box_types.length*40,
-                child: Center(
-                    child: ListView.builder(
-                        itemCount: box_types.length,
-                        itemBuilder: (context,i){
+              });
+            },
+              child: Container(
+                height: 40,decoration: BoxDecoration(borderRadius: BorderRadius.circular(8),color: Colors.teal[200]),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                        'chose type of box',
+                        style: TextStyle(fontSize: 14, color: Colors.black),
+                                  ),
+                      ),
+                    ),
+                    !chosing_box_type?
+                    Container(width:40,height:40,child: Icon(Icons.add_circle_outline,color: Colors.black,)):
+                    Container(width:40,height:40,child: Icon(Icons.remove_circle_outline,color: Colors.red))
+                   ],
+                ),
+              ),
+            ),
+          ),
+          chosing_box_type?
+          Container(
+              width: 532,color: Colors.grey[200],
+              height: box_types.length*40,
+              child:
+              Center(
+                child: ListView.builder(
+                    itemCount: box_types.length,
+                    itemBuilder: (context,i){
                       return Container(height: 40,
                         child: Center(
                           child: InkWell(onTap: (){
@@ -549,25 +567,73 @@ setState(() {
                         ),
                       );
                     }),
-              )):
-              Container(
-                width: 532,
-                height: 40,decoration: BoxDecoration(borderRadius: BorderRadius.circular(12),color: Colors.teal[300]),
-                child: Center(
-                    child: (box_type=="")?Text(
-                      'chose type of box',
-                      style: TextStyle(fontSize: 16, color: Colors.black),
-                    ):
-                    Text(
-                      box_type,
-                      style: TextStyle(fontSize: 16, color: Colors.black),
-                    )
+              )):SizedBox(),
+
+          SizedBox(
+            height: 6,
+          ),
+
+
+          ///chose chosing_fastener_type
+          Padding(
+            padding: const EdgeInsets.only(left: 24,right: 24),
+            child: InkWell(onTap: (){
+              chosing_fastener_type=!chosing_fastener_type;setState(() {
+
+              });
+            },
+              child: Container(
+                height: 40,decoration: BoxDecoration(borderRadius: BorderRadius.circular(8),color: Colors.teal[200]),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          'chose  fastener type',
+                          style: TextStyle(fontSize: 14, color: Colors.black),
+                        ),
+                      ),
+                    ),
+                    !chosing_fastener_type?
+                    Container(width:40,height:40,child: Icon(Icons.add_circle_outline,color: Colors.black,)):
+                    Container(width:40,height:40,child: Icon(Icons.remove_circle_outline,color: Colors.red))
+                  ],
                 ),
               ),
+            ),
+          ),
+          chosing_fastener_type?
+          Container(
+              width: 532,color: Colors.grey[200],
+              height: draw_controller.box_repository.fasteners_namae.length*40,
+              child: Center(
+                child: ListView.builder(
+                    itemCount: draw_controller.box_repository.fasteners_namae.length,
+                    itemBuilder: (context,i){
+                      return Container(height: 40,
+                        child: Center(
+                          child: InkWell(onTap: (){
+                            draw_controller.box_repository.corrent_fastener=draw_controller.box_repository.fasteners_namae[i];
+                            chosing_fastener_type=false;
+
+                            draw_Controller.analyze();
+
+                            setState(() {
+
+                            });
+
+                          },
+                            child: Text(
+                              draw_controller.box_repository.fasteners_namae[i],
+                              style: TextStyle(fontSize: 16, color: Colors.black),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+              )):SizedBox(),
 
 
-
-          ),),
 
           ///Draw in the Screen button
           Padding(
@@ -632,101 +698,6 @@ setState(() {
           Container(
             height: 1,
             color: Colors.grey,
-          ),
-
-          SizedBox(height: 16,),
-
-          /// choose fasteners
-          Padding(
-            padding: const EdgeInsets.only(left: 24,right: 24,top: 6,bottom: 6),
-            child: InkWell(
-              onTap: () {
-                chosing_fastener_type=true;
-                setState(() {
-
-                });
-
-              },
-              child: chosing_fastener_type?
-              Container(
-                  width: 532,color: Colors.grey[200],
-                  height: draw_controller.box_repository.fasteners_namae.length*40,
-                  child: Center(
-                    child: ListView.builder(
-                        itemCount: draw_controller.box_repository.fasteners_namae.length,
-                        itemBuilder: (context,i){
-                          return Container(height: 40,
-                            child: Center(
-                              child: InkWell(onTap: (){
-                                draw_controller.box_repository.corrent_fastener=draw_controller.box_repository.fasteners_namae[i];
-                                chosing_fastener_type=false;
-                                setState(() {
-
-                                });
-
-                              },
-                                child: Text(
-                                  draw_controller.box_repository.fasteners_namae[i],
-                                  style: TextStyle(fontSize: 16, color: Colors.black),
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
-                  )):
-              Container(
-                  width: 120,
-                  child:
-
-                  (draw_controller.box_repository.corrent_fastener=="")?
-                  Text('choose fasteners',
-                      style: TextStyle(
-                        fontSize: 14,
-                      )):
-                  Text(draw_controller.box_repository.corrent_fastener,
-                      style: TextStyle(
-                        fontSize: 14,
-                      ))
-
-
-              ),
-
-
-            ),),
-
-
-
-          /// install fasteners
-          Container(
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 18,
-                ),
-                Container(
-                    width: 120,
-                    child: Text('install fasteners ',
-                        style: TextStyle(
-                          fontSize: 14,
-                        ))),
-                SizedBox(
-                  width: 18,
-                ),
-                InkWell(
-                    onTap: () {
-                      draw_Controller.analyze();
-
-                      setState(() {
-
-                      });
-                    },
-                    child: Icon(
-                      Icons.auto_fix_off_sharp,
-                      size: 36,
-                      color: Colors.teal,
-                    )),
-              ],
-            ),
           ),
 
 

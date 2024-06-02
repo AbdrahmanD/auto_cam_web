@@ -1,5 +1,6 @@
 
  import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener_shape_3d.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
@@ -25,11 +26,22 @@ class Fastener {
   late int side_name;
 
 
+late  Bore_model face_1_bore;
+late  Bore_model face_2_bore;
+late  Bore_model side_bore;
+late  Bore_model side_face_1_bore;
+late  Bore_model side_face_2_bore;
+
+
+
   Fastener(
       this.id, this.fastener_templet, this.fastener_origin,
       this.fastener_axis, this.fastener_direction, this.material_thickness,
       this.face_pice_id, this.side_pice_id, this.facee_name, this.side_name
-      );
+      ){
+    transform_fastener_to_hole();
+  }
+
 
 
   transform_fastener_to_hole(){
@@ -38,10 +50,10 @@ class Fastener {
 
     if(fastener_axis=="X"){
 
-      Bore_model face_1_bore=Bore_model(fastener_origin, fastener_templet.face_1_diameter, fastener_templet.face_1_depth);
+       face_1_bore=Bore_model(id,fastener_origin, fastener_templet.face_1_diameter, fastener_templet.face_1_depth);
 
 
-      Bore_model face_2_bore=Bore_model(
+       face_2_bore=Bore_model(id,
           Point_model(
               fastener_direction?(fastener_origin.x_coordinate-material_thickness):(fastener_origin.x_coordinate+material_thickness),
               fastener_origin.y_coordinate,
@@ -50,9 +62,9 @@ class Fastener {
           fastener_templet.face_2_diameter, fastener_templet.face_2_depth);
 
 
-      Bore_model side_bore=Bore_model(fastener_origin, fastener_templet.side_diameter, fastener_templet.side_depth);
+       side_bore=Bore_model(id,fastener_origin, fastener_templet.side_diameter, fastener_templet.side_depth);
 
-      Bore_model side_face_1_bore=Bore_model(
+       side_face_1_bore=Bore_model(id,
           Point_model(
               fastener_direction?(fastener_origin.x_coordinate+fastener_templet.side_to_face):fastener_origin.x_coordinate-fastener_templet.side_to_face,
               fastener_origin.y_coordinate+material_thickness/2,
@@ -60,7 +72,7 @@ class Fastener {
           ),
           fastener_templet.side_face_1_diameter, fastener_templet.side_face_1_depth);
 
-      Bore_model side_face_2_bore=Bore_model(
+       side_face_2_bore=Bore_model(id,
           Point_model(
               fastener_direction?(fastener_origin.x_coordinate+fastener_templet.side_to_face):fastener_origin.x_coordinate-fastener_templet.side_to_face,
               fastener_origin.y_coordinate-material_thickness/2,
@@ -89,10 +101,12 @@ class Fastener {
 
     if(fastener_axis=="Y"){
 
-      Bore_model face_1_bore=Bore_model(fastener_origin, fastener_templet.face_1_diameter, fastener_templet.face_1_depth);
+
+       face_1_bore=Bore_model(id,fastener_origin, fastener_templet.face_1_diameter, fastener_templet.face_1_depth);
 
 
-      Bore_model face_2_bore=Bore_model(
+
+       face_2_bore=Bore_model(id,
           Point_model(
               fastener_origin.x_coordinate,
 
@@ -105,9 +119,9 @@ class Fastener {
           fastener_templet.face_2_diameter, fastener_templet.face_2_depth);
 
 
-      Bore_model side_bore=Bore_model(fastener_origin, fastener_templet.side_diameter, fastener_templet.side_depth);
+       side_bore=Bore_model(id,fastener_origin, fastener_templet.side_diameter, fastener_templet.side_depth);
 
-      Bore_model side_face_1_bore=Bore_model(
+       side_face_1_bore=Bore_model(id,
           Point_model(
               fastener_origin.x_coordinate+material_thickness/2,
               fastener_direction?
@@ -117,7 +131,7 @@ class Fastener {
           ),
           fastener_templet.side_face_1_diameter, fastener_templet.side_face_1_depth);
 
-      Bore_model side_face_2_bore=Bore_model(
+       side_face_2_bore=Bore_model(id,
           Point_model(
               fastener_origin.x_coordinate-material_thickness/2,
               fastener_direction?
@@ -144,10 +158,10 @@ class Fastener {
 
     if(fastener_axis=="Z"){
 
-      Bore_model face_1_bore=Bore_model(fastener_origin, fastener_templet.face_1_diameter, fastener_templet.face_1_depth);
+       face_1_bore=Bore_model(id,fastener_origin, fastener_templet.face_1_diameter, fastener_templet.face_1_depth);
 
 
-      Bore_model face_2_bore=Bore_model(
+       face_2_bore=Bore_model(id,
           Point_model(
             fastener_origin.x_coordinate,
             fastener_origin.y_coordinate,
@@ -159,9 +173,9 @@ class Fastener {
           fastener_templet.face_2_diameter, fastener_templet.face_2_depth);
 
 
-      Bore_model side_bore=Bore_model(fastener_origin, fastener_templet.side_diameter, fastener_templet.side_depth);
+       side_bore=Bore_model(id,fastener_origin, fastener_templet.side_diameter, fastener_templet.side_depth);
 
-      Bore_model side_face_1_bore=Bore_model(
+       side_face_1_bore=Bore_model(id,
           Point_model(
               fastener_origin.x_coordinate+material_thickness/2,
               fastener_origin.y_coordinate,
@@ -171,7 +185,7 @@ class Fastener {
           ),
           fastener_templet.side_face_1_diameter, fastener_templet.side_face_1_depth);
 
-      Bore_model side_face_2_bore=Bore_model(
+       side_face_2_bore=Bore_model(id,
           Point_model(
               fastener_origin.x_coordinate-material_thickness/2,
               fastener_origin.y_coordinate,
