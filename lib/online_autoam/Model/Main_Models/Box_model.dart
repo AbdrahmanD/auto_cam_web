@@ -29,7 +29,7 @@ class Box_model {
    List<Piece_model> box_deleted_pieces=[];
    int piece_id=0;
    List<Fastener> fasteners=[];
-   List<Fastener_shape_3d> fasteners_shape_3d=[];
+    List<Fastener_shape_3d> fasteners_shape_3d=[];
 
 
   Box_model(
@@ -200,56 +200,6 @@ Map<String, dynamic> toJson() {
     );
     box_pieces.add(left_piece);
 
-    // if(is_back_panel){
-    //   Piece_model  back_panel = Piece_model(
-    //       get_id("BP"),
-    //       'back_panel',
-    //       'F',
-    //       init_material_name,
-    //       correct_value(box_width-2*init_material_thickness+2*grove_value-1),
-    //       correct_value(box_height-2*init_material_thickness+2*grove_value-1),
-    //       correct_value(back_panel_thickness),
-    //       Point_model(
-    //           correct_value( box_origin.x_coordinate+init_material_thickness-grove_value+1),
-    //           correct_value( box_origin.y_coordinate+init_material_thickness-grove_value+1 ),
-    //           correct_value( box_origin.z_coordinate+box_depth-bac_panel_distence-back_panel_thickness)
-    //       )
-    //   );
-    //
-    //   Piece_model  back_panel_Helper = Piece_model(
-    //       get_id("Helper"),
-    //       'back_panel_Helper',
-    //       'F',
-    //       init_material_name,
-    //       correct_value(box_width-2*init_material_thickness),
-    //       correct_value(box_height-2*init_material_thickness),
-    //       correct_value(back_panel_thickness),
-    //       Point_model(
-    //           correct_value( box_origin.x_coordinate+init_material_thickness),
-    //           correct_value( box_origin.y_coordinate+init_material_thickness ),
-    //           correct_value( box_origin.z_coordinate+box_depth-bac_panel_distence-back_panel_thickness)
-    //       )
-    //   );
-    //
-    //   box_pieces.add(back_panel);
-    //   box_pieces.add(back_panel_Helper);
-    // }
-    // //
-    // // Piece_model  inner = Piece_model(
-    // //     get_id("inner"),
-    // //     'inner_0',
-    // //     'F',
-    // //     'inner',
-    // //     correct_value( box_width-2*init_material_thickness),
-    // //     correct_value( box_height-2*init_material_thickness),
-    // //     correct_value( (is_back_panel)?(box_depth-bac_panel_distence-back_panel_thickness):(box_depth)),
-    // //     Point_model(
-    // //         correct_value(box_origin.x_coordinate+init_material_thickness),
-    // //         correct_value(box_origin.y_coordinate+init_material_thickness) ,
-    // //         correct_value(box_origin.z_coordinate)
-    // //     ),""
-    // // );
-    // // box_pieces.add(inner);
 
 
 
@@ -394,56 +344,6 @@ Map<String, dynamic> toJson() {
     );
     box_pieces.add(left_piece);
 
-    // if(is_back_panel){
-    //   Piece_model  back_panel = Piece_model(
-    //       get_id("BP"),
-    //       'back_panel',
-    //       'F',
-    //       init_material_name,
-    //      correct_value(box_width-2*init_material_thickness+2*grove_value-1),
-    //      correct_value(box_height-2*init_material_thickness+2*grove_value-1),
-    //      correct_value(back_panel_thickness),
-    //       Point_model(
-    //          correct_value( box_origin.x_coordinate+init_material_thickness-grove_value+1),
-    //          correct_value( box_origin.y_coordinate+init_material_thickness-grove_value+1 ),
-    //          correct_value( box_origin.z_coordinate+box_depth-bac_panel_distence-back_panel_thickness)
-    //       ),
-    //   );
-    //
-    //   Piece_model  back_panel_Helper = Piece_model(
-    //       get_id("Helper"),
-    //       'back_panel_Helper',
-    //       'F',
-    //       init_material_name,
-    //       correct_value(box_width-2*init_material_thickness),
-    //       correct_value(box_height-2*init_material_thickness),
-    //       correct_value(back_panel_thickness),
-    //       Point_model(
-    //           correct_value( box_origin.x_coordinate+init_material_thickness),
-    //           correct_value( box_origin.y_coordinate+init_material_thickness ),
-    //           correct_value( box_origin.z_coordinate+box_depth-bac_panel_distence-back_panel_thickness)
-    //       ),
-    //   );
-    //
-    //   box_pieces.add(back_panel);
-    //   box_pieces.add(back_panel_Helper);
-    // }
-    // //
-    // // Piece_model  inner = Piece_model(
-    // //     get_id("inner"),
-    // //     'inner_0',
-    // //     'F',
-    // //     'inner',
-    // //    correct_value( box_width-2*init_material_thickness),
-    // //    correct_value( box_height-2*init_material_thickness),
-    // //    correct_value( (is_back_panel)?(box_depth-bac_panel_distence-back_panel_thickness):(box_depth)),
-    // //     Point_model(
-    // //        correct_value(box_origin.x_coordinate+init_material_thickness),
-    // //        correct_value(box_origin.y_coordinate+init_material_thickness) ,
-    // //        correct_value(box_origin.z_coordinate)
-    // //     ),""
-    // // );
-    // // box_pieces.add(inner);
 
 
 
@@ -516,52 +416,6 @@ Map<String, dynamic> toJson() {
             box_origin.y_coordinate ,box_origin.z_coordinate)
        );
     box_pieces.add(left_piece);
-    //
-    // if(is_back_panel){
-    //   Piece_model  back_panel = Piece_model(
-    //       get_id("BP"),
-    //       'back_panel',
-    //       'F',
-    //       init_material_name,
-    //       box_width-2*init_material_thickness+2*grove_value-1,
-    //       box_height-2*init_material_thickness+2*grove_value-1,
-    //       back_panel_thickness,
-    //       Point_model(box_origin.x_coordinate+init_material_thickness-grove_value+1,
-    //           box_origin.y_coordinate+init_material_thickness-grove_value+1
-    //           ,box_origin.z_coordinate+box_depth-bac_panel_distence-back_panel_thickness)
-    //         );
-    //   Piece_model  back_panel_Helper = Piece_model(
-    //       get_id("Helper"),
-    //       'back_panel_Helper',
-    //       'F',
-    //       init_material_name,
-    //       correct_value(box_width-2*init_material_thickness),
-    //       correct_value(box_height-2*init_material_thickness),
-    //       correct_value(back_panel_thickness),
-    //       Point_model(
-    //           correct_value( box_origin.x_coordinate+init_material_thickness),
-    //           correct_value( box_origin.y_coordinate+init_material_thickness ),
-    //           correct_value( box_origin.z_coordinate+box_depth-bac_panel_distence-back_panel_thickness)
-    //       )
-    //     );
-    //
-    //   box_pieces.add(back_panel);
-    //   box_pieces.add(back_panel_Helper);
-    // }
-    // // Piece_model  inner = Piece_model(
-    // //     get_id("inner"),
-    // //     'inner_0',
-    // //     'F',
-    // //     'inner',
-    // //     box_width-2*init_material_thickness,
-    // //     box_height-2*init_material_thickness,
-    // //     (is_back_panel)?(box_depth-bac_panel_distence-back_panel_thickness):(box_depth),
-    // //
-    // //     Point_model(box_origin.x_coordinate+init_material_thickness,
-    // //         box_origin.y_coordinate+init_material_thickness ,
-    // //         box_origin.z_coordinate)
-    // //     ,"" );
-    // // box_pieces.add(inner);
 
   }
 
@@ -637,51 +491,6 @@ Map<String, dynamic> toJson() {
          );
     box_pieces.add(left_piece);
 
-    // if(is_back_panel){
-    //   Piece_model  back_panel = Piece_model(
-    //       get_id("BP"),
-    //       'back_panel',
-    //       'F',
-    //       init_material_name,
-    //       box_width-2*init_material_thickness+2*grove_value-1,
-    //       box_height-top_base_piece_width- init_material_thickness+2*grove_value-1,
-    //       back_panel_thickness,
-    //       Point_model(box_origin.x_coordinate+init_material_thickness-grove_value+1,
-    //           box_origin.y_coordinate+init_material_thickness-grove_value+1
-    //           ,box_origin.z_coordinate+box_depth-bac_panel_distence-back_panel_thickness)
-    //        );
-    //   Piece_model  back_panel_Helper = Piece_model(
-    //       get_id("Helper"),
-    //       'back_panel_Helper',
-    //       'F',
-    //       init_material_name,
-    //       correct_value(box_width-2*init_material_thickness),
-    //       correct_value(box_height- init_material_thickness-top_base_piece_width),
-    //       correct_value(back_panel_thickness),
-    //       Point_model(
-    //           correct_value( box_origin.x_coordinate+init_material_thickness),
-    //           correct_value( box_origin.y_coordinate+init_material_thickness ),
-    //           correct_value( box_origin.z_coordinate+box_depth-bac_panel_distence-back_panel_thickness)
-    //       )
-    //       );
-    //
-    //   box_pieces.add(back_panel);
-    //   box_pieces.add(back_panel_Helper);
-    // }
-    // // Piece_model  inner = Piece_model(
-    // //     get_id("inner"),
-    // //     'inner_0',
-    // //     'F',
-    // //     'inner',
-    // //     box_width-2*init_material_thickness,
-    // //     box_height-2*init_material_thickness,
-    // //     (is_back_panel)?(box_depth-bac_panel_distence-back_panel_thickness):(box_depth),
-    // //
-    // //     Point_model(box_origin.x_coordinate+init_material_thickness,
-    // //         box_origin.y_coordinate+init_material_thickness ,
-    // //         box_origin.z_coordinate)
-    // //     ,"" );
-    // // box_pieces.add(inner);
 
   }
 
@@ -767,50 +576,6 @@ Map<String, dynamic> toJson() {
         );
     box_pieces.add(left_piece);
 
-    // if(is_back_panel){
-    //   Piece_model  back_panel = Piece_model(
-    //       get_id("BP"),
-    //       'back_panel',
-    //       'F',
-    //       init_material_name,
-    //       box_width-2*init_material_thickness+2*grove_value-1,
-    //       box_height-2*init_material_thickness+2*grove_value-1,
-    //       back_panel_thickness,
-    //       Point_model(box_origin.x_coordinate+init_material_thickness-grove_value+1,
-    //           box_origin.y_coordinate+init_material_thickness-grove_value+1 ,
-    //           box_origin.z_coordinate+box_depth-bac_panel_distence-back_panel_thickness)
-    //         );
-    //   Piece_model  back_panel_Helper = Piece_model(
-    //       get_id("Helper"),
-    //       'back_panel_Helper',
-    //       'F',
-    //       init_material_name,
-    //       correct_value(box_width-2*init_material_thickness),
-    //       correct_value(box_height-2*init_material_thickness),
-    //       correct_value(back_panel_thickness),
-    //       Point_model(
-    //           correct_value( box_origin.x_coordinate+init_material_thickness),
-    //           correct_value( box_origin.y_coordinate+init_material_thickness ),
-    //           correct_value( box_origin.z_coordinate+box_depth-bac_panel_distence-back_panel_thickness)
-    //       )
-    //       );
-    //
-    //   box_pieces.add(back_panel);
-    //   box_pieces.add(back_panel_Helper);
-    // }
-    // // Piece_model  inner = Piece_model(
-    // //     get_id("inner"),
-    // //     'inner_0',
-    // //     'F',
-    // //     'inner',
-    // //     box_width-2*init_material_thickness,
-    // //     box_height-2*init_material_thickness,
-    // //     0,
-    // //     Point_model(box_origin.x_coordinate+init_material_thickness,
-    // //         box_origin.y_coordinate+init_material_thickness ,
-    // //         box_origin.z_coordinate)
-    // //     ,"");
-    // // box_pieces.add(inner);
 
   }
 
@@ -818,7 +583,8 @@ Map<String, dynamic> toJson() {
 
 
 
-  add_Shelf_pattern(Point_model origin, double width, double height, double shelf_material_thickness, String shelf_type )
+  add_Shelf_pattern(Point_model origin, double width, double height, double shelf_material_thickness, String shelf_type
+      ,Fastener_Templet temp)
   {
 
     Piece_model new_piece = Piece_model(
@@ -832,13 +598,16 @@ Map<String, dynamic> toJson() {
         origin.correct_cordinate()
          );
 
+    Fastener fastener=Fastener(fasteners.length,
+        temp , origin, "X", true,18, 3, 4, 1, 3, false);
+    fasteners.add(fastener);
      box_pieces.add(new_piece);
 
   }
 
   add_Shelf(int inner,
       double frontage_Gap, double shelf_material_thickness,
-      double top_Distence,int Quantity, String shelf_type,) {
+      double top_Distence,int Quantity, String shelf_type,Fastener_Templet temp) {
 
     Piece_model inner_piece=box_pieces[inner];
     double shelf_width=inner_piece.piece_thickness-(frontage_Gap);
@@ -858,7 +627,7 @@ Map<String, dynamic> toJson() {
             inner_piece.piece_origin.z_coordinate+frontage_Gap
         );
 
-        add_Shelf_pattern(origin, shelf_width, shelf_height, shelf_material_thickness, shelf_type);
+        add_Shelf_pattern(origin, shelf_width, shelf_height, shelf_material_thickness, shelf_type,temp);
         Navigator.of(Get.overlayContext!).pop();
       }
       else
@@ -897,7 +666,7 @@ Map<String, dynamic> toJson() {
 
         for (int i = 0; i < Quantity; i++) {
 
-          add_Shelf_pattern(origins[i], shelf_width, shelf_height, shelf_material_thickness, shelf_type);
+          add_Shelf_pattern(origins[i], shelf_width, shelf_height, shelf_material_thickness, shelf_type,temp);
         }
 
         Navigator.of(Get.overlayContext!).pop();

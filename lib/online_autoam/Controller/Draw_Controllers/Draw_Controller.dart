@@ -549,7 +549,7 @@ if(select_window.value){
       material_thickness,
       top_Distence,
       quantity,
-      shelf_type,
+      shelf_type,box_repository.shelf_templet
     );
 
     anlyze_inners();
@@ -853,6 +853,7 @@ if(select_window.value){
         Fastener fff = selected_fasteners[f];
 
         delete_fasteners_relted_bore(fff.id);
+        analayzejoins.generate_3d_shape_fastener();
 
 
       }

@@ -126,6 +126,7 @@ class _Add_Shelf_DialogState extends State<Add_Shelf_Dialog> {
         draw_Controller.add_shelf(0, frontage_Gap, material,
             double.parse(Quantity.text.toString()).toInt(),shelf_type);
       }
+
     }
   }
 

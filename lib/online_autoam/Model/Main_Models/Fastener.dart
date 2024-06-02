@@ -104,8 +104,8 @@ late bool rebuild;
      if(face_1_bore.diameter>0)     {face_piece.piece_faces.faces[facee_name].bores.add(face_1_bore);}
      if(face_2_bore.diameter>0)     {face_piece.piece_faces.faces[finde_parallel_face(facee_name)].bores.add(face_2_bore);}
      if(side_bore.diameter>0)       {side_piece.piece_faces.faces[side_name].bores.add(side_bore);}
-     if(side_face_1_bore.diameter>0){side_piece.piece_faces.faces[finde_perpendiculer_face(side_name)].bores.add(side_face_1_bore);}
-     if(side_face_2_bore.diameter>0){side_piece.piece_faces.faces[finde_parallel_face(finde_perpendiculer_face(side_name))].bores.add(side_face_2_bore);}
+     if(side_face_1_bore.diameter>0){side_piece.piece_faces.faces[finde_perpendiculer_face(side_name,side_piece.piece_direction)].bores.add(side_face_1_bore);}
+     if(side_face_2_bore.diameter>0){side_piece.piece_faces.faces[finde_parallel_face(finde_perpendiculer_face(side_name,side_piece.piece_direction))].bores.add(side_face_2_bore);}
 
 
 
@@ -161,8 +161,8 @@ late bool rebuild;
      if(face_1_bore.diameter>0)     { face_piece.piece_faces.faces[facee_name].bores.add(face_1_bore);}
      if(face_2_bore.diameter>0)     { face_piece.piece_faces.faces[finde_parallel_face(facee_name)].bores.add(face_2_bore);}
      if(side_bore.diameter>0)       { side_piece.piece_faces.faces[side_name].bores.add(side_bore);}
-     if(side_face_1_bore.diameter>0){ side_piece.piece_faces.faces[finde_perpendiculer_face(side_name)].bores.add(side_face_1_bore);}
-     if(side_face_2_bore.diameter>0){ side_piece.piece_faces.faces[finde_parallel_face(finde_perpendiculer_face(side_name))].bores.add(side_face_2_bore);}
+     if(side_face_1_bore.diameter>0){ side_piece.piece_faces.faces[finde_perpendiculer_face(side_name,side_piece.piece_direction)].bores.add(side_face_1_bore);}
+     if(side_face_2_bore.diameter>0){ side_piece.piece_faces.faces[finde_parallel_face(finde_perpendiculer_face(side_name,side_piece.piece_direction))].bores.add(side_face_2_bore);}
 
 
 
@@ -214,8 +214,8 @@ late bool rebuild;
      if(face_1_bore.diameter>0)     { face_piece.piece_faces.faces[facee_name].bores.add(face_1_bore);}
      if(face_2_bore.diameter>0)     { face_piece.piece_faces.faces[finde_parallel_face(facee_name)].bores.add(face_2_bore);}
      if(side_bore.diameter>0)       { side_piece.piece_faces.faces[side_name].bores.add(side_bore);}
-     if(side_face_1_bore.diameter>0){ side_piece.piece_faces.faces[finde_perpendiculer_face(side_name)].bores.add(side_face_1_bore);}
-     if(side_face_2_bore.diameter>0){ side_piece.piece_faces.faces[finde_parallel_face(finde_perpendiculer_face(side_name))].bores.add(side_face_2_bore);}
+     if(side_face_1_bore.diameter>0){ side_piece.piece_faces.faces[finde_perpendiculer_face(side_name,side_piece.piece_direction)].bores.add(side_face_1_bore);}
+     if(side_face_2_bore.diameter>0){ side_piece.piece_faces.faces[finde_parallel_face(finde_perpendiculer_face(side_name,side_piece.piece_direction))].bores.add(side_face_2_bore);}
 
 
 
@@ -239,14 +239,24 @@ late bool rebuild;
     return resault;
   }
 
-  int finde_perpendiculer_face(int face){
+  int finde_perpendiculer_face(int face , String piece_direction){
     int resault=0;
-    if(face==0){resault=1;}
-    if(face==1){resault=0;}
-    if(face==2){resault=1;}
-    if(face==3){resault=0;}
-    if(face==4){resault=1;}
-    if(face==5){resault=1;}
+    if (piece_direction=="F") {
+      if(face==0){resault=5;}
+      if(face==1){resault=5;}
+      if(face==2){resault=5;}
+      if(face==3){resault=5;}
+      if(face==4){resault=1;}
+      if(face==5){resault=1;}
+    }
+    else{
+      if(face==0){resault=1;}
+      if(face==1){resault=0;}
+      if(face==2){resault=1;}
+      if(face==3){resault=0;}
+      if(face==4){resault=1;}
+      if(face==5){resault=1;}
+    }
 
     return resault;
   }

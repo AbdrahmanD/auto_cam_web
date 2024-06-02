@@ -40,11 +40,10 @@ class Box_Repository extends GetxController {
 
   List<String> fasteners_namae=["confirm_screw","mini_fix"];
 
-  Fastener_Templet confirm_screw= Fastener_Templet(
-      "confirm_screw",
-     0,
-     6,17,10,1,5,35,0,0,0,0,
-  );
+
+  Fastener_Templet shelf_templet= Fastener_Templet("shelf_templet", 0, 5,10,0,0,0,0,0,0,0,0,);
+
+  Fastener_Templet confirm_screw= Fastener_Templet("confirm_screw", 0, 6,17,10,1,5,35,0,0,0,0,);
 
   Fastener_Templet mini_fix= Fastener_Templet(
     "mini_fix",

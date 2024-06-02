@@ -1,10 +1,13 @@
 import 'dart:ui';
 import 'dart:math';
 
+import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Fastener_shape_3d {
 
@@ -33,12 +36,12 @@ class Fastener_shape_3d {
     }
     if (fastener.side_face_1_bore.diameter > 0) {
       side_face_1_cylinder =
-          generate_cylinder_from_bore(fastener.side_face_1_bore,false,true);
+          generate_cylinder_from_bore(fastener.side_face_1_bore,true,true);
       cylinders.add(side_face_1_cylinder);
     }
     if (fastener.side_face_2_bore.diameter > 0) {
       side_face_2_cylinder =
-          generate_cylinder_from_bore(fastener.side_face_2_bore,true,true);
+          generate_cylinder_from_bore(fastener.side_face_2_bore,false,true);
       cylinders.add(side_face_2_cylinder);
     }
   }
@@ -46,6 +49,7 @@ class Fastener_shape_3d {
   Cylinder generate_cylinder_from_bore(Bore_model bore,bool hole_directtion,bool side_face) {
 
 
+    Draw_Controller draw_controller = Get.find();
 
 
     double r = bore.diameter / 2;
@@ -56,15 +60,23 @@ class Fastener_shape_3d {
 
     if (fastener.fastener_axis == "X") {
       if(side_face){
+        Piece_model side_piece=draw_controller.box_repository.box_model.value.box_pieces[fastener.side_pice_id];
 
-        main_circle_points   =  generate_circle_point(bore.origin,
-            "XZ", r);
+        bool is_front_piece = side_piece.piece_direction=="F";
+
+        main_circle_points   =  generate_circle_point(
+            Point_model(
+                bore.origin.x_coordinate,
+                bore.origin.y_coordinate -(is_front_piece?fastener.material_thickness/2:0),
+                bore.origin.z_coordinate +(is_front_piece?(-d+fastener.material_thickness/2):0)),
+
+            is_front_piece?"XY":"XZ", r);
         second_circle_points =generate_circle_point(
             Point_model(
                 bore.origin.x_coordinate,
-                bore.origin.y_coordinate+d,
-                bore.origin.z_coordinate),
-            "XZ",r);
+                bore.origin.y_coordinate -(is_front_piece?fastener.material_thickness/2:d),
+                bore.origin.z_coordinate+(is_front_piece?(fastener.material_thickness/2):0)),
+            is_front_piece?"XY":"XZ",r);
 
       }
       else {
@@ -101,14 +113,18 @@ class Fastener_shape_3d {
     else if (fastener.fastener_axis == "Z") {
       if(side_face){
 
-        // main_circle_points   =  generate_circle_point(bore.origin,
-        //     "YZ", r);
-        // second_circle_points =generate_circle_point(
-        //     Point_model(
-        //         bore.origin.x_coordinate,
-        //         bore.origin.y_coordinate+d,
-        //         bore.origin.z_coordinate),
-        //     "YZ",r);
+        Piece_model side_piece=draw_controller.box_repository.box_model.value.box_pieces[fastener.side_pice_id];
+
+        bool h = side_piece.piece_direction=="H";
+
+        main_circle_points   =  generate_circle_point(bore.origin,
+           h?"XZ": "YZ", r);
+        second_circle_points =generate_circle_point(
+            Point_model(
+                bore.origin.x_coordinate-(h?0:d),
+                bore.origin.y_coordinate-(h?d:0),
+                bore.origin.z_coordinate),
+            h?"XZ":   "YZ",r);
 
       }
       else {

@@ -168,7 +168,6 @@ class AnalyzeJoins {
               /// helper shelf
               else if ( spiece.piece_name.contains("shelf") && !spiece.piece_name.contains("fixed"))
               {
-
                 join_line = Join_Line(line.start_point, line.end_point, "Help",line.line_width);
               }
 
@@ -189,7 +188,9 @@ class AnalyzeJoins {
               join_line = Join_Line(line.start_point, line.end_point, "Drawer_Face",line.line_width);
             }
 
-            else if ( spiece.piece_name.contains("shelf") && !spiece.piece_name.contains("fixed"))
+            else if (
+            spiece.piece_name.contains("shelf") && !spiece.piece_name.contains("fixed")
+            )
             {
 
               join_line = Join_Line(line.start_point, line.end_point, "Flexible_Shelves",line.line_width);
@@ -233,7 +234,14 @@ class AnalyzeJoins {
                 sface.joines.add(join_line);
                 mface.joines.add(join_line);
 
-                transform_line_into_fasteners(line , mp,sp,mf,sf);
+                if (
+                !join_line.join_type.contains("Flexible_Shelves")&&
+                !join_line.join_type.contains("Groove")&&
+                !join_line.join_type.contains("Drawer_Rail_Side")&&
+                !join_line.join_type.contains("Drawer_Rail_Box")
+                ) {
+                  transform_line_into_fasteners(line , mp,sp,mf,sf);
+                }
 
               }
 
