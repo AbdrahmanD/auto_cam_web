@@ -852,7 +852,8 @@ if(select_window.value){
         box_repository.box_model.value.fasteners.remove(selected_fasteners[f]);
         Fastener fff = selected_fasteners[f];
 
-        delete_fasteners_relted_bore(fff.id);
+        update_holes();
+
         analayzejoins.generate_3d_shape_fastener();
 
 
@@ -896,30 +897,30 @@ if(select_window.value){
   }
 
 
-  delete_fasteners_relted_bore(int f_id){
-
-    for(int i=0;i<box_repository.box_model.value.box_pieces.length;i++){
-      print("piece : ${box_repository.box_model.value.box_pieces[i].piece_name} ");
-
-      for (var f=0 ; f<6; f++) {
-        print("    face : ${box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].name} ");
-
-        print("       bore : ${box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores.length}");
-
-        for(int b=0;b<box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores.length;b++){
-
-          if(box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores[b].fastener_id==f_id){
-            box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores.remove(
-                box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores[b]
-            );
-          }
-
-         }
-      }
-      print("======================");
-
-    }
-  }
+  // delete_fasteners_relted_bore(int f_id){
+  //
+  //   for(int i=0;i<box_repository.box_model.value.box_pieces.length;i++){
+  //     print("piece : ${box_repository.box_model.value.box_pieces[i].piece_name} ");
+  //
+  //     for (var f=0 ; f<6; f++) {
+  //       print("    face : ${box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].name} ");
+  //
+  //       print("       bore : ${box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores.length}");
+  //
+  //       for(int b=0;b<box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores.length;b++){
+  //
+  //         if(box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores[b].fastener_id==f_id){
+  //           box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores.remove(
+  //               box_repository.box_model.value.box_pieces[i].piece_faces.faces[f].bores[b]
+  //           );
+  //         }
+  //
+  //        }
+  //     }
+  //     print("======================");
+  //
+  //   }
+  // }
 
 
   // refresh_fasteners(){
@@ -1199,6 +1200,7 @@ if(select_window.value){
 
       }
 
+    update_holes();
 
 
   }
@@ -1214,29 +1216,26 @@ analayzejoins.generate_3d_shape_fastener();
 
   change_fastener_templet(Fastener_Templet temp){
     for(int i=0;i<selected_fasteners.length;i++){
-      Fastener nf=Fastener(
-         selected_fasteners[i]. id,
-          temp,
-         selected_fasteners[i]. fastener_origin,
-         selected_fasteners[i]. fastener_axis,
-         selected_fasteners[i]. fastener_direction,
-         selected_fasteners[i]. material_thickness,
-         selected_fasteners[i]. face_pice_id,
-         selected_fasteners[i]. side_pice_id,
-         selected_fasteners[i]. facee_name,
-         selected_fasteners[i]. side_name,
-         selected_fasteners[i]. rebuild
-      );
-      box_repository.box_model.value.fasteners.removeWhere((f) => f.id==selected_fasteners[i].id);
-      box_repository.box_model.value.fasteners.add(nf);
+      if (selected_fasteners[i].fastener_templet.name!="dowel") {
+        Fastener nf=Fastener(
+           selected_fasteners[i]. id,
+            temp,
+           selected_fasteners[i]. fastener_origin,
+           selected_fasteners[i]. fastener_axis,
+           selected_fasteners[i]. fastener_direction,
+           selected_fasteners[i]. material_thickness,
+           selected_fasteners[i]. face_pice_id,
+           selected_fasteners[i]. side_pice_id,
+           selected_fasteners[i]. facee_name,
+           selected_fasteners[i]. side_name,
+           selected_fasteners[i]. rebuild
+        );
+        box_repository.box_model.value.fasteners.removeWhere((f) => f.id==selected_fasteners[i].id);
+        box_repository.box_model.value.fasteners.add(nf);
+      }
     }
+    update_holes();
     analayzejoins.generate_3d_shape_fastener();
-
-
-    for(Fastener f in box_repository.box_model.value.fasteners){
-      print(f.fastener_templet.name);
-    }
-
 
   }
 
@@ -1302,7 +1301,20 @@ analayzejoins.generate_3d_shape_fastener();
     anlyze_inners();
   }
 
+  update_holes(){
+    for(int p=0;p<box_repository.box_model.value.box_pieces.length;p++){
+      for(int f=0;f<6;f++){
+        box_repository.box_model.value.box_pieces[p].piece_faces.faces[f].bores.clear();
+      }
+    }
 
+    for(int f=0;f<box_repository.box_model.value.fasteners.length;f++){
+      box_repository.box_model.value.fasteners[f].transform_fastener_to_hole();
+    }
+
+
+
+  }
 
   /// analyze box
   analyze() {

@@ -613,6 +613,7 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
                       return Container(height: 40,
                         child: Center(
                           child: InkWell(onTap: (){
+
                             draw_controller.box_repository.corrent_fastener=draw_controller.box_repository.fasteners_namae[i];
                             chosing_fastener_type=false;
 
@@ -724,6 +725,7 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
                 ),
                 InkWell(
                     onTap: () {
+                      draw_controller.update_holes();
                       Get.to(Piece_List_view());},
                     child: Icon(
                       Icons.draw,

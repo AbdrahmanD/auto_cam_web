@@ -33,6 +33,7 @@ late  Bore_model side_face_1_bore;
 late  Bore_model side_face_2_bore;
 
 late bool rebuild;
+  Draw_Controller draw_controller = Get.find();
 
   Fastener(
       this.id, this.fastener_templet, this.fastener_origin,
@@ -55,7 +56,6 @@ late bool rebuild;
 
   transform_fastener_to_hole(){
 
-    Draw_Controller draw_controller = Get.find();
 
     if(fastener_axis=="X"){
 
@@ -220,8 +220,6 @@ late bool rebuild;
 
 
     }
-
-
 
   }
 

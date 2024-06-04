@@ -76,6 +76,14 @@ class transform_controller {
 
       p.piece_inable=b.box_pieces[i].piece_inable;
 
+      for(int f=0;f<p.piece_faces.faces.length;f++){
+        for(int j=0;j<b.box_pieces[i].piece_faces.faces[f].joines.length;j++){
+          Join_Line nj=b.box_pieces[i].piece_faces.faces[f].joines[j];
+          p.piece_faces.faces[f].joines.add(nj);
+
+        }
+
+      }
       box_model.box_pieces.add(p);
 
     }
@@ -91,7 +99,26 @@ class transform_controller {
         for(int c=0;c<p.piece_faces.faces[f].corners.length;c++){
         p.piece_faces.faces[f].corners[c]=cameraTransformer.transform(p.piece_faces.faces[f].corners[c]);
 
-      }}
+      }
+
+        List<Join_Line> njl=[];
+        for(int j=0;j<p.piece_faces.faces[f].joines.length;j++){
+
+          Join_Line nj=Join_Line(
+         cameraTransformer.transform(p.piece_faces.faces[f].joines[j].start_point) ,
+          cameraTransformer.transform(p.piece_faces.faces[f].joines[j].end_point),
+              p.piece_faces.faces[f].joines[j].join_type
+              , p.piece_faces.faces[f].joines[j].join_width);
+
+          njl.add(nj);    }
+
+
+          p.piece_faces.faces[f].joines=njl;
+
+
+
+
+      }
 
 
     }

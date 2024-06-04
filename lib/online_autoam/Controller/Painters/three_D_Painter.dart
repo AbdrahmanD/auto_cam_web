@@ -392,6 +392,27 @@ draw_fasteners(Canvas canvas){
     }
 
 
+    Paint join_line_paint = Paint();
+    join_line_paint.style = PaintingStyle.stroke;
+    join_line_paint.strokeWidth=3;
+    join_line_paint.color=Colors.red;
+
+    for(int i=0;i<6;i++){
+      print("${piece_model.piece_faces.faces[i].joines.length}");
+
+      if(piece_model.piece_faces.faces[i].joines.length>0){
+        for(int j=0;j<piece_model.piece_faces.faces[i].joines.length;j++){
+          Offset sp=Offset(w+piece_model.piece_faces.faces[i].joines[j].start_point.x_coordinate*scale,
+              h-piece_model.piece_faces.faces[i].joines[j].start_point.y_coordinate*scale);
+          Offset ep=Offset(w+piece_model.piece_faces.faces[i].joines[j].end_point.x_coordinate *scale ,
+              h-piece_model.piece_faces.faces[i].joines[j].end_point.y_coordinate*scale);
+          canvas.drawLine(sp, ep, join_line_paint);
+        }
+      }
+    }
+
+
+
   }
 
   draw_hover_piece(Canvas canvas , Size screen_size , Piece_model piece_model ){

@@ -30,6 +30,7 @@ class AnalyzeJoins {
        all_face_check(draw_controller.box_repository.box_model.value);
        collect_all_same_pieces(collect_same_pieces);
 
+
   }
 
   clean ( ) {
@@ -185,7 +186,13 @@ class AnalyzeJoins {
             else if (box_model.box_pieces[mp].piece_name.contains("Drawer Face") ||
                 spiece.piece_name.contains("Drawer Face"))
             {
-              join_line = Join_Line(line.start_point, line.end_point, "Drawer_Face",line.line_width);
+              join_line = Join_Line(
+              Point_model(
+                  line.start_point.x_coordinate,
+                  line.start_point.y_coordinate+20,
+                  line.start_point.z_coordinate
+              ),
+                  line.end_point, "Drawer_Face",line.line_width);
             }
 
             else if (
@@ -238,6 +245,7 @@ class AnalyzeJoins {
                 !join_line.join_type.contains("Flexible_Shelves")&&
                 !join_line.join_type.contains("Groove")&&
                 !join_line.join_type.contains("Drawer_Rail_Side")&&
+                !join_line.join_type.contains("Helper")&&
                 !join_line.join_type.contains("Drawer_Rail_Box")
                 ) {
                   transform_line_into_fasteners(line , mp,sp,mf,sf);
