@@ -21,118 +21,180 @@ class Fastener_shape_3d {
   late Cylinder side_face_1_cylinder;
   late Cylinder side_face_2_cylinder;
 
+  Draw_Controller draw_controller = Get.find();
+
   Fastener_shape_3d(this.fastener) {
     if (fastener.face_1_bore.diameter > 0) {
-      face_1_cylinder = generate_cylinder_from_bore(fastener.face_1_bore,!fastener.fastener_direction,false);
+      face_1_cylinder = generate_cylinder_from_bore(fastener.face_1_bore,false);
       cylinders.add(face_1_cylinder);
     }
     if (fastener.face_2_bore.diameter > 0) {
-      face_2_cylinder = generate_cylinder_from_bore(fastener.face_2_bore,fastener.fastener_direction,false);
+      face_2_cylinder = generate_cylinder_from_bore(fastener.face_2_bore,false);
       cylinders.add(face_2_cylinder);
     }
     if (fastener.side_bore.diameter > 0) {
-      side_cylinder = generate_cylinder_from_bore(fastener.side_bore,fastener.fastener_direction,false);
+      side_cylinder = generate_cylinder_from_bore(fastener.side_bore,false);
       cylinders.add(side_cylinder);
     }
     if (fastener.side_face_1_bore.diameter > 0) {
       side_face_1_cylinder =
-          generate_cylinder_from_bore(fastener.side_face_1_bore,true,true);
+          generate_cylinder_from_bore(fastener.side_face_1_bore,true);
       cylinders.add(side_face_1_cylinder);
     }
     if (fastener.side_face_2_bore.diameter > 0) {
       side_face_2_cylinder =
-          generate_cylinder_from_bore(fastener.side_face_2_bore,false,true);
+          generate_cylinder_from_bore(fastener.side_face_2_bore,true);
       cylinders.add(side_face_2_cylinder);
     }
   }
 
-  Cylinder generate_cylinder_from_bore(Bore_model bore,bool hole_directtion,bool side_face) {
+  Cylinder generate_cylinder_from_bore(Bore_model bore,bool side_face) {
 
-
-    Draw_Controller draw_controller = Get.find();
-
+   bool hole_direction=fastener.fastener_direction;
 
     double r = bore.diameter / 2;
-    double d = hole_directtion ? bore.depth : -bore.depth;
+
+
+
 
    late List<Point_model> main_circle_points=[] ;
    late List<Point_model> second_circle_points =[];
 
     if (fastener.fastener_axis == "X") {
+
+
       if(side_face){
         Piece_model side_piece=draw_controller.box_repository.box_model.value.box_pieces[fastener.side_pice_id];
 
-        bool is_front_piece = side_piece.piece_direction=="F";
+String plane="";
+double hd=0;
+double fd=0;
 
-        main_circle_points   =  generate_circle_point(
-            Point_model(
-                bore.origin.x_coordinate,
-                bore.origin.y_coordinate -(is_front_piece?fastener.material_thickness/2:0),
-                bore.origin.z_coordinate +(is_front_piece?(-d+fastener.material_thickness/2):0)),
+if(side_piece.piece_direction=="H"){
+  hole_direction=bore.origin.y_coordinate<fastener.fastener_origin.y_coordinate;
+   hd =hole_direction? (bore.depth):(-bore.depth);
+   fd=0;
+  plane="XZ";
 
-            is_front_piece?"XY":"XZ", r);
+}
+else if(side_piece.piece_direction=="F"){
+  hole_direction=bore.origin.z_coordinate<fastener.fastener_origin.z_coordinate;
+  fd =hole_direction? (bore.depth):(-bore.depth);
+  hd=0;
+  plane="XY";
+}
+
+        main_circle_points   =  generate_circle_point(bore.origin,plane, r);
+
         second_circle_points =generate_circle_point(
-            Point_model(
-                bore.origin.x_coordinate,
-                bore.origin.y_coordinate -(is_front_piece?fastener.material_thickness/2:d),
-                bore.origin.z_coordinate+(is_front_piece?(fastener.material_thickness/2):0)),
-            is_front_piece?"XY":"XZ",r);
+            Point_model(bore.origin.x_coordinate, bore.origin.y_coordinate+hd, bore.origin.z_coordinate+fd),
+            plane,r);
 
       }
+
       else {
-        main_circle_points   =  generate_circle_point(bore.origin, "YZ", r);
+
+          double d =hole_direction? (bore.depth):(-bore.depth);
+
+          main_circle_points   =  generate_circle_point(bore.origin, "YZ", r);
         second_circle_points =generate_circle_point(
-            Point_model(bore.origin.x_coordinate+d, bore.origin.y_coordinate, bore.origin.z_coordinate), "YZ",r);
+            Point_model(bore.origin.x_coordinate+d, bore.origin.y_coordinate, bore.origin.z_coordinate),
+            "YZ",r);
 
       }
+
     }
 
 
     else if (fastener.fastener_axis == "Y") {
-      if(side_face){
 
-        main_circle_points   =  generate_circle_point(bore.origin,
-            "YZ", r);
+
+      if(side_face){
+        Piece_model side_piece=draw_controller.box_repository.box_model.value.box_pieces[fastener.side_pice_id];
+
+        String plane="";
+        double vd=0;
+        double fd=0;
+
+        if(side_piece.piece_direction=="V"){
+          hole_direction=bore.origin.x_coordinate<fastener.fastener_origin.x_coordinate;
+          vd =hole_direction? (bore.depth):(-bore.depth);
+          fd=0;
+          plane="YZ";
+
+        }
+        else if(side_piece.piece_direction=="F"){
+          hole_direction=bore.origin.z_coordinate<fastener.fastener_origin.z_coordinate;
+          fd =hole_direction? (bore.depth):(-bore.depth);
+          vd=0;
+          plane="XY";
+        }
+
+        main_circle_points   =  generate_circle_point(bore.origin,plane, r);
+
         second_circle_points =generate_circle_point(
-            Point_model(
-                bore.origin.x_coordinate+d,
-                bore.origin.y_coordinate,
-                bore.origin.z_coordinate),
-            "YZ",r);
+            Point_model(bore.origin.x_coordinate+vd, bore.origin.y_coordinate, bore.origin.z_coordinate+fd),
+            plane,r);
 
       }
+
       else {
+
+        double d =hole_direction? (bore.depth):(-bore.depth);
+
         main_circle_points   =  generate_circle_point(bore.origin, "XZ", r);
         second_circle_points =generate_circle_point(
-            Point_model(bore.origin.x_coordinate, bore.origin.y_coordinate+d, bore.origin.z_coordinate), "XZ",r);
+            Point_model(bore.origin.x_coordinate, bore.origin.y_coordinate+d, bore.origin.z_coordinate),
+            "XZ",r);
 
       }
+
     }
 
 
     else if (fastener.fastener_axis == "Z") {
-      if(side_face){
 
+
+      if(side_face){
         Piece_model side_piece=draw_controller.box_repository.box_model.value.box_pieces[fastener.side_pice_id];
 
-        bool h = side_piece.piece_direction=="H";
+        String plane="";
+        double hd=0;
+        double vd=0;
 
-        main_circle_points   =  generate_circle_point(bore.origin,
-           h?"XZ": "YZ", r);
+        if(side_piece.piece_direction=="H"){
+          hole_direction=bore.origin.y_coordinate<fastener.fastener_origin.y_coordinate;
+          hd =hole_direction? (bore.depth):(-bore.depth);
+          vd=0;
+          plane="XZ";
+
+        }
+        else if(side_piece.piece_direction=="V"){
+          hole_direction=bore.origin.x_coordinate<fastener.fastener_origin.x_coordinate;
+          vd =hole_direction? (bore.depth):(-bore.depth);
+          hd=0;
+          plane="XZ";
+        }
+
+        main_circle_points   =  generate_circle_point(bore.origin,plane, r);
+
         second_circle_points =generate_circle_point(
-            Point_model(
-                bore.origin.x_coordinate-(h?0:d),
-                bore.origin.y_coordinate-(h?d:0),
-                bore.origin.z_coordinate),
-            h?"XZ":   "YZ",r);
+            Point_model(bore.origin.x_coordinate+vd, bore.origin.y_coordinate+hd, bore.origin.z_coordinate),
+            plane,r);
 
       }
+
       else {
+
+         double d =hole_direction? (bore.depth):(-bore.depth);
+
         main_circle_points   =  generate_circle_point(bore.origin, "XY", r);
         second_circle_points =generate_circle_point(
-            Point_model(bore.origin.x_coordinate, bore.origin.y_coordinate, bore.origin.z_coordinate+d), "XY",r);
+            Point_model(bore.origin.x_coordinate, bore.origin.y_coordinate, bore.origin.z_coordinate+d),
+            "XY",r);
 
       }
+
     }
 
 
