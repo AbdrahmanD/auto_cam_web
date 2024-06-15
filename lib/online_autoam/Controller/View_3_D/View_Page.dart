@@ -1,10 +1,9 @@
 import 'dart:html';
 import 'dart:math' as math;
 
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
+ import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/Draw_Controller.dart';
 import 'package:auto_cam_web/online_autoam/Controller/View_3_D/transform_controller.dart';
-import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
-import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
+ import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
  import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Gumball.dart';
 import 'package:auto_cam_web/online_autoam/View/Screens_parts/Box_Pieces_List.dart';
 import 'package:flutter/gestures.dart';
@@ -450,6 +449,10 @@ onDoubleTap: (){
                       draw_controller.view_port.value="P";
                       draw_controller.x_move=0;
                       draw_controller.y_move=0;
+
+                      transfomer.camera_position=Point_model(0, 0, 0);
+
+
                       setState(() {});
                     },
                     child: Padding(
@@ -474,6 +477,9 @@ onDoubleTap: (){
                   InkWell(
                     onTap: () {
                       draw_controller.zoom_all();
+                      transfomer.camera_position=Point_model(0, 0, 0);
+                      draw_controller.x_move=0;
+                      draw_controller.y_move=0;
 
                       setState(() {});
                     },

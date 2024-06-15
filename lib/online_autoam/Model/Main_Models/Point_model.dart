@@ -18,9 +18,9 @@ class Point_model{
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["x_coordinate"] = this.x_coordinate;
-    data["y_coordinate"] = this.y_coordinate;
-    data["z_coordinate"] = this.z_coordinate;
+    data['"x_coordinate"'] = "${this.x_coordinate}";
+    data['"y_coordinate"'] = "${this.y_coordinate}";
+    data['"z_coordinate"'] = "${this.z_coordinate}";
     return data;
   }
 

@@ -476,9 +476,9 @@ class Bore_model {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
-    data["diameter"] = this.diameter;
-    data["depth"] = this.depth;
-    data["origin"] = this.origin!.toJson();
+    data['"diameter"'] = this.diameter;
+    data['"depth"'] = this.depth;
+    data['"origin"'] = this.origin!.toJson();
 
     return data;
   }
@@ -537,13 +537,13 @@ class Join_Line{
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.start_point != null) {
-      data['start_point'] = this.start_point!.toJson();
+      data['"start_point"'] = this.start_point!.toJson();
     }
     if (this.end_point != null) {
-      data['origend_pointin'] = this.end_point!.toJson();
+      data['"origend_pointin"'] = this.end_point!.toJson();
     }
-    data['join_type'] = this.join_type;
-    data['join_width'] = this.join_width;
+    data['"join_type"'] = '"${this.join_type}"';
+    data['"join_width"'] = '${this.join_width}';
     return data;
   }
 

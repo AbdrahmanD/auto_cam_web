@@ -1,7 +1,8 @@
 import 'dart:ui';
 import 'dart:math';
 
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
+ import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/Draw_Controller.dart';
+import 'package:auto_cam_web/online_autoam/Controller/Repositories_Controllers/Box_Repository.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
@@ -21,31 +22,80 @@ class Fastener_shape_3d {
   late Cylinder side_face_1_cylinder;
   late Cylinder side_face_2_cylinder;
 
-  Draw_Controller draw_controller = Get.find();
+
+  Box_Repository box_repository=Get.find();
+
 
   Fastener_shape_3d(this.fastener) {
+
+
     if (fastener.face_1_bore.diameter > 0) {
       face_1_cylinder = generate_cylinder_from_bore(fastener.face_1_bore,false);
       cylinders.add(face_1_cylinder);
+    }else{
+      face_1_cylinder=Cylinder([], [], [], Colors.white);
     }
     if (fastener.face_2_bore.diameter > 0) {
       face_2_cylinder = generate_cylinder_from_bore(fastener.face_2_bore,false);
       cylinders.add(face_2_cylinder);
+    }else{
+      face_2_cylinder=Cylinder([], [], [], Colors.white);
     }
     if (fastener.side_bore.diameter > 0) {
       side_cylinder = generate_cylinder_from_bore(fastener.side_bore,false);
       cylinders.add(side_cylinder);
+    }else{
+      side_cylinder=Cylinder([], [], [], Colors.white);
     }
     if (fastener.side_face_1_bore.diameter > 0) {
       side_face_1_cylinder =
           generate_cylinder_from_bore(fastener.side_face_1_bore,true);
       cylinders.add(side_face_1_cylinder);
+    }else{
+      side_face_1_cylinder=Cylinder([], [], [], Colors.white);
     }
     if (fastener.side_face_2_bore.diameter > 0) {
       side_face_2_cylinder =
           generate_cylinder_from_bore(fastener.side_face_2_bore,true);
       cylinders.add(side_face_2_cylinder);
+    }else{
+      side_face_2_cylinder=Cylinder([], [], [], Colors.white);
     }
+
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '"fastener"': fastener.toJson(),
+      '"cylinders"': cylinders.map((cylinder) => cylinder.toJson()).toList(),
+      '"face_1_cylinder"': face_1_cylinder.toJson(),
+      '"face_2_cylinder"': face_2_cylinder.toJson(),
+      '"side_cylinder"': side_cylinder.toJson(),
+      '"side_face_1_cylinder"': side_face_1_cylinder.toJson(),
+      '"side_face_2_cylinder"': side_face_2_cylinder.toJson(),
+    };
+  }
+
+
+  // Create Fastener_shape_3d from JSON
+  factory Fastener_shape_3d.fromJson(Map<String, dynamic> json) {
+
+    Fastener_shape_3d fastener_shape_3d=
+    Fastener_shape_3d(Fastener.fromJson(json['fastener']));
+
+
+    fastener_shape_3d.cylinders=(json['cylinders'] as List).map((i) => Cylinder.fromJson(i)).toList();
+
+      fastener_shape_3d.face_1_cylinder=Cylinder.fromJson(json['face_1_cylinder']);
+      fastener_shape_3d.face_2_cylinder=Cylinder.fromJson(json['face_2_cylinder']);
+      fastener_shape_3d.side_cylinder=Cylinder.fromJson(json['side_cylinder']);
+      fastener_shape_3d.side_face_1_cylinder=Cylinder.fromJson(json['side_face_1_cylinder']);
+      fastener_shape_3d.side_face_2_cylinder=Cylinder.fromJson(json['side_face_2_cylinder']);
+
+
+    return fastener_shape_3d;
+
+
   }
 
   Cylinder generate_cylinder_from_bore(Bore_model bore,bool side_face) {
@@ -64,7 +114,7 @@ class Fastener_shape_3d {
 
 
       if(side_face){
-        Piece_model side_piece=draw_controller.box_repository.box_model.value.box_pieces[fastener.side_pice_id];
+        Piece_model side_piece=box_repository.box_model.value.box_pieces[fastener.side_pice_id];
 
 String plane="";
 double hd=0;
@@ -110,7 +160,7 @@ else if(side_piece.piece_direction=="F"){
 
 
       if(side_face){
-        Piece_model side_piece=draw_controller.box_repository.box_model.value.box_pieces[fastener.side_pice_id];
+        Piece_model side_piece=box_repository.box_model.value.box_pieces[fastener.side_pice_id];
 
         String plane="";
         double vd=0;
@@ -156,7 +206,7 @@ else if(side_piece.piece_direction=="F"){
 
 
       if(side_face){
-        Piece_model side_piece=draw_controller.box_repository.box_model.value.box_pieces[fastener.side_pice_id];
+        Piece_model side_piece=box_repository.box_model.value.box_pieces[fastener.side_pice_id];
 
         String plane="";
         double hd=0;
@@ -173,7 +223,7 @@ else if(side_piece.piece_direction=="F"){
           hole_direction=bore.origin.x_coordinate<fastener.fastener_origin.x_coordinate;
           vd =hole_direction? (bore.depth):(-bore.depth);
           hd=0;
-          plane="XZ";
+          plane="YZ";
         }
 
         main_circle_points   =  generate_circle_point(bore.origin,plane, r);
@@ -208,9 +258,12 @@ else if(side_piece.piece_direction=="F"){
 
        main_circle   = draw_circle(main_circle_points  );
        second_circle = draw_circle(second_circle_points);
+
        for(int i=0;i<main_circle.length;i++){
-         basic_line c = basic_line(main_circle[i].start_point, second_circle[i].start_point);
-         connect_lines.add(c);
+         // if (i%2==0) {}
+           basic_line c = basic_line(main_circle[i].start_point, second_circle[i].start_point);
+           connect_lines.add(c);
+
        }
 
      }
@@ -225,10 +278,12 @@ else if(side_piece.piece_direction=="F"){
   List<Point_model> generate_circle_point(Point_model center , String plane ,double radius){
     List<Point_model> resault=[];
 
+    int number_of_sides=6;
+
     if(plane=="YZ"){
 
-      for (int i = 0; i < 6; i++) {
-        double angle = (i * 60) * pi / 180; // Convert degrees to radians
+      for (int i = 0; i < number_of_sides; i++) {
+        double angle = (i * (360/number_of_sides)) * pi / 180; // Convert degrees to radians
         List<double> point = generatePointOnCircle(center.z_coordinate, center.y_coordinate, radius, angle);
 
         Point_model resault_point=Point_model(center.x_coordinate,point[1], point[0]);
@@ -239,8 +294,8 @@ else if(side_piece.piece_direction=="F"){
     }
     else if(plane=="XZ"){
 
-      for (int i = 0; i < 8; i++) {
-        double angle = (i * 45) * pi / 180; // Convert degrees to radians
+      for (int i = 0; i < number_of_sides; i++) {
+        double angle = (i * (360/number_of_sides)) * pi / 180; // Convert degrees to radians
         List<double> point = generatePointOnCircle(center.x_coordinate, center.z_coordinate, radius, angle);
 
         Point_model resault_point=Point_model(point[0],center.y_coordinate, point[1]);
@@ -251,8 +306,8 @@ else if(side_piece.piece_direction=="F"){
     }
     else if(plane=="XY"){
 
-      for (int i = 0; i < 8; i++) {
-        double angle = (i * 45) * pi / 180; // Convert degrees to radians
+      for (int i = 0; i < number_of_sides; i++) {
+        double angle = (i * (360/number_of_sides)) * pi / 180; // Convert degrees to radians
         List<double> point = generatePointOnCircle(center.x_coordinate, center.y_coordinate, radius, angle);
 
         Point_model resault_point=Point_model(point[0], point[1],center.z_coordinate);
@@ -301,6 +356,26 @@ class Cylinder {
 
   Cylinder(
       this.main_circle, this.second_circle, this.connect_lines, this.color);
+
+  // Convert Cylinder to JSON
+  Map<String, dynamic> toJson() => {
+    '"main_circle"': main_circle.map((line) => line.toJson()).toList(),
+    '"second_circle"': second_circle.map((line) => line.toJson()).toList(),
+    '"connect_lines"': connect_lines.map((line) => line.toJson()).toList(),
+    '"color"': color.value,
+  };
+
+  // Create Cylinder from JSON
+  factory Cylinder.fromJson(Map<String, dynamic> json) {
+    return Cylinder(
+      (json['main_circle'] as List).map((i) => basic_line.fromJson(i)).toList(),
+      (json['second_circle'] as List).map((i) => basic_line.fromJson(i)).toList(),
+      (json['connect_lines'] as List).map((i) => basic_line.fromJson(i)).toList(),
+      Color(json['color']),
+    );
+  }
+
+
 }
 
 class basic_line {
@@ -308,4 +383,19 @@ class basic_line {
   late Point_model end_point;
 
   basic_line(this.start_point, this.end_point);
+
+  // Convert basic_line to JSON
+  Map<String, dynamic> toJson() => {
+    '"start_point"': start_point.toJson(),
+    '"end_point"': end_point.toJson(),
+  };
+
+  // Create basic_line from JSON
+  factory basic_line.fromJson(Map<String, dynamic> json) {
+    return basic_line(
+      Point_model.fromJson(json['start_point']),
+      Point_model.fromJson(json['end_point']),
+    );
+  }
+
 }

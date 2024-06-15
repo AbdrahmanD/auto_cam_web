@@ -35,7 +35,6 @@ void main() async {
             dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch, PointerDeviceKind.stylus, PointerDeviceKind.unknown},
           ),
           initialBinding: MY_Binding(),
-          initialRoute: "/",
           home: Home_Screen()
       )
   );

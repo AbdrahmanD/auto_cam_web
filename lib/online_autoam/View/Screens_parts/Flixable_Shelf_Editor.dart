@@ -1,7 +1,6 @@
 import 'package:auto_cam_web/online_autoam/Controller/DecimalTextInputFormatter.dart';
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Firebase_controller.dart';
-import 'package:auto_cam_web/online_autoam/Controller/Painters/Flexible_Shelf_Pattern_Painter.dart';
+import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/Draw_Controller.dart';
+ import 'package:auto_cam_web/online_autoam/Controller/Painters/Flexible_Shelf_Pattern_Painter.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +34,6 @@ class _Flixable_Shelf_EditorState extends State<Flixable_Shelf_Editor> {
 
 
   Draw_Controller draw_controller = Get.find();
-  Firebase_caontroller firebase_caontroller =Get.find();
 
   int corrent_pattern=0;
 
@@ -182,8 +180,8 @@ setState(() {
         Flexible_Shelf_units,
         true);
 
-    await firebase_caontroller.save_pattern_to_cloud(
-        Flexible_Shelf_joinHolePattern, "Flexible_Shelves");
+    // await firebase_caontroller.save_pattern_to_cloud(
+    //     Flexible_Shelf_joinHolePattern, "Flexible_Shelves");
 
     // await draw_controller.read_pattern_files();
 
@@ -196,9 +194,9 @@ setState(() {
 
     joinHolePattern.pattern_enable=!    joinHolePattern.pattern_enable;
 
-
-    await firebase_caontroller.save_pattern_to_cloud(
-        joinHolePattern, "Flexible_Shelves");
+    //
+    // await firebase_caontroller.save_pattern_to_cloud(
+    //     joinHolePattern, "Flexible_Shelves");
 
     // await draw_controller.read_pattern_files();
 

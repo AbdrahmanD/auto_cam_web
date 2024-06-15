@@ -1,7 +1,7 @@
 import 'package:auto_cam_web/online_autoam/Controller/DecimalTextInputFormatter.dart';
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Firebase_controller.dart';
-import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
+import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/Draw_Controller.dart';
+import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/Firebase_controller.dart';
+ import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
 import 'package:auto_cam_web/online_autoam/View/Screens_parts/Box_Fitting_Editor.dart';
 import 'package:flutter/gestures.dart';

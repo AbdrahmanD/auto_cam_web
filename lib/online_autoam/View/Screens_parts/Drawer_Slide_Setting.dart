@@ -1,8 +1,7 @@
 import 'package:auto_cam_web/online_autoam/Controller/DecimalTextInputFormatter.dart';
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
+ import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/Draw_Controller.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Drawer_Rail_Brand.dart';
-import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class Drawer_Slide_Setting extends StatefulWidget {
@@ -50,13 +49,11 @@ bool corrent_brand_enable=false;
 
   read_brands()async{
 
- await     draw_controller.read_brands();
+ // await     draw_controller.read_brands();
 
  brands=draw_controller.box_repository.brands;
 
-
-
-refresh();
+ refresh();
 
 
   }
@@ -70,7 +67,7 @@ refresh();
       for(Drawer_Rail_Brand b in brands){
         if (b.brand_name!=corrent_brand.brand_name) {
           b.brand_enable=false;
-          draw_controller.save_brand(b);
+          // draw_controller.save_brand(b);
         }
       }
     }
@@ -116,14 +113,14 @@ refresh();
 Drawer_Rail_Brand corrent_brand=Drawer_Rail_Brand(brand_name, brand_enable, distances, diameter, depth);
 
 
-draw_controller.save_brand(corrent_brand);
+// draw_controller.save_brand(corrent_brand);
 read_brands();
 
   }
 
   delete_category(){
 
-    draw_controller.delete_brand(corrent_brand);
+    // draw_controller.delete_brand(corrent_brand);
     read_brands();
     corrent_brand_index=0;
     refresh();

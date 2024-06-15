@@ -1,6 +1,8 @@
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/AnalyzeJoins.dart';
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Excel_Controller.dart';
+
+import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/AnalyzeJoins.dart';
+import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/Draw_Controller.dart';
+import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/Excel_Controller.dart';
+import 'package:auto_cam_web/online_autoam/Controller/Repositories_Controllers/Box_Repository.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Cut_List_Item.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,7 +17,10 @@ class Cut_List_review extends StatefulWidget {
 class _Cut_List_reviewState extends State<Cut_List_review> {
 
   bool collect_same_pieces=false;
-  Draw_Controller draw_controller = Get.find();
+  // Draw_Controller draw_controller = Get.find();
+  Box_Repository box_repository=Get.find();
+
+
   TextEditingController quantity_controller = TextEditingController();
 
 
@@ -275,11 +280,9 @@ class _Cut_List_reviewState extends State<Cut_List_review> {
                     child:
 
                     ListView.builder(
-                        itemCount: draw_controller
-                            .box_repository.cut_list_items.length,
+                        itemCount:box_repository.cut_list_items.length,
                         itemBuilder: (BuildContext context, int index) {
-                          Cut_List_Item p = draw_controller
-                              .box_repository.cut_list_items[index];
+                          Cut_List_Item p = box_repository.cut_list_items[index];
 
                           return Column(
                             children: [

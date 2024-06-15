@@ -17,7 +17,7 @@ class Box_Repository extends GetxController {
 
 
   Rx<Box_model> box_model = Box_model('box_name', "wall_cabinet", 400, 600, 500,
-          18, 'MDF', 5, 9, 18, 100, true, Point_model(0, 0, 0))
+          18, 'MDF', 5, 9, 18, 100, true, Point_model(0, 0, 0),0)
       .obs;
 
 
@@ -41,14 +41,14 @@ class Box_Repository extends GetxController {
   List<String> fasteners_namae=["confirm_screw","mini_fix"];
 
 
-  Fastener_Templet shelf_templet= Fastener_Templet("shelf_templet", 0, 5,10,0,0,0,0,0,0,0,0,);
+  Fastener_Templet shelf_templet= Fastener_Templet("shelf_templet", 0, 5,10,0,0,0,0,0,0);
 
-  Fastener_Templet confirm_screw= Fastener_Templet("confirm_screw", 0, 6,17,10,1,5,35,0,0,0,0,);
+  Fastener_Templet confirm_screw= Fastener_Templet("confirm_screw", 0, 6,17,10,1,5,35,0,0);
 
   Fastener_Templet mini_fix= Fastener_Templet(
     "mini_fix",
     24,
-    10,11,0,0,8,24,14,14,0,0,
+    10,11,0,0,8,24,14,14
   );
 
 
@@ -57,7 +57,7 @@ class Box_Repository extends GetxController {
 
   Fastener_Templet dowel_templet   = Fastener_Templet(
       "dowel",
-    0,8,10,0,0,8,21,0,0,0,0
+    0,8,10,0,0,8,21,0,0
   );
 
 
@@ -91,7 +91,6 @@ class Box_Repository extends GetxController {
 
 
 
-  Box_Repository();
 
   add_box_to_repo(Box_model b) {
 

@@ -12,8 +12,9 @@ class Faces_model{
   Faces_model(this.faces);
 
   Faces_model.fromJson(Map<String, dynamic> json) {
+    faces = <Single_Face>[];
+
     if (json['faces'] != null) {
-      faces = <Single_Face>[];
       json['faces'].forEach((v) { faces!.add(new Single_Face.fromJson(v)); });
     }
   }
@@ -21,7 +22,7 @@ class Faces_model{
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.faces != null) {
-      data['faces'] = this.faces!.map((v) => v.toJson()).toList();
+      data['"faces"'] = this.faces!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -52,6 +53,7 @@ class Single_Face {
 
   Single_Face.fromJson(Map<String, dynamic> json) {
     name = json['name'];
+
     if (json['corners'] != null) {
       corners = <Point_model>[];
       json['corners'].forEach((v) { corners!.add(new Point_model.fromJson(v)); });
@@ -72,18 +74,18 @@ class Single_Face {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
+    data['"name"'] = '${this.name}';
     if (this.corners != null) {
-      data['corners'] = this.corners!.map((v) => v.toJson()).toList();
+      data['"corners"'] = this.corners!.map((v) => v.toJson()).toList();
     }
     if (this.bores != null) {
-      data['Bores_model'] = this.bores!.map((v) => v.toJson()).toList();
+      data['"Bores_model"'] = this.bores!.map((v) => v.toJson()).toList();
     }
     if (this.groves != null) {
-      data['groves'] = this.groves!.map((v) => v.toJson()).toList();
+      data['"groves"'] = this.groves!.map((v) => v.toJson()).toList();
     }
     if (this.joines != null) {
-      data['Joines_model'] = this.joines!.map((v) => v.toJson()).toList();
+      data['"Joines_model"'] = this.joines!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -134,10 +136,10 @@ class Groove_model{
   Map<String,dynamic> toJson(){
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
-    data["start_point"]=this.start_point.toJson();
-    data["end_point"]=this.end_point.toJson();
-    data["groove_width"]=this.groove_width;
-    data["groove_depth"]=this.groove_depth;
+    data['"start_point"']=this.start_point.toJson();
+    data['"end_point"']=this.end_point.toJson();
+    data['"groove_width"']=this.groove_width;
+    data['"groove_depth"']=this.groove_depth;
 
     return data;
   }

@@ -18,7 +18,7 @@ class Piece_model{
   late Point_model  piece_origin;
   late Faces_model   piece_faces;
 
-  late double       back_distance;
+   double       back_distance=0;
 
   bool              piece_inable=true;
 
@@ -122,20 +122,20 @@ class Piece_model{
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['piece_id'] = this.piece_id;
-    data['piece_name'] = this.piece_name;
-    data['piece_direction'] = this.piece_direction;
-    data['material_name'] = this.material_name;
-    data['piece_width'] = this.piece_width;
-    data['piece_height'] = this.piece_height;
-    data['piece_thickness'] = this.piece_thickness;
+    data['"piece_id"'] = '"${this.piece_id}"';
+    data['"piece_name"'] = '"${this.piece_name}"';
+    data['"piece_direction"'] = '"${this.piece_direction}"';
+    data['"material_name"'] = '"${this.material_name}"';
+    data['"piece_width"'] = this.piece_width;
+    data['"piece_height"'] = this.piece_height;
+    data['"piece_thickness"'] = this.piece_thickness;
     if (this.piece_origin != null) {
-      data['piece_origin'] = this.piece_origin!.toJson();
+      data['"piece_origin"'] = this.piece_origin!.toJson();
     }
     if (this.piece_faces != null) {
-      data['piece_faces'] = this.piece_faces!.toJson();
+      data['"piece_faces"'] = this.piece_faces!.toJson();
     }
-     data['piece_inable'] = this.piece_inable;
+     data['"piece_inable"'] = this.piece_inable;
     return data;
   }
 

@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
+import 'package:auto_cam_web/online_autoam/Controller/Repositories_Controllers/Box_Repository.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Cut_List_Item.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Faces_model.dart';
@@ -9,25 +9,25 @@ import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener_shape_3d.d
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
-import 'package:flutter/cupertino.dart';
- import 'package:get/get.dart';
+  import 'package:get/get.dart';
 
 
 class AnalyzeJoins {
 
   late bool project;
   late bool collect_same_pieces;
-   Draw_Controller draw_controller = Get.find();
 
+
+Box_Repository box_repository=Get.find();
 
   AnalyzeJoins(this.project,this.collect_same_pieces) {
 
     this.project=project;
 
-    draw_controller.box_repository.cut_list_items = [];
+    box_repository.cut_list_items = [];
 
        clean();
-       all_face_check(draw_controller.box_repository.box_model.value);
+       all_face_check(box_repository.box_model.value);
        collect_all_same_pieces(collect_same_pieces);
 
 
@@ -35,19 +35,20 @@ class AnalyzeJoins {
 
   clean ( ) {
 
-    draw_controller.box_repository.box_model.value.fasteners.clear() ;
-    draw_controller.box_repository.box_model.value.fasteners_shape_3d.clear() ;
+    box_repository.box_model.value.fasteners.clear() ;
+    box_repository.box_model.value.fasteners_shape_3d.clear() ;
 
-    for(int p=0;p<draw_controller.box_repository.box_model.value.box_pieces.length;p++){
+    for(int p=0;p< box_repository.box_model.value.box_pieces.length;p++){
       for(int f=0;f<6;f++){
-        draw_controller.box_repository.box_model.value.box_pieces[p].piece_faces.faces[f].bores.clear();
+        box_repository.box_model.value.box_pieces[p].piece_faces.faces[f].bores.clear();
       }
     }
-    draw_controller.box_repository.cut_list_items = [];
+     box_repository.cut_list_items = [];
   }
 
   ///  all pieces for loop
   all_face_check(Box_model box_model) {
+
     for (int mp = 0; mp < box_model.box_pieces.length; mp++) {
 
 
@@ -214,7 +215,7 @@ class AnalyzeJoins {
               if (join_line.join_type=="Groove") {
 
                 double width;
-                double grove_depth=draw_controller.box_repository.pack_panel_grove_depth;
+                double grove_depth=box_repository.pack_panel_grove_depth;
 
 
                 if(box_model.box_pieces[mp].piece_name.contains("Helper")){
@@ -224,7 +225,7 @@ class AnalyzeJoins {
                   width=spiece.piece_thickness;
                 }
                 else{
-                  width=draw_controller.box_repository.pack_panel_thickness;
+                  width=box_repository.pack_panel_thickness;
                 }
                 mface.groves.add
                   (Groove_model(
@@ -274,21 +275,25 @@ class AnalyzeJoins {
     Point_model origin = l.start_point;
 
     late Fastener_Templet fastener_templet;
-    if(draw_controller.box_repository.corrent_fastener==""){
-      Get.defaultDialog(title: "ALERT" , content: Container(height: 50,width: 200,child: Text("choose fasteners type"),));
+    // if(box_repository.corrent_fastener==""){
+    //   Get.defaultDialog(title: "ALERT" , content: Container(height: 50,width: 200,child: Text("choose fasteners type"),));
+    // }
+    // else
+      if(box_repository.corrent_fastener=="mini_fix"){
+      fastener_templet=box_repository.mini_fix;
     }
-    else if(draw_controller.box_repository.corrent_fastener=="mini_fix"){
-      fastener_templet=draw_controller.box_repository.mini_fix;
-    }
-    else if(draw_controller.box_repository.corrent_fastener=="confirm_screw"){
-      fastener_templet=draw_controller.box_repository.confirm_screw;
+    else if(box_repository.corrent_fastener=="confirm_screw"){
+      fastener_templet=box_repository.confirm_screw;
 
     }
+else{
+        fastener_templet=box_repository.mini_fix;
 
-    Fastener_Templet dowel_templet   = draw_controller.box_repository.dowel_templet   ;
-    double material_thickness=draw_controller.box_repository.box_model.value.init_material_thickness;
+      }
+    Fastener_Templet dowel_templet   = box_repository.dowel_templet   ;
+    double material_thickness=box_repository.box_model.value.init_material_thickness;
 
-    Piece_model face_piece=draw_controller.box_repository.box_model.value.box_pieces[mp];
+    Piece_model face_piece=box_repository.box_model.value.box_pieces[mp];
 
     bool fastener_direction=Detect_Fastener_Direction(face_piece,mf);
     String fastener_axis=Detect_Fastener_Axis(face_piece,mf);
@@ -301,7 +306,7 @@ class AnalyzeJoins {
 
       if(join_line_axis=="Z"){
         fastener=   Fastener(
-            draw_controller.box_repository.box_model.value.fasteners.length-1,
+            box_repository.box_model.value.fasteners.length,
             templet,
             Point_model(
                 origin.x_coordinate,
@@ -317,7 +322,7 @@ class AnalyzeJoins {
       }
       if(join_line_axis=="Y"){
         fastener=   Fastener(
-            draw_controller.box_repository.box_model.value.fasteners.length-1,
+            box_repository.box_model.value.fasteners.length,
             templet,
             Point_model(
                 origin.x_coordinate,
@@ -333,7 +338,7 @@ class AnalyzeJoins {
       }
       if(join_line_axis=="X"){
         fastener=   Fastener(
-            draw_controller.box_repository.box_model.value.fasteners.length-1,
+            box_repository.box_model.value.fasteners.length,
             templet,
             Point_model(
                 origin.x_coordinate+fasteners_points[i].distance,
@@ -348,7 +353,7 @@ class AnalyzeJoins {
         );
       }
 
-      draw_controller.box_repository.box_model.value.fasteners.add(fastener);
+      box_repository.box_model.value.fasteners.add(fastener);
 
 
     }
@@ -360,15 +365,15 @@ class AnalyzeJoins {
 
   generate_3d_shape_fastener(){
 
-    draw_controller.box_repository.box_model.value.fasteners_shape_3d.clear();
+    box_repository.box_model.value.fasteners_shape_3d.clear();
 
-    for(int f=0;f<draw_controller.box_repository.box_model.value.fasteners.length;f++){
+    for(int f=0;f<box_repository.box_model.value.fasteners.length;f++){
 
-      Fastener fastener = draw_controller.box_repository.box_model.value.fasteners[f];
+      Fastener fastener = box_repository.box_model.value.fasteners[f];
 
       Fastener_shape_3d f3d =Fastener_shape_3d(fastener);
-
-      draw_controller.box_repository.box_model.value.fasteners_shape_3d.add(f3d);
+      //
+      box_repository.box_model.value.fasteners_shape_3d.add(f3d);
 
     }
 
@@ -489,10 +494,10 @@ return fastener_axis ;
     double z_coorect=0;
 
     if(is_groove){
-      x_correct=draw_controller.box_repository.pack_panel_grove_depth;
-      y_correct=draw_controller.box_repository.pack_panel_grove_depth;
-      z_coorect=draw_controller.box_repository.pack_panel_grove_depth;
-      line_width=draw_controller.box_repository.pack_panel_thickness;
+      x_correct = box_repository.pack_panel_grove_depth;
+      y_correct = box_repository.pack_panel_grove_depth;
+      z_coorect = box_repository.pack_panel_grove_depth;
+      line_width= box_repository.pack_panel_thickness;
     }
 
     if (face.name == 1 || face.name == 3) {
@@ -1325,7 +1330,7 @@ return fastener_axis ;
 
     List<Piece_model> pices =[];
 
-  pices=draw_controller.box_repository.box_model.value.box_pieces;
+  pices=box_repository.box_model.value.box_pieces;
 
 if(collect)
     {
@@ -1395,7 +1400,7 @@ if(collect)
             items[0].piece_height,
             items.length);
 
-        draw_controller.box_repository.cut_list_items.add(cut_list_item);
+        box_repository.cut_list_items.add(cut_list_item);
       });
 
     }
@@ -1420,7 +1425,7 @@ else
           1
       );
 
-      draw_controller.box_repository.cut_list_items.add(cut_list_item);
+      box_repository.cut_list_items.add(cut_list_item);
     }
   }
 }

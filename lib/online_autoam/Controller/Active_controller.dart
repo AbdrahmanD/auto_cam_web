@@ -178,7 +178,7 @@ String un_limit_convert_code(String code){
     }
     String resault=genertated_code_list.join();
 
-    print(resault) ;
+    // print(resault) ;
   }
 
 

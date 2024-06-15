@@ -1,6 +1,6 @@
 
 import 'package:auto_cam_web/online_autoam/Controller/DecimalTextInputFormatter.dart';
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
+ import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/Draw_Controller.dart';
 import 'package:auto_cam_web/online_autoam/Controller/Painters/Door_Pattern_Painter.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
@@ -91,7 +91,7 @@ class _Door_pattern_SettingState extends State<Door_pattern_Setting> {
       // await draw_controller.save_joinHolePattern(
       //     side_joinHolePattern, "side_Hinges");
 
-      await draw_controller.read_pattern_files();
+      // await draw_controller.read_pattern_files();
       selected_door_pattern = await draw_controller
           .box_repository.join_patterns["side_Hinges"]!.length;
       add_new_door = false;
@@ -330,7 +330,7 @@ read_patterns();
     list_Door_Hinges = [];
     list_side_Hinges = [];
 
-    await draw_controller.read_pattern_files();
+    // await draw_controller.read_pattern_files();
 
     Map<String, List<JoinHolePattern>> join_patterns =
         draw_controller.box_repository.join_patterns;

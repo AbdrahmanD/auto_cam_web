@@ -1,12 +1,10 @@
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
+ import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/Draw_Controller.dart';
 import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/ADD_BOX.dart';
 import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Add_Door_Dialog.dart';
 import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Add_Drawer_Dialog.dart';
-import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Add_Fix_Dialog.dart';
-import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Add_Partition_Dialog.dart';
+ import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Add_Partition_Dialog.dart';
 import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Add_Shelf_Dialog.dart';
-import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Add_Filler_Dialog.dart';
-import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Add_Support_Dialog.dart';
+ import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Add_Support_Dialog.dart';
 import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Add_back_panel_Dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

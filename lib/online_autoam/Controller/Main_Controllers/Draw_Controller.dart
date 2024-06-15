@@ -1,34 +1,29 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:html';
+import 'dart:js_interop';
 import 'dart:math';
 import 'dart:html' as html;
 import 'package:archive/archive.dart';
+import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/AnalyzeJoins.dart';
+import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/Firebase_controller.dart';
+import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/kdt_file.dart';
 import 'dart:typed_data';
 
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/AnalyzeJoins.dart';
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Firebase_controller.dart';
 import 'package:auto_cam_web/online_autoam/Controller/Painters/Box_Painter.dart';
 import 'package:auto_cam_web/online_autoam/Controller/Repositories_Controllers/Box_Repository.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Door_Model.dart';
-import 'package:auto_cam_web/online_autoam/Model/Main_Models/Drawer_Rail_Brand.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Faces_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
-import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener_shape_3d.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Group_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Inner_Box.dart';
-import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/kdt_file.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Support_Filler.dart';
 import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Edit_Fastener_dialog.dart';
-import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Edit_Piece_Dialog.dart';
 import 'package:auto_cam_web/online_autoam/View/Dialog_Boxes/Context_Menu_Dialogs/Main_Edit_Dialog.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:path_provider/path_provider.dart';
 import '../../View/Dialog_Boxes/Context_Menu_Dialogs/Out_Box_Menu.dart';
 
 class Draw_Controller extends GetxController {
@@ -72,19 +67,14 @@ class Draw_Controller extends GetxController {
 
   Firebase_caontroller firebase_controller=Get.find();
 
-  late  AnalyzeJoins analayzejoins;
+  AnalyzeJoins analayzejoins=AnalyzeJoins(false,false);
 
   Draw_Controller() {
-    // analayzejoins = AnalyzeJoins(false, false);
 
   }
 
   zoom_all() {
     drawing_scale.value = 0.5;
-    // drawing_origin.x_coordinate = screen_size.value.width / 2 -
-    //     box_repository.box_model.value.box_width * drawing_scale.value / 2;
-    // drawing_origin.y_coordinate = screen_size.value.height / 2 +
-    //     box_repository.box_model.value.box_height * drawing_scale.value / 2;
 
     draw_Box();
   }
@@ -681,6 +671,7 @@ if(select_window.value){
         box_repository.box_model.value.box_pieces.add(back_panel);
         // box_repository.back_panel_type=back_panel_type;
       }
+
       else {
         Piece_model back_panel = Piece_model(
             box_repository.box_model.value.get_id("BP"),
@@ -690,6 +681,7 @@ if(select_window.value){
             correct_value(inner.piece_width + 2 * groove_depth - 1),
             correct_value(inner.piece_height + 2 * groove_depth - 1),
             correct_value(material_thickness),
+
             Point_model(
                 correct_value(
                     inner.piece_origin.x_coordinate - groove_depth + 0.5),
@@ -720,8 +712,8 @@ if(select_window.value){
         box_repository.box_model.value.box_pieces.add(back_panel);
         box_repository.box_model.value.box_pieces.add(back_panel_Helper);
 
-        Group_model group_model = Group_model("Helper",[back_panel,back_panel_Helper],true);
-        box_repository.box_model.value.box_groups.add(group_model);
+        // Group_model group_model = Group_model("Helper",[back_panel,back_panel_Helper],true);
+        // box_repository.box_model.value.box_groups.add(group_model);
 
        inner.back_distance+=back_distance+material_thickness;
 
@@ -1316,6 +1308,13 @@ analayzejoins.generate_3d_shape_fastener();
 
   }
 
+  flip_fasteners() {
+    for(int f=0;f<box_repository.box_model.value.fasteners.length;f++){
+      box_repository.box_model.value.fasteners[f].change_fastener_nut_face();
+    }
+    update_holes();
+  }
+
   /// analyze box
   analyze() {
       analayzejoins = AnalyzeJoins(false, false);
@@ -1443,12 +1442,15 @@ analayzejoins.generate_3d_shape_fastener();
 
 
 
-  void save_BOX_File( ) {
+  void save_BOX_File( String fName) {
 
 
     var contents=box_repository.box_model.value.toJson();
+    box_repository.box_model.value.box_name=fName;
+    String fileName = "${fName}.json";
 
-    String fileName = "${box_repository.box_model.value.box_name}.json";
+    // print(contents);
+    // print("======================");
 
     // Convert the contents to a Blob
     var blob = html.Blob([contents]);
@@ -1470,38 +1472,397 @@ analayzejoins.generate_3d_shape_fastener();
 
   ///   //////////////////////
 
-  Future<String> open_File() async {
-    String repo_path;
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(allowMultiple: true);
+  open_File() async{
 
-    if (result != null) {
-      List<File> files = result.paths.map((path) => File(path!)).toList();
-      repo_path = files.first.path;
-    } else {
-      // User canceled the picker
-      repo_path = '';
-    }
+   await open_box_from_repo();
 
-    // read_Box_from_rebository(file!.path);
+   Get.defaultDialog(title: "",
+       content:    Container(width: 200,height: 50,color: Colors.blue,
+           child: LinearProgressIndicator()
+       )
+   );
 
-    // Get.to(Cabinet_Editor());
+    await Future.delayed(Duration(seconds: 4)).then((value) {
+      Navigator.of(Get.overlayContext!).pop();
+    } );
 
-    return repo_path;
+
+   analayzejoins.generate_3d_shape_fastener();
+
+
+  }
+  open_box_from_repo()  {
+
+    html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
+    uploadInput.accept = '.json'; // Accept only JSON files
+    uploadInput.click();
+
+    uploadInput.onChange.listen(  (e) {
+      final files = uploadInput.files;
+      if (files != null && files.isNotEmpty) {
+        final file = files[0];
+        final reader = html.FileReader();
+
+        reader.onLoadEnd.listen(  (e) {
+          if (reader.readyState == html.FileReader.DONE) {
+            String fileContent = reader.result as String;
+            // print(fileContent.length );
+
+            // print('fileContent: $fileContent');
+
+            try {
+              // Decode the JSON string
+              Map < String, dynamic > data = jsonDecode(fileContent);
+
+              Box_model box_model=Box_model.fromJson(data);
+              add_Box(box_model);
+
+              // Print the decoded JSON
+
+            } catch (e) {
+              print("Error decoding JSON: $e");
+            }
+
+          }
+        });
+
+        reader.readAsText(file);
+      }
+    });
+
+
+
   }
 
-  Future<Box_model> read_Box_from_rebository() async {
-    String path = await open_File();
-    File f = File("$path");
-    String content = await f.readAsString();
 
-    Box_model bfr = Box_model.fromJson(json.decode(content));
 
-    box_repository.box_model.value = bfr;
-    return bfr;
-  }
 
-  // save_joinHolePattern(JoinHolePattern joinHolePattern, String category) async {
+//   async {
+//     String repo_path="";
+//     FilePickerResult? result = await FilePicker.platform.pickFiles();
+//
+//     // if (result != null) {
+//     //   List<File> files = result.paths.map((path) => File(path!)).toList();
+//     //   repo_path = files.first.path;
+//     // } else {
+//     //   // User canceled the picker
+//     //   repo_path = '';
+//     // }
+//
+//     // read_Box_from_rebository(file!.path);
+//
+// print(result!.paths.first);
+//
+//     return repo_path;
+//   }
+
+  // Future<Box_model> read_Box_from_rebository() async {
+  //   String path = await open_File();
+  //   File f = File("$path");
+  //   String content = await f.readAsString();
+  //
+  //   Box_model bfr = Box_model.fromJson(json.decode(content));
+  //
+  //   box_repository.box_model.value = bfr;
+  //   return bfr;
+  // }
+  //
+  // // save_joinHolePattern(JoinHolePattern joinHolePattern, String category) async {
+  // //   bool windows_platform = Platform.isWindows;
+  // //   final directory = await getApplicationDocumentsDirectory();
+  // //
+  // //   final Directory oldDirectory = windows_platform
+  // //       ? (Directory('${directory.path}\\Auto_Cam'))
+  // //       : (Directory('${directory.path}/Auto_Cam'));
+  // //   oldDirectory.createSync();
+  // //
+  // //   final Directory newDirectory = windows_platform
+  // //       ? (Directory('${oldDirectory.path}\\Setting'))
+  // //       : (Directory('${oldDirectory.path}/Setting'));
+  // //   newDirectory.createSync();
+  // //
+  // //   final Directory finalDirectory0 = windows_platform
+  // //       ? (Directory('${newDirectory.path}\\Join_Patterns'))
+  // //       : (Directory('${newDirectory.path}/Join_Patterns'));
+  // //   finalDirectory0.createSync();
+  // //
+  // //   final Directory finalDirectory = windows_platform
+  // //       ? (Directory('${finalDirectory0.path}\\${category}'))
+  // //       : (Directory('${finalDirectory0.path}/${category}'));
+  // //   finalDirectory.createSync();
+  // //
+  // //   final path = await finalDirectory.path;
+  // //   String file_path = windows_platform
+  // //       ? ('$path\\${joinHolePattern.name}-pattern')
+  // //       : ('$path/${joinHolePattern.name}-pattern');
+  // //   // writeJsonToFile(joinHolePattern.toJson(),file_path);
+  // //   File file = File(file_path);
+  // //
+  // //   try {
+  // //     // Convert the data to a JSON string
+  // //     String jsonData = jsonEncode(joinHolePattern.toJson());
+  // //
+  // //     // Write the JSON data to the file
+  // //     file.writeAsStringSync(jsonData);
+  // //
+  // //     print('JSON data has been written to $file_path');
+  // //   } catch (e) {
+  // //     print('Error writing JSON data to the file: $e');
+  // //   }
+  // // }
+  // // save_joinHolePattern_list(List<JoinHolePattern> joinHolePatterns, String category) async {
+  // //   bool windows_platform = Platform.isWindows;
+  // //   final directory = await getApplicationDocumentsDirectory();
+  // //
+  // //   final Directory oldDirectory = windows_platform
+  // //       ? (Directory('${directory.path}\\Auto_Cam'))
+  // //       : (Directory('${directory.path}/Auto_Cam'));
+  // //   oldDirectory.createSync();
+  // //
+  // //   final Directory newDirectory = windows_platform
+  // //       ? (Directory('${oldDirectory.path}\\Setting'))
+  // //       : (Directory('${oldDirectory.path}/Setting'));
+  // //   newDirectory.createSync();
+  // //
+  // //   final Directory finalDirectory0 = windows_platform
+  // //       ? (Directory('${newDirectory.path}\\Join_Patterns'))
+  // //       : (Directory('${newDirectory.path}/Join_Patterns'));
+  // //   finalDirectory0.createSync();
+  // //
+  // //   final Directory finalDirectory = windows_platform
+  // //       ? (Directory('${finalDirectory0.path}\\${category}'))
+  // //       : (Directory('${finalDirectory0.path}/${category}'));
+  // //   finalDirectory.createSync();
+  // //
+  // //   for (var p = 0; p < joinHolePatterns.length; p++) {
+  // //     JoinHolePattern joinHolePattern = joinHolePatterns[p];
+  // //     final path = await finalDirectory.path;
+  // //     String file_path = windows_platform
+  // //         ? ('$path\\${joinHolePattern.name}-pattern')
+  // //         : ('$path/${joinHolePattern.name}-pattern');
+  // //     // writeJsonToFile(joinHolePattern.toJson(),file_path);
+  // //     File file = File(file_path);
+  // //
+  // //     try {
+  // //       // Convert the data to a JSON string
+  // //       String jsonData = jsonEncode(joinHolePattern.toJson());
+  // //
+  // //       // Write the JSON data to the file
+  // //       file.writeAsStringSync(jsonData);
+  // //
+  // //       print('JSON data has been written to $file_path');
+  // //     } catch (e) {
+  // //       print('Error writing JSON data to the file: $e');
+  // //     }
+  // //   }
+  // // }
+  // //
+  // // delete_joinHolePattern(
+  // //     JoinHolePattern joinHolePattern, String category) async {
+  // //   bool windows_platform = Platform.isWindows;
+  // //   final directory = await getApplicationDocumentsDirectory();
+  // //
+  // //   final Directory oldDirectory = windows_platform
+  // //       ? (Directory('${directory.path}\\Auto_Cam'))
+  // //       : (Directory('${directory.path}/Auto_Cam'));
+  // //   oldDirectory.createSync();
+  // //
+  // //   final Directory newDirectory = windows_platform
+  // //       ? (Directory('${oldDirectory.path}\\Setting'))
+  // //       : (Directory('${oldDirectory.path}/Setting'));
+  // //   newDirectory.createSync();
+  // //
+  // //   final Directory finalDirectory0 = windows_platform
+  // //       ? (Directory('${newDirectory.path}\\Join_Patterns'))
+  // //       : (Directory('${newDirectory.path}/Join_Patterns'));
+  // //   finalDirectory0.createSync();
+  // //
+  // //   final Directory finalDirectory = windows_platform
+  // //       ? (Directory('${finalDirectory0.path}\\${category}'))
+  // //       : (Directory('${finalDirectory0.path}/${category}'));
+  // //   finalDirectory.createSync();
+  // //
+  // //   final path = await finalDirectory.path;
+  // //   String file_path = windows_platform
+  // //       ? ('$path\\${joinHolePattern.name}-pattern')
+  // //       : ('$path/${joinHolePattern.name}-pattern');
+  // //
+  // //   final dir = Directory(file_path);
+  // //   dir.deleteSync(recursive: true);
+  // //
+  // //   box_repository.join_patterns[category]!.remove(joinHolePattern);
+  // //   await read_pattern_files();
+  // // }
+  //
+  // // enable_pattern(JoinHolePattern joinHolePattern, String category) async {
+  // //   bool windows_platform = Platform.isWindows;
+  // //   final directory = await getApplicationDocumentsDirectory();
+  // //
+  // //   final Directory oldDirectory = windows_platform
+  // //       ? (Directory('${directory.path}\\Auto_Cam'))
+  // //       : (Directory('${directory.path}/Auto_Cam'));
+  // //   oldDirectory.createSync();
+  // //
+  // //   final Directory newDirectory = windows_platform
+  // //       ? (Directory('${oldDirectory.path}\\Setting'))
+  // //       : (Directory('${oldDirectory.path}/Setting'));
+  // //   newDirectory.createSync();
+  // //
+  // //   final Directory finalDirectory0 = windows_platform
+  // //       ? (Directory('${newDirectory.path}\\Join_Patterns'))
+  // //       : (Directory('${newDirectory.path}/Join_Patterns'));
+  // //   finalDirectory0.createSync();
+  // //
+  // //   final Directory finalDirectory = windows_platform
+  // //       ? (Directory('${finalDirectory0.path}\\${category}'))
+  // //       : (Directory('${finalDirectory0.path}/${category}'));
+  // //   finalDirectory.createSync();
+  // //
+  // //   JoinHolePattern new_join_pattern = joinHolePattern;
+  // //   new_join_pattern.pattern_enable = true;
+  // //
+  // //   box_repository.join_patterns[category]!.remove(joinHolePattern);
+  // //
+  // //   save_joinHolePattern(new_join_pattern, category);
+  // // }
+  // //
+  // // disable_pattern(JoinHolePattern joinHolePattern, String category) async {
+  // //   bool windows_platform = Platform.isWindows;
+  // //   final directory = await getApplicationDocumentsDirectory();
+  // //
+  // //   final Directory oldDirectory = windows_platform
+  // //       ? (Directory('${directory.path}\\Auto_Cam'))
+  // //       : (Directory('${directory.path}/Auto_Cam'));
+  // //   oldDirectory.createSync();
+  // //
+  // //   final Directory newDirectory = windows_platform
+  // //       ? (Directory('${oldDirectory.path}\\Setting'))
+  // //       : (Directory('${oldDirectory.path}/Setting'));
+  // //   newDirectory.createSync();
+  // //
+  // //   final Directory finalDirectory0 = windows_platform
+  // //       ? (Directory('${newDirectory.path}\\Join_Patterns'))
+  // //       : (Directory('${newDirectory.path}/Join_Patterns'));
+  // //   finalDirectory0.createSync();
+  // //
+  // //   final Directory finalDirectory = windows_platform
+  // //       ? (Directory('${finalDirectory0.path}\\${category}'))
+  // //       : (Directory('${finalDirectory0.path}/${category}'));
+  // //   finalDirectory.createSync();
+  // //   JoinHolePattern new_join_pattern = joinHolePattern;
+  // //   new_join_pattern.pattern_enable = false;
+  // //
+  // //   box_repository.join_patterns[category]!.remove(joinHolePattern);
+  // //
+  // //   save_joinHolePattern(new_join_pattern, category);
+  // // }
+  //
+  // read_pattern_files() async {
+  //   box_repository.join_patterns["Box_Fitting_DRILL"]!.clear();
+  //   box_repository.join_patterns["Flexible_Shelves"]!.clear();
+  //   box_repository.join_patterns["Drawer_Face"]!.clear();
+  //   box_repository.join_patterns["Door_Hinges"]!.clear();
+  //   box_repository.join_patterns["side_Hinges"]!.clear();
+  //   box_repository.join_patterns["Groove"]!.clear();
+  //
+  //   bool windows_platform = Platform.isWindows;
+  //
+  //   final rootdirectory = await getApplicationDocumentsDirectory();
+  //
+  //   final Directory directory0 = windows_platform
+  //       ? (Directory('${rootdirectory.path}\\Auto_Cam\\Setting\\Join_Patterns'))
+  //       : (Directory('${rootdirectory.path}/Auto_Cam/Setting/Join_Patterns'));
+  //   directory0.createSync();
+  //
+  //   for (int i = 0; i < box_repository.join_patterns.length; i++) {
+  //     String category_name = box_repository.join_patterns.keys.toList()[i];
+  //
+  //     final Directory directory = windows_platform
+  //         ? (Directory('${directory0.path}\\${category_name}'))
+  //         : (Directory('${directory0.path}/${category_name}'));
+  //     directory.createSync();
+  //
+  //     if (directory.existsSync()) {
+  //       List<FileSystemEntity> files = directory.listSync();
+  //
+  //       // Filter the list to include only files
+  //       List<File> fileList = [];
+  //       for (var fileEntity in files) {
+  //         if (fileEntity is File) {
+  //           fileList.add(fileEntity as File);
+  //         }
+  //       }
+  //
+  //       // Now, fileList contains a list of File objects from the directory.
+  //       for (var file in fileList) {
+  //         if (file.existsSync()) {
+  //           File f = File(file.path);
+  //
+  //           if (f.path.contains('pattern')) {
+  //             String content = await f.readAsString();
+  //
+  //             JoinHolePattern joinHolePattern =
+  //                 JoinHolePattern.fromJson(json.decode(content));
+  //
+  //             box_repository.join_patterns[category_name]!.add(joinHolePattern);
+  //           }
+  //         } else {
+  //           print('Directory does not exist: $directory');
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+  //
+  // read_brands() async {
+  //   box_repository.brands = [];
+  //
+  //   bool windows_platform = Platform.isWindows;
+  //
+  //   final rootdirectory = await getApplicationDocumentsDirectory();
+  //
+  //   final Directory directory0 = windows_platform
+  //       ? (Directory('${rootdirectory.path}\\Auto_Cam\\Setting\\Join_Patterns'))
+  //       : (Directory('${rootdirectory.path}/Auto_Cam/Setting/Join_Patterns'));
+  //   directory0.createSync();
+  //
+  //   final Directory directory = windows_platform
+  //       ? (Directory('${directory0.path}\\Drawer_Rail_Brands'))
+  //       : (Directory('${directory0.path}/Drawer_Rail_Brands'));
+  //   directory.createSync();
+  //
+  //   if (directory.existsSync()) {
+  //     List<FileSystemEntity> files = directory.listSync();
+  //
+  //     // Filter the list to include only files
+  //     List<File> fileList = [];
+  //     for (var fileEntity in files) {
+  //       if (fileEntity is File) {
+  //         fileList.add(fileEntity as File);
+  //       }
+  //     }
+  //
+  //     // Now, fileList contains a list of File objects from the directory.
+  //     for (var file in fileList) {
+  //       if (file.existsSync()) {
+  //         File f = File(file.path);
+  //
+  //         if (f.path.contains('brand')) {
+  //           String content = await f.readAsString();
+  //
+  //           Drawer_Rail_Brand brand =
+  //               Drawer_Rail_Brand.fromJson(json.decode(content));
+  //
+  //           box_repository.brands.add(brand);
+  //         }
+  //       } else {
+  //         print('Directory does not exist: $directory');
+  //       }
+  //     }
+  //   }
+  // }
+  //
+  // save_brand(Drawer_Rail_Brand brand) async {
   //   bool windows_platform = Platform.isWindows;
   //   final directory = await getApplicationDocumentsDirectory();
   //
@@ -1521,20 +1882,20 @@ analayzejoins.generate_3d_shape_fastener();
   //   finalDirectory0.createSync();
   //
   //   final Directory finalDirectory = windows_platform
-  //       ? (Directory('${finalDirectory0.path}\\${category}'))
-  //       : (Directory('${finalDirectory0.path}/${category}'));
+  //       ? (Directory('${finalDirectory0.path}\\Drawer_Rail_Brands}'))
+  //       : (Directory('${finalDirectory0.path}/Drawer_Rail_Brands'));
   //   finalDirectory.createSync();
   //
   //   final path = await finalDirectory.path;
   //   String file_path = windows_platform
-  //       ? ('$path\\${joinHolePattern.name}-pattern')
-  //       : ('$path/${joinHolePattern.name}-pattern');
+  //       ? ('$path\\${brand.brand_name}-brand')
+  //       : ('$path/${brand.brand_name}-brand');
   //   // writeJsonToFile(joinHolePattern.toJson(),file_path);
   //   File file = File(file_path);
   //
   //   try {
   //     // Convert the data to a JSON string
-  //     String jsonData = jsonEncode(joinHolePattern.toJson());
+  //     String jsonData = jsonEncode(brand.toJson());
   //
   //     // Write the JSON data to the file
   //     file.writeAsStringSync(jsonData);
@@ -1543,9 +1904,13 @@ analayzejoins.generate_3d_shape_fastener();
   //   } catch (e) {
   //     print('Error writing JSON data to the file: $e');
   //   }
+  //
+  //   // read_brands();
   // }
-  // save_joinHolePattern_list(List<JoinHolePattern> joinHolePatterns, String category) async {
+  //
+  // delete_brand(Drawer_Rail_Brand brand) async {
   //   bool windows_platform = Platform.isWindows;
+  //
   //   final directory = await getApplicationDocumentsDirectory();
   //
   //   final Directory oldDirectory = windows_platform
@@ -1564,320 +1929,21 @@ analayzejoins.generate_3d_shape_fastener();
   //   finalDirectory0.createSync();
   //
   //   final Directory finalDirectory = windows_platform
-  //       ? (Directory('${finalDirectory0.path}\\${category}'))
-  //       : (Directory('${finalDirectory0.path}/${category}'));
-  //   finalDirectory.createSync();
-  //
-  //   for (var p = 0; p < joinHolePatterns.length; p++) {
-  //     JoinHolePattern joinHolePattern = joinHolePatterns[p];
-  //     final path = await finalDirectory.path;
-  //     String file_path = windows_platform
-  //         ? ('$path\\${joinHolePattern.name}-pattern')
-  //         : ('$path/${joinHolePattern.name}-pattern');
-  //     // writeJsonToFile(joinHolePattern.toJson(),file_path);
-  //     File file = File(file_path);
-  //
-  //     try {
-  //       // Convert the data to a JSON string
-  //       String jsonData = jsonEncode(joinHolePattern.toJson());
-  //
-  //       // Write the JSON data to the file
-  //       file.writeAsStringSync(jsonData);
-  //
-  //       print('JSON data has been written to $file_path');
-  //     } catch (e) {
-  //       print('Error writing JSON data to the file: $e');
-  //     }
-  //   }
-  // }
-  //
-  // delete_joinHolePattern(
-  //     JoinHolePattern joinHolePattern, String category) async {
-  //   bool windows_platform = Platform.isWindows;
-  //   final directory = await getApplicationDocumentsDirectory();
-  //
-  //   final Directory oldDirectory = windows_platform
-  //       ? (Directory('${directory.path}\\Auto_Cam'))
-  //       : (Directory('${directory.path}/Auto_Cam'));
-  //   oldDirectory.createSync();
-  //
-  //   final Directory newDirectory = windows_platform
-  //       ? (Directory('${oldDirectory.path}\\Setting'))
-  //       : (Directory('${oldDirectory.path}/Setting'));
-  //   newDirectory.createSync();
-  //
-  //   final Directory finalDirectory0 = windows_platform
-  //       ? (Directory('${newDirectory.path}\\Join_Patterns'))
-  //       : (Directory('${newDirectory.path}/Join_Patterns'));
-  //   finalDirectory0.createSync();
-  //
-  //   final Directory finalDirectory = windows_platform
-  //       ? (Directory('${finalDirectory0.path}\\${category}'))
-  //       : (Directory('${finalDirectory0.path}/${category}'));
+  //       ? (Directory('${finalDirectory0.path}\\Drawer_Rail_Brands'))
+  //       : (Directory('${finalDirectory0.path}/Drawer_Rail_Brands'));
   //   finalDirectory.createSync();
   //
   //   final path = await finalDirectory.path;
   //   String file_path = windows_platform
-  //       ? ('$path\\${joinHolePattern.name}-pattern')
-  //       : ('$path/${joinHolePattern.name}-pattern');
+  //       ? ('$path\\${brand.brand_name}-brand')
+  //       : ('$path/${brand.brand_name}-brand');
   //
   //   final dir = Directory(file_path);
   //   dir.deleteSync(recursive: true);
   //
-  //   box_repository.join_patterns[category]!.remove(joinHolePattern);
-  //   await read_pattern_files();
-  // }
-
-  // enable_pattern(JoinHolePattern joinHolePattern, String category) async {
-  //   bool windows_platform = Platform.isWindows;
-  //   final directory = await getApplicationDocumentsDirectory();
-  //
-  //   final Directory oldDirectory = windows_platform
-  //       ? (Directory('${directory.path}\\Auto_Cam'))
-  //       : (Directory('${directory.path}/Auto_Cam'));
-  //   oldDirectory.createSync();
-  //
-  //   final Directory newDirectory = windows_platform
-  //       ? (Directory('${oldDirectory.path}\\Setting'))
-  //       : (Directory('${oldDirectory.path}/Setting'));
-  //   newDirectory.createSync();
-  //
-  //   final Directory finalDirectory0 = windows_platform
-  //       ? (Directory('${newDirectory.path}\\Join_Patterns'))
-  //       : (Directory('${newDirectory.path}/Join_Patterns'));
-  //   finalDirectory0.createSync();
-  //
-  //   final Directory finalDirectory = windows_platform
-  //       ? (Directory('${finalDirectory0.path}\\${category}'))
-  //       : (Directory('${finalDirectory0.path}/${category}'));
-  //   finalDirectory.createSync();
-  //
-  //   JoinHolePattern new_join_pattern = joinHolePattern;
-  //   new_join_pattern.pattern_enable = true;
-  //
-  //   box_repository.join_patterns[category]!.remove(joinHolePattern);
-  //
-  //   save_joinHolePattern(new_join_pattern, category);
+  //   // await read_brands();
   // }
   //
-  // disable_pattern(JoinHolePattern joinHolePattern, String category) async {
-  //   bool windows_platform = Platform.isWindows;
-  //   final directory = await getApplicationDocumentsDirectory();
-  //
-  //   final Directory oldDirectory = windows_platform
-  //       ? (Directory('${directory.path}\\Auto_Cam'))
-  //       : (Directory('${directory.path}/Auto_Cam'));
-  //   oldDirectory.createSync();
-  //
-  //   final Directory newDirectory = windows_platform
-  //       ? (Directory('${oldDirectory.path}\\Setting'))
-  //       : (Directory('${oldDirectory.path}/Setting'));
-  //   newDirectory.createSync();
-  //
-  //   final Directory finalDirectory0 = windows_platform
-  //       ? (Directory('${newDirectory.path}\\Join_Patterns'))
-  //       : (Directory('${newDirectory.path}/Join_Patterns'));
-  //   finalDirectory0.createSync();
-  //
-  //   final Directory finalDirectory = windows_platform
-  //       ? (Directory('${finalDirectory0.path}\\${category}'))
-  //       : (Directory('${finalDirectory0.path}/${category}'));
-  //   finalDirectory.createSync();
-  //   JoinHolePattern new_join_pattern = joinHolePattern;
-  //   new_join_pattern.pattern_enable = false;
-  //
-  //   box_repository.join_patterns[category]!.remove(joinHolePattern);
-  //
-  //   save_joinHolePattern(new_join_pattern, category);
-  // }
-
-  read_pattern_files() async {
-    box_repository.join_patterns["Box_Fitting_DRILL"]!.clear();
-    box_repository.join_patterns["Flexible_Shelves"]!.clear();
-    box_repository.join_patterns["Drawer_Face"]!.clear();
-    box_repository.join_patterns["Door_Hinges"]!.clear();
-    box_repository.join_patterns["side_Hinges"]!.clear();
-    box_repository.join_patterns["Groove"]!.clear();
-
-    bool windows_platform = Platform.isWindows;
-
-    final rootdirectory = await getApplicationDocumentsDirectory();
-
-    final Directory directory0 = windows_platform
-        ? (Directory('${rootdirectory.path}\\Auto_Cam\\Setting\\Join_Patterns'))
-        : (Directory('${rootdirectory.path}/Auto_Cam/Setting/Join_Patterns'));
-    directory0.createSync();
-
-    for (int i = 0; i < box_repository.join_patterns.length; i++) {
-      String category_name = box_repository.join_patterns.keys.toList()[i];
-
-      final Directory directory = windows_platform
-          ? (Directory('${directory0.path}\\${category_name}'))
-          : (Directory('${directory0.path}/${category_name}'));
-      directory.createSync();
-
-      if (directory.existsSync()) {
-        List<FileSystemEntity> files = directory.listSync();
-
-        // Filter the list to include only files
-        List<File> fileList = [];
-        for (var fileEntity in files) {
-          if (fileEntity is File) {
-            fileList.add(fileEntity as File);
-          }
-        }
-
-        // Now, fileList contains a list of File objects from the directory.
-        for (var file in fileList) {
-          if (file.existsSync()) {
-            File f = File(file.path);
-
-            if (f.path.contains('pattern')) {
-              String content = await f.readAsString();
-
-              JoinHolePattern joinHolePattern =
-                  JoinHolePattern.fromJson(json.decode(content));
-
-              box_repository.join_patterns[category_name]!.add(joinHolePattern);
-            }
-          } else {
-            print('Directory does not exist: $directory');
-          }
-        }
-      }
-    }
-  }
-
-  read_brands() async {
-    box_repository.brands = [];
-
-    bool windows_platform = Platform.isWindows;
-
-    final rootdirectory = await getApplicationDocumentsDirectory();
-
-    final Directory directory0 = windows_platform
-        ? (Directory('${rootdirectory.path}\\Auto_Cam\\Setting\\Join_Patterns'))
-        : (Directory('${rootdirectory.path}/Auto_Cam/Setting/Join_Patterns'));
-    directory0.createSync();
-
-    final Directory directory = windows_platform
-        ? (Directory('${directory0.path}\\Drawer_Rail_Brands'))
-        : (Directory('${directory0.path}/Drawer_Rail_Brands'));
-    directory.createSync();
-
-    if (directory.existsSync()) {
-      List<FileSystemEntity> files = directory.listSync();
-
-      // Filter the list to include only files
-      List<File> fileList = [];
-      for (var fileEntity in files) {
-        if (fileEntity is File) {
-          fileList.add(fileEntity as File);
-        }
-      }
-
-      // Now, fileList contains a list of File objects from the directory.
-      for (var file in fileList) {
-        if (file.existsSync()) {
-          File f = File(file.path);
-
-          if (f.path.contains('brand')) {
-            String content = await f.readAsString();
-
-            Drawer_Rail_Brand brand =
-                Drawer_Rail_Brand.fromJson(json.decode(content));
-
-            box_repository.brands.add(brand);
-          }
-        } else {
-          print('Directory does not exist: $directory');
-        }
-      }
-    }
-  }
-
-  save_brand(Drawer_Rail_Brand brand) async {
-    bool windows_platform = Platform.isWindows;
-    final directory = await getApplicationDocumentsDirectory();
-
-    final Directory oldDirectory = windows_platform
-        ? (Directory('${directory.path}\\Auto_Cam'))
-        : (Directory('${directory.path}/Auto_Cam'));
-    oldDirectory.createSync();
-
-    final Directory newDirectory = windows_platform
-        ? (Directory('${oldDirectory.path}\\Setting'))
-        : (Directory('${oldDirectory.path}/Setting'));
-    newDirectory.createSync();
-
-    final Directory finalDirectory0 = windows_platform
-        ? (Directory('${newDirectory.path}\\Join_Patterns'))
-        : (Directory('${newDirectory.path}/Join_Patterns'));
-    finalDirectory0.createSync();
-
-    final Directory finalDirectory = windows_platform
-        ? (Directory('${finalDirectory0.path}\\Drawer_Rail_Brands}'))
-        : (Directory('${finalDirectory0.path}/Drawer_Rail_Brands'));
-    finalDirectory.createSync();
-
-    final path = await finalDirectory.path;
-    String file_path = windows_platform
-        ? ('$path\\${brand.brand_name}-brand')
-        : ('$path/${brand.brand_name}-brand');
-    // writeJsonToFile(joinHolePattern.toJson(),file_path);
-    File file = File(file_path);
-
-    try {
-      // Convert the data to a JSON string
-      String jsonData = jsonEncode(brand.toJson());
-
-      // Write the JSON data to the file
-      file.writeAsStringSync(jsonData);
-
-      print('JSON data has been written to $file_path');
-    } catch (e) {
-      print('Error writing JSON data to the file: $e');
-    }
-
-    // read_brands();
-  }
-
-  delete_brand(Drawer_Rail_Brand brand) async {
-    bool windows_platform = Platform.isWindows;
-
-    final directory = await getApplicationDocumentsDirectory();
-
-    final Directory oldDirectory = windows_platform
-        ? (Directory('${directory.path}\\Auto_Cam'))
-        : (Directory('${directory.path}/Auto_Cam'));
-    oldDirectory.createSync();
-
-    final Directory newDirectory = windows_platform
-        ? (Directory('${oldDirectory.path}\\Setting'))
-        : (Directory('${oldDirectory.path}/Setting'));
-    newDirectory.createSync();
-
-    final Directory finalDirectory0 = windows_platform
-        ? (Directory('${newDirectory.path}\\Join_Patterns'))
-        : (Directory('${newDirectory.path}/Join_Patterns'));
-    finalDirectory0.createSync();
-
-    final Directory finalDirectory = windows_platform
-        ? (Directory('${finalDirectory0.path}\\Drawer_Rail_Brands'))
-        : (Directory('${finalDirectory0.path}/Drawer_Rail_Brands'));
-    finalDirectory.createSync();
-
-    final path = await finalDirectory.path;
-    String file_path = windows_platform
-        ? ('$path\\${brand.brand_name}-brand')
-        : ('$path/${brand.brand_name}-brand');
-
-    final dir = Directory(file_path);
-    dir.deleteSync(recursive: true);
-
-    // await read_brands();
-  }
-
 
   /// /// / / / naming /////////////
 
@@ -2331,4 +2397,6 @@ analayzejoins.generate_3d_shape_fastener();
     double resault = double.parse(v.toStringAsFixed(2));
     return resault;
   }
+
+
 }

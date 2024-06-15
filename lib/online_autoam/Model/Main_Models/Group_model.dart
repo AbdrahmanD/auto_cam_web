@@ -25,11 +25,11 @@ class Group_model {
   Map <String,dynamic> toJson(){
     Map<String,dynamic> map =Map<String,dynamic>() ;
 
-    map['group_name'] = this.group_name;
-    map['group_enable'] = this.group_enable;
+    map['"group_name"'] =   '"${this.group_name}"';
+    map['"group_enable"'] = "${this.group_enable}";
 
     if (this.pieces != null) {
-      map['pieces'] = this.pieces!.map((v) => v.toJson()).toList();
+      map['"pieces"'] = this.pieces!.map((v) => v.toJson()).toList();
     }
 return map;
   }

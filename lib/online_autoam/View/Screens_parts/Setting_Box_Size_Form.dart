@@ -1,9 +1,7 @@
 import 'package:auto_cam_web/online_autoam/Controller/DecimalTextInputFormatter.dart';
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
+ import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/Draw_Controller.dart';
    import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
-  import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
-import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
-import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
+ import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
   import 'package:auto_cam_web/online_autoam/View/Screens_parts/Cut_List_review.dart';
 import 'package:auto_cam_web/online_autoam/View/Setting_Page.dart';
  import 'package:auto_cam_web/online_autoam/View/Piece_List_view.dart';
@@ -27,7 +25,6 @@ class _Setting_Box_Size_FormState extends State<Setting_Box_Size_Form> {
 
   GlobalKey<FormState> form_key = GlobalKey();
 
-  Draw_Controller draw_Controller = Get.find();
 
   TextEditingController box_name_controller = TextEditingController();
   TextEditingController width_controller = TextEditingController();
@@ -49,8 +46,11 @@ class _Setting_Box_Size_FormState extends State<Setting_Box_Size_Form> {
   TextEditingController top_base_piece_width_controller =
       TextEditingController();
 
+bool set_box_size=false;
 bool chosing_box_type=false;
 bool chosing_fastener_type=false;
+
+
 List<String> box_types=[
   "standard_unit",
   "base_cabinet",
@@ -85,20 +85,20 @@ draw_box_in_screen(){
     double top_base_piece_width = double.parse(
         top_base_piece_width_controller.text.toString());
 
-    draw_Controller.box_repository.pack_panel_distence =
+    draw_controller.box_repository.pack_panel_distence =
         pack_panel_distence;
-    draw_Controller.box_repository.pack_panel_grove_depth =
+    draw_controller.box_repository.pack_panel_grove_depth =
         pack_panel_grove_depth;
-    draw_Controller.box_repository.top_base_piece_width =
+    draw_controller.box_repository.top_base_piece_width =
         top_base_piece_width;
-    draw_Controller.box_repository.box_model.value
+    draw_controller.box_repository.box_model.value
         .init_material_thickness = material_thickness_value;
 
-    String nbn= draw_Controller.first_chart_every_word_with_random_num(box_name);
+    // String nbn= draw_Controller.first_chart_every_word_with_random_num(box_name);
 
     Box_model b = Box_model(
-        nbn,
-        draw_Controller.box_type,
+        box_name,
+        draw_controller.box_type,
         width_value,
         hight_value,
         depth_value,
@@ -109,9 +109,9 @@ draw_box_in_screen(){
         pack_panel_distence,
         top_base_piece_width,
         is_back_panel,
-        Point_model(0, 0, 0));
+        Point_model(0, 0, 0),0);
 
-    draw_Controller.add_Box(b);
+    draw_controller.add_Box(b);
 
 
   }
@@ -125,7 +125,7 @@ draw_box_in_screen(){
     // TODO: implement initState
     super.initState();
 
-    box_model = draw_Controller.get_box();
+    box_model = draw_controller.get_box();
     box_name_controller.text=box_model.box_name.toString();
      width_controller.text = box_model.box_width.toString();
     hight_controller.text = box_model.box_height.toString();
@@ -136,11 +136,11 @@ draw_box_in_screen(){
         box_model.back_panel_thickness.toString();
     material_name_controller.text = 'MDF';
     pack_panel_grove_depth_controller.text =
-        '${draw_Controller.box_repository.pack_panel_grove_depth}';
+        '${draw_controller.box_repository.pack_panel_grove_depth}';
     pack_panel_distence_controller.text =
-        '${draw_Controller.box_repository.pack_panel_distence}';
+        '${draw_controller.box_repository.pack_panel_distence}';
     top_base_piece_width_controller.text =
-        '${draw_Controller.box_repository.top_base_piece_width}';
+        '${draw_controller.box_repository.top_base_piece_width}';
     is_back_panel=box_model.is_back_panel;
    }
   int text_size =12;
@@ -204,304 +204,352 @@ draw_box_in_screen(){
             height: 12,
           ),
 
-          ///box name
-          Row(
-            children: [
-              SizedBox(
-                width: 6,
-              ),
-              Container(width:60,child: Text('name : ')),
-              SizedBox(
-                width: 12,
-              ),
-              Container(
-                width: 132,
-                // height: 32,
-                child: TextFormField(
-                  minLines: 1,maxLines: 3,
-                  style: TextStyle(fontSize: 12),
-                  controller: box_name_controller,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  validator: (d) {
-                    if (d!.isEmpty) {
-                      return 'please add value';
-                    }
-                  },
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 12,
-          ),
 
-          //divider
-          Container(
-            height: 1,
-            color: Colors.grey,
-          ),
+          ///chose type of box
+          Padding(
+            padding: const EdgeInsets.only(left: 24,right: 24),
+            child: InkWell(onTap: (){
+              set_box_size=!set_box_size;setState(() {
 
-
-          SizedBox(
-            height: 6,
-          ),
-
-          ///width
-          Row(
-            children: [
-              SizedBox(
-                width: 6,
-              ),
-              Container(width:60,child: Text('Width :',style: TextStyle(fontSize: 12),)),
-              SizedBox(
-                width: 12,
-              ),
-              Container(
-                width: 132,
-                height: 26,
-                child: TextFormField(
-                  style: TextStyle(fontSize: 12),
-                  controller: width_controller,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  validator: (d) {
-                    if (d!.isEmpty) {
-                      return 'please add value';
-                    }
-                  },
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  keyboardType: TextInputType.number,
-                ),
-              ),
-              Text(
-                "  mm",
-                style: TextStyle(fontSize: 12),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 6,
-          ),
-
-          ///height
-          Row(
-            children: [
-              SizedBox(
-                width: 6,
-              ),
-              Container(width: 60,
-                child: Text(
-                  "Height :" ,style: TextStyle(fontSize: 12),
-                ),
-              ),
-              SizedBox(
-                width: 12,
-              ),
-              Container(
-                width: 132,
-                height: 26,
-                child: TextFormField(
-                  style: TextStyle(fontSize: 12),
-                  controller: hight_controller,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  validator: (d) {
-                    if (d!.isEmpty) {
-                      return 'please add value';
-                    }
-                  },
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  keyboardType: TextInputType.number,
-                ),
-              ),
-              Text(
-                "  mm",
-                style: TextStyle(fontSize: 12),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 6,
-          ),
-
-          ///depth
-          Row(
-            children: [
-              SizedBox(
-                width: 6,
-              ),
-              Container(width: 60,
-                child: Text(
-                  "Depth  :",
-                  style: TextStyle(fontSize: 12),
-                ),
-              ),
-              SizedBox(
-                width: 12,
-              ),
-              Container(
-                  width: 132,
-                  height: 26,
-                  child: TextFormField(
-                    style: TextStyle(fontSize: 12),
-                    controller: depth_controller,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
+              });
+            },
+              child: Container(
+                height: 40,decoration: BoxDecoration(borderRadius: BorderRadius.circular(8),
+                  color:!set_box_size? Colors.teal[200]:Colors.blue[200]),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          'setting box size',
+                          style: TextStyle(fontSize: 14, color: Colors.black),
+                        ),
                       ),
                     ),
-                    validator: (d) {
-                      if (d!.isEmpty) {
-                        return 'please add value';
-                      }
-                    },
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    keyboardType: TextInputType.number,
-                  )),
-              Text(
-                "  mm",
-                style: TextStyle(fontSize: 12),
+                    !set_box_size?
+                    Container(width:40,height:40,child: Icon(Icons.add_circle_outline,color: Colors.black,)):
+                    Container(width:40,height:40,child: Icon(Icons.remove_circle_outline,color: Colors.red))
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
-          SizedBox(
-            height: 6,
-          ),
-
-          //divider
+          set_box_size?
           Container(
-            height: 1,
-            color: Colors.grey,
-          ),
-
-          SizedBox(
-            height: 6,
-          ),
-
-          /// material title
-          Row(
-            children: [
-              SizedBox(
-                width: 6,
-              ),
+              width: 532,color: Colors.grey[200],
+              height: 300,
+              child:
               Center(
-                child: Text(
-                  "Materials ",
-                  style: TextStyle(fontSize: 12),
-                ),
-              ),
-            ],
-          ),
+                child: ListView(
 
-          SizedBox(
-            height: 6,
-          ),
-
-          ///material thickness form field
-          Row(
-            children: [
-              SizedBox(
-                width: 6,
-              ),
-              Container(width: 60,
-                child: Text(
-                  "thickness:",
-                  style: TextStyle(fontSize: 12),
-                ),
-              ),
-              SizedBox(
-                width: 12,
-              ),
-              Container(
-                width: 132,
-                height: 26,
-                child: TextFormField(
-                  style: TextStyle(fontSize: 12),
-                  controller: material_thickness_controller,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+                  children: [
+                    SizedBox(
+                      height: 12,
                     ),
-                  ),
-                  validator: (d) {
-                    if (d!.isEmpty) {
-                      return 'please add value';
-                    }
-                  },
-                  inputFormatters: [DecimalTextInputFormatter(1)],
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                ),
-              ),
-              Text(
-                "  mm",
-                style: TextStyle(fontSize: 12),
-              ),
-            ],
-          ),
 
-          SizedBox(
-            height: 6,
-          ),
-
-          ///material name form field
-          Row(
-            children: [
-              SizedBox(
-                width: 6,
-              ),
-              Container(width: 60,
-                child: Text(
-                  " name :",
-                  style: TextStyle(fontSize: 12),
-                ),
-              ),
-              SizedBox(
-                width: 12,
-              ),
-              Container(
-                width: 132,
-                // height: 26,
-                child: TextFormField(
-                  style: TextStyle(fontSize: 12),
-                  controller: material_name_controller,
-maxLines: 3,      minLines: 1,            decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+                    ///box name
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Container(width:60,child: Text('name : ')),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Container(
+                          width: 132,
+                          // height: 32,
+                          child: TextFormField(
+                            minLines: 1,maxLines: 3,
+                            style: TextStyle(fontSize: 12),
+                            controller: box_name_controller,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            validator: (d) {
+                              if (d!.isEmpty) {
+                                return 'please add value';
+                              }
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  validator: (d) {
-                    if (d!.isEmpty) {
-                      return 'please add value';
-                    }
-                  },
-                ),
-              ),
+                    SizedBox(
+                      height: 12,
+                    ),
 
-            ],
-          ),
-
-          SizedBox(
-            height: 6,
-          ),
-          SizedBox(
-            height: 6,
-          ),
+                    //divider
+                    Container(
+                      height: 1,
+                      color: Colors.grey,
+                    ),
 
 
-          Container(
-            height: 1,
-            color: Colors.grey,
-          ),
+                    SizedBox(
+                      height: 6,
+                    ),
+
+                    ///width
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Container(width:60,child: Text('Width :',style: TextStyle(fontSize: 12),)),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Container(
+                          width: 132,
+                          height: 26,
+                          child: TextFormField(
+                            style: TextStyle(fontSize: 12),
+                            controller: width_controller,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            validator: (d) {
+                              if (d!.isEmpty) {
+                                return 'please add value';
+                              }
+                            },
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                        Text(
+                          "  mm",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+
+                    ///height
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Container(width: 60,
+                          child: Text(
+                            "Height :" ,style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Container(
+                          width: 132,
+                          height: 26,
+                          child: TextFormField(
+                            style: TextStyle(fontSize: 12),
+                            controller: hight_controller,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            validator: (d) {
+                              if (d!.isEmpty) {
+                                return 'please add value';
+                              }
+                            },
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                        Text(
+                          "  mm",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+
+                    ///depth
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Container(width: 60,
+                          child: Text(
+                            "Depth  :",
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Container(
+                            width: 132,
+                            height: 26,
+                            child: TextFormField(
+                              style: TextStyle(fontSize: 12),
+                              controller: depth_controller,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              validator: (d) {
+                                if (d!.isEmpty) {
+                                  return 'please add value';
+                                }
+                              },
+                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                              keyboardType: TextInputType.number,
+                            )),
+                        Text(
+                          "  mm",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+
+                    //divider
+                    Container(
+                      height: 1,
+                      color: Colors.grey,
+                    ),
+
+                    SizedBox(
+                      height: 6,
+                    ),
+
+                    /// material title
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Center(
+                          child: Text(
+                            "Materials ",
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(
+                      height: 6,
+                    ),
+
+                    ///material thickness form field
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Container(width: 60,
+                          child: Text(
+                            "thickness:",
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Container(
+                          width: 132,
+                          height: 26,
+                          child: TextFormField(
+                            style: TextStyle(fontSize: 12),
+                            controller: material_thickness_controller,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            validator: (d) {
+                              if (d!.isEmpty) {
+                                return 'please add value';
+                              }
+                            },
+                            inputFormatters: [DecimalTextInputFormatter(1)],
+                            keyboardType: TextInputType.numberWithOptions(decimal: true),
+                          ),
+                        ),
+                        Text(
+                          "  mm",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(
+                      height: 6,
+                    ),
+
+                    ///material name form field
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Container(width: 60,
+                          child: Text(
+                            " name :",
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Container(
+                          width: 132,
+                          // height: 26,
+                          child: TextFormField(
+                            style: TextStyle(fontSize: 12),
+                            controller: material_name_controller,
+                            maxLines: 3,      minLines: 1,            decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                            validator: (d) {
+                              if (d!.isEmpty) {
+                                return 'please add value';
+                              }
+                            },
+                          ),
+                        ),
+
+                      ],
+                    ),
+
+                    SizedBox(
+                      height: 6,
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+
+
+                    Container(
+                      height: 1,
+                      color: Colors.grey,
+                    ),
+
+                  ],
+                    ),
+              )):SizedBox(),
+
 
           /////////////////
           // Action part (buttons for : draw , export as excel , export as G_code .. )
@@ -617,7 +665,7 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
                             draw_controller.box_repository.corrent_fastener=draw_controller.box_repository.fasteners_namae[i];
                             chosing_fastener_type=false;
 
-                            draw_Controller.analyze();
+                            draw_controller.analyze();
 
                             setState(() {
 
@@ -667,30 +715,59 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
             child: Row(
               children: [
                 SizedBox(
-                  width: 36,
+                  width: 18,
                 ),
                 Container(
-                    width: 100,
+                    width: 120,
                     child: Text('Save Box',
                         style: TextStyle(
                           fontSize: 14,
                         ))),
                 SizedBox(
-                  width: 18,
+                  width: 12,
                 ),
                 InkWell(
                     onTap: () {
-                      draw_Controller.save_BOX_File();
+                      draw_controller.save_BOX_File(box_name_controller.text.toString());
                     },
                     child: Icon(
                       Icons.save,
-                      size: 36,
+                      size: 30,
                       color: Colors.teal,
                     )),
               ],
             ),
           ),
 
+          /// open saved box
+          Container(
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 18,
+                ),
+                Container(
+                    width: 120,
+                    child: Text('open saved Box',
+                        style: TextStyle(
+                          fontSize: 14,
+                        ))),
+                SizedBox(
+                  width: 12,
+                ),
+                InkWell(
+                    onTap: () {
+                      draw_controller.open_File();
+
+                    },
+                    child: Icon(
+                      Icons.folder_open_outlined,
+                      size: 30,
+                      color: Colors.teal,
+                    )),
+              ],
+            ),
+          ),
 
           SizedBox(
             height: 12,
@@ -721,7 +798,7 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
                           fontSize: 14,
                         ))),
                 SizedBox(
-                  width: 18,
+                  width: 12,
                 ),
                 InkWell(
                     onTap: () {
@@ -729,7 +806,7 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
                       Get.to(Piece_List_view());},
                     child: Icon(
                       Icons.draw,
-                      size: 36,
+                      size: 30,
                       color: Colors.teal,
                     )),
               ],
@@ -756,17 +833,17 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
                           fontSize: 14,
                         ))),
                 SizedBox(
-                  width: 18,
+                  width: 12,
                 ),
                 InkWell(
                     onTap: () {
-                      draw_Controller.analyze();
+                      draw_controller.analyze();
                       Future.delayed(Duration(milliseconds: 1000))
                           .then((value) => Get.to(Cut_List_review()));
                     },
                     child: Icon(
                       Icons.list,
-                      size: 36,
+                      size: 30,
                       color: Colors.teal,
                     )),
               ],
@@ -795,16 +872,17 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
                           fontSize: 14,
                         ))),
                 SizedBox(
-                  width: 18,
+                  width: 12,
                 ),
                 InkWell(
                     onTap: () {
 
+                      draw_controller.analayzejoins.generate_3d_shape_fastener();
 
                     },
                     child: Icon(
                       Icons.print,
-                      size: 36,
+                      size: 30,
                       color: Colors.teal,
                     )),
               ],
@@ -831,7 +909,7 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
                           fontSize: 14,
                         ))),
                 SizedBox(
-                  width: 18,
+                  width: 12,
                 ),
                 InkWell(
                     onTap: () {
@@ -841,7 +919,7 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
                     },
                     child: Icon(
                       Icons.settings,
-                      size: 36,
+                      size: 30,
                       color: Colors.teal,
                     )),
               ],
@@ -857,5 +935,9 @@ maxLines: 3,      minLines: 1,            decoration: InputDecoration(
         ],
       ),
     );
+
+
   }
+
+
 }

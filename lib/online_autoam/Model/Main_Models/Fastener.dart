@@ -1,5 +1,5 @@
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
-import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener_shape_3d.dart';
+ import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/Draw_Controller.dart';
+import 'package:auto_cam_web/online_autoam/Controller/Repositories_Controllers/Box_Repository.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/JoinHolePattern.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
@@ -28,7 +28,8 @@ class Fastener {
   late Bore_model side_face_2_bore;
 
   late bool rebuild;
-  Draw_Controller draw_controller = Get.find();
+  // Draw_Controller draw_controller = Get.find();
+  Box_Repository box_repository=Get.find();
 
   Fastener(
       this.id,
@@ -41,7 +42,8 @@ class Fastener {
       this.side_pice_id,
       this.facee_name,
       this.side_name,
-      this.rebuild) {
+      this.rebuild
+      ) {
     if (rebuild) {
       transform_fastener_to_hole();
     } else {
@@ -53,19 +55,75 @@ class Fastener {
     }
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      '"id"': '$id',
+      '"fastener_templet"': fastener_templet.toJson(),
+      '"fastener_origin"': fastener_origin.toJson(),
+      '"fastener_axis"': '"${fastener_axis}"',
+      '"fastener_direction"': fastener_direction,
+      '"material_thickness"': material_thickness,
+      '"face_pice_id"': face_pice_id,
+      '"side_pice_id"': side_pice_id,
+      '"facee_name"': facee_name,
+      '"side_name"': side_name,
+      '"face_1_bore"': face_1_bore.toJson(),
+      '"face_2_bore"': face_2_bore.toJson(),
+      '"side_bore"': side_bore.toJson(),
+      '"side_face_1_bore"': side_face_1_bore.toJson(),
+      '"side_face_2_bore"': side_face_2_bore.toJson(),
+      '"rebuild"': rebuild,
+    };
+  }
+
+  // Create MainClass from JSON
+   Fastener.fromJson(Map<String, dynamic> json) {
+     // Fastener fastener = Fastener(
+    this.id= json['id'];
+    this.fastener_templet= Fastener_Templet.fromJson(json['fastener_templet']);
+    this.fastener_origin= Point_model.fromJson(json['fastener_origin']);
+    this.fastener_axis= json['fastener_axis'];
+    this.fastener_direction= json['fastener_direction'];
+    this.material_thickness= json['material_thickness'];
+    this.face_pice_id= json['face_pice_id'];
+    this.side_pice_id= json['side_pice_id'];
+    this.facee_name= json['facee_name'];
+    this.side_name= json['side_name'];
+    this.rebuild= json['rebuild'];
+    this.face_1_bore=Bore_model.fromJson(json['face_1_bore']);
+    this.face_2_bore=Bore_model.fromJson(json['face_2_bore']);
+    this.side_bore=Bore_model.fromJson(json['side_bore']);
+    this.side_face_1_bore=Bore_model.fromJson(json['side_face_1_bore']);
+    this.side_face_2_bore=Bore_model.fromJson(json['side_face_2_bore']);
+
+  }
+
+
+
+  change_fastener_nut_face(){
+
+    side_face_1_bore=side_face_2_bore;
+    side_face_2_bore=side_face_1_bore;
+
+    transform_fastener_to_hole();
+  }
+
+
   transform_fastener_to_hole() {
+
     Piece_model face_piece =
-        draw_controller.box_repository.box_model.value.box_pieces[face_pice_id];
+    box_repository.box_model.value.box_pieces[face_pice_id];
     Piece_model side_piece =
-        draw_controller.box_repository.box_model.value.box_pieces[side_pice_id];
+    box_repository.box_model.value.box_pieces[side_pice_id];
 
     if (fastener_axis == "X") {
-
       face_1_bore = Bore_model(id,
           Point_model(
               fastener_direction
-                  ? (fastener_origin.x_coordinate -fastener_templet.face_1_depth)
-                  : (fastener_origin.x_coordinate +fastener_templet.face_1_depth),
+                  ? (fastener_origin.x_coordinate -
+                  fastener_templet.face_1_depth)
+                  : (fastener_origin.x_coordinate +
+                  fastener_templet.face_1_depth),
               fastener_origin.y_coordinate,
               fastener_origin.z_coordinate),
           fastener_templet.face_1_diameter, fastener_templet.face_1_depth);
@@ -109,26 +167,26 @@ class Fastener {
           Point_model(
               fastener_direction
                   ? (fastener_origin.x_coordinate +
-                      fastener_templet.side_to_face)
+                  fastener_templet.side_to_face)
                   : fastener_origin.x_coordinate -
-                      fastener_templet.side_to_face,
+                  fastener_templet.side_to_face,
               y1,
               z1),
-          fastener_templet.side_face_1_diameter,
-          fastener_templet.side_face_1_depth);
+          fastener_templet.side_face_diameter,
+          fastener_templet.side_face_depth);
 
       side_face_2_bore = Bore_model(
           id,
           Point_model(
               fastener_direction
                   ? (fastener_origin.x_coordinate +
-                      fastener_templet.side_to_face)
+                  fastener_templet.side_to_face)
                   : fastener_origin.x_coordinate -
-                      fastener_templet.side_to_face,
+                  fastener_templet.side_to_face,
               y2,
               z2),
-          fastener_templet.side_face_2_diameter,
-          fastener_templet.side_face_2_depth);
+          fastener_templet.side_face_diameter,
+          fastener_templet.side_face_depth);
 
       if (face_1_bore.diameter > 0) {
         face_piece.piece_faces.faces[facee_name].bores.add(face_1_bore);
@@ -141,22 +199,33 @@ class Fastener {
         side_piece.piece_faces.faces[side_name].bores.add(side_bore);
       }
 
-      if (side_face_1_bore.diameter > 0) {
-        side_piece
-            .piece_faces
-            .faces[
-                finde_perpendiculer_face(side_name, side_piece.piece_direction,side_piece.piece_name,"X")]
-            .bores
-            .add(side_face_1_bore);
-      }
+      if (fastener_templet.side_face_diameter > 0) {
+        int face;
+        Bore_model bore_model;
 
-      if (side_face_2_bore.diameter > 0) {
-        side_piece
-            .piece_faces
-            .faces[finde_parallel_face(finde_perpendiculer_face(
-                side_name, side_piece.piece_direction,side_piece.piece_name,"X"))]
-            .bores
-            .add(side_face_2_bore);
+        if (side_piece.piece_direction == "F") {
+          if (side_piece.piece_name.contains("Front")) {
+            face = 4;
+            bore_model = side_face_2_bore;
+            side_face_1_bore.diameter = 0;
+          } else {
+            face = 5;
+            bore_model = side_face_1_bore;
+            side_face_2_bore.diameter = 0;
+          }
+        } else {
+          if (side_piece.piece_name.contains("top")) {
+            face = 0;
+            bore_model = side_face_1_bore;
+            side_face_2_bore.diameter = 0;
+          } else {
+            face = 2;
+            bore_model = side_face_2_bore;
+            side_face_1_bore.diameter = 0;
+          }
+        }
+
+        side_piece.piece_faces.faces[face].bores.add(bore_model);
       }
     }
 
@@ -166,8 +235,11 @@ class Fastener {
           fastener_direction
               ? (fastener_origin.y_coordinate - fastener_templet.face_1_depth)
               : (fastener_origin.y_coordinate + fastener_templet.face_1_depth),
-          fastener_origin.z_coordinate), fastener_templet.face_1_diameter, fastener_templet.face_1_depth);
-      side_bore = Bore_model(id, fastener_origin, fastener_templet.side_diameter, fastener_templet.side_depth);
+          fastener_origin.z_coordinate), fastener_templet.face_1_diameter,
+          fastener_templet.face_1_depth);
+      side_bore = Bore_model(
+          id, fastener_origin, fastener_templet.side_diameter,
+          fastener_templet.side_depth);
 
       face_2_bore = Bore_model(
           id,
@@ -205,22 +277,22 @@ class Fastener {
       side_face_1_bore = Bore_model(
           id,
           Point_model(
-x1,              fastener_direction
-                  ? (fastener_origin.y_coordinate + fastener_templet.side_to_face)
-                  : fastener_origin.y_coordinate - fastener_templet.side_to_face,
+              x1, fastener_direction
+              ? (fastener_origin.y_coordinate + fastener_templet.side_to_face)
+              : fastener_origin.y_coordinate - fastener_templet.side_to_face,
               z1),
-          fastener_templet.side_face_1_diameter,
-          fastener_templet.side_face_1_depth);
+          fastener_templet.side_face_diameter,
+          fastener_templet.side_face_depth);
 
       side_face_2_bore = Bore_model(
           id,
           Point_model(
-x2,              fastener_direction
-                  ? (fastener_origin.y_coordinate + fastener_templet.side_to_face)
-                  : fastener_origin.y_coordinate - fastener_templet.side_to_face,
+              x2, fastener_direction
+              ? (fastener_origin.y_coordinate + fastener_templet.side_to_face)
+              : fastener_origin.y_coordinate - fastener_templet.side_to_face,
               z2),
-          fastener_templet.side_face_2_diameter,
-          fastener_templet.side_face_2_depth);
+          fastener_templet.side_face_diameter,
+          fastener_templet.side_face_depth);
 
       if (face_1_bore.diameter > 0) {
         face_piece.piece_faces.faces[facee_name].bores.add(face_1_bore);
@@ -232,37 +304,47 @@ x2,              fastener_direction
       if (side_bore.diameter > 0) {
         side_piece.piece_faces.faces[side_name].bores.add(side_bore);
       }
-      if (side_face_1_bore.diameter > 0) {
-        side_piece
-            .piece_faces
-            .faces[
-                finde_perpendiculer_face(side_name, side_piece.piece_direction,side_piece.piece_name,"Y")]
-            .bores
-            .add(side_face_1_bore);
-      }
-      if (side_face_2_bore.diameter > 0) {
-        side_piece
-            .piece_faces
-            .faces[finde_parallel_face(finde_perpendiculer_face(
-                side_name, side_piece.piece_direction,side_piece.piece_name,"Y"))]
-            .bores
-            .add(side_face_2_bore);
+
+
+      if (fastener_templet.side_face_diameter > 0) {
+        int face;
+        Bore_model bore_model;
+
+        if (side_piece.piece_direction == "F") {
+          face = 5;
+          bore_model = side_face_1_bore;
+          side_face_2_bore.diameter = 0;
+        } else {
+          if (side_piece.piece_name.contains("right")) {
+            face = 1;
+            bore_model = side_face_1_bore;
+            side_face_2_bore.diameter = 0;
+          } else {
+            face = 3;
+            bore_model = side_face_2_bore;
+            side_face_1_bore.diameter = 0;
+          }
+        }
+
+        side_piece.piece_faces.faces[face].bores.add(bore_model);
       }
     }
 
     if (fastener_axis == "Z") {
-
       face_1_bore = Bore_model(id,
           Point_model(
-        fastener_origin.x_coordinate,
-        fastener_origin.y_coordinate,
-        fastener_direction
-            ? (fastener_origin.z_coordinate -fastener_templet.face_1_depth)
-            : (fastener_origin.z_coordinate +fastener_templet.face_1_depth),
+            fastener_origin.x_coordinate,
+            fastener_origin.y_coordinate,
+            fastener_direction
+                ? (fastener_origin.z_coordinate - fastener_templet.face_1_depth)
+                : (fastener_origin.z_coordinate +
+                fastener_templet.face_1_depth),
 
-      ), fastener_templet.face_1_diameter, fastener_templet.face_1_depth);
+          ), fastener_templet.face_1_diameter, fastener_templet.face_1_depth);
 
-      side_bore = Bore_model(id, fastener_origin, fastener_templet.side_diameter, fastener_templet.side_depth);
+      side_bore = Bore_model(
+          id, fastener_origin, fastener_templet.side_diameter,
+          fastener_templet.side_depth);
 
       face_2_bore = Bore_model(
           id,
@@ -300,26 +382,26 @@ x2,              fastener_direction
       side_face_1_bore = Bore_model(
           id,
           Point_model(
-              x1,y1,
+              x1, y1,
               fastener_direction
                   ? (fastener_origin.z_coordinate +
-                      fastener_templet.side_to_face)
+                  fastener_templet.side_to_face)
                   : (fastener_origin.z_coordinate -
-                      fastener_templet.side_to_face)),
-          fastener_templet.side_face_1_diameter,
-          fastener_templet.side_face_1_depth);
+                  fastener_templet.side_to_face)),
+          fastener_templet.side_face_diameter,
+          fastener_templet.side_face_depth);
 
       side_face_2_bore = Bore_model(
           id,
           Point_model(
-              x2,y2,
+              x2, y2,
               fastener_direction
                   ? (fastener_origin.z_coordinate +
-                      fastener_templet.side_to_face)
+                  fastener_templet.side_to_face)
                   : (fastener_origin.z_coordinate -
-                      fastener_templet.side_to_face)),
-          fastener_templet.side_face_2_diameter,
-          fastener_templet.side_face_2_depth);
+                  fastener_templet.side_to_face)),
+          fastener_templet.side_face_diameter,
+          fastener_templet.side_face_depth);
 
       if (face_1_bore.diameter > 0) {
         face_piece.piece_faces.faces[facee_name].bores.add(face_1_bore);
@@ -331,21 +413,41 @@ x2,              fastener_direction
       if (side_bore.diameter > 0) {
         side_piece.piece_faces.faces[side_name].bores.add(side_bore);
       }
-      if (side_face_1_bore.diameter > 0) {
-        side_piece
-            .piece_faces
-            .faces[
-                finde_perpendiculer_face(side_name, side_piece.piece_direction,side_piece.piece_name,"Z")]
-            .bores
-            .add(side_face_1_bore);
-      }
-      if (side_face_2_bore.diameter > 0) {
-        side_piece
-            .piece_faces
-            .faces[finde_parallel_face(finde_perpendiculer_face(
-                side_name, side_piece.piece_direction,side_piece.piece_name,"Z"))]
-            .bores
-            .add(side_face_2_bore);
+
+
+      if (fastener_templet.side_face_diameter > 0) {
+        int face;
+        Bore_model bore_model;
+
+        if (side_piece.piece_direction == "V") {
+          if (side_piece.piece_name.contains("right")) {
+            face = 1;
+            bore_model = side_face_1_bore;
+            side_face_2_bore.diameter = 0;
+          } else {
+            face = 3;
+            bore_model = side_face_2_bore;
+            side_face_1_bore.diameter = 0;
+          }
+        } else {
+          if (side_piece.piece_name.contains("H")) {
+            if (side_piece.piece_name.contains("top")) {
+              face = 0;
+              bore_model = side_face_1_bore;
+              side_face_2_bore.diameter = 0;
+            } else {
+              face = 2;
+              bore_model = side_face_2_bore;
+              side_face_1_bore.diameter = 0;
+            }
+          } else {
+            face = 2;
+            side_face_1_bore.diameter = 0;
+            bore_model = side_face_1_bore;
+          }
+
+          side_piece.piece_faces.faces[face].bores.add(bore_model);
+        }
       }
     }
   }
@@ -463,11 +565,9 @@ class Fastener_Templet {
   late double side_diameter;
   late double side_depth;
 
-  late double side_face_1_diameter;
-  late double side_face_1_depth;
+  late double side_face_diameter;
+  late double side_face_depth;
 
-  late double side_face_2_diameter;
-  late double side_face_2_depth;
 
   Fastener_Templet(
       this.name,
@@ -478,8 +578,41 @@ class Fastener_Templet {
       this.face_2_depth,
       this.side_diameter,
       this.side_depth,
-      this.side_face_1_diameter,
-      this.side_face_1_depth,
-      this.side_face_2_diameter,
-      this.side_face_2_depth);
+      this.side_face_diameter,
+      this.side_face_depth,
+      );
+
+  Map<String, dynamic> toJson() {
+    return {
+      '"name"':'"$name"',
+      '"side_to_face"':       '$side_to_face',
+      '"face_1_diameter"':    '$face_1_diameter',
+      '"face_1_depth"':       '$face_1_depth',
+      '"face_2_diameter"':    '$face_2_diameter',
+      '"face_2_depth"':       '$face_2_depth',
+      '"side_diameter"':      '$side_diameter',
+      '"side_depth"':         '$side_depth',
+      '"side_face_diameter"': '$side_face_diameter',
+      '"side_face_depth"':    '$side_face_depth',
+    };
+  }
+
+  // Create Fastener_Templet from JSON
+  factory Fastener_Templet.fromJson(Map<String, dynamic> json) {
+    return Fastener_Templet(
+        json['name'],
+        json['side_to_face'],
+        json['face_1_diameter'],
+        json['face_1_depth'],
+        json['face_2_diameter'],
+        json['face_2_depth'],
+        json['side_diameter'],
+        json['side_depth'],
+        json['side_face_diameter'],
+        json['side_face_depth']
+    );
+  }
+
+
+
 }

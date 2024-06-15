@@ -23,11 +23,16 @@ class Box_model {
  late double top_base_piece_width;
  late bool   is_back_panel;
  late Point_model box_origin;
-   List<Piece_model> box_pieces=[];
+
+
+
+  int piece_id=0;
+  List<Piece_model> box_pieces=[];
    List<Group_model> box_groups=[];
+
    List<List<Group_model> > drawer_groups=[];
    List<Piece_model> box_deleted_pieces=[];
-   int piece_id=0;
+
    List<Fastener> fasteners=[];
     List<Fastener_shape_3d> fasteners_shape_3d=[];
 
@@ -45,7 +50,8 @@ class Box_model {
       this.bac_panel_distence,
       this.top_base_piece_width,
       this.is_back_panel,
-      this.box_origin
+      this.box_origin,
+      this.piece_id
       )
 
   {
@@ -68,64 +74,101 @@ class Box_model {
     else if(box_type=="standard_unit")
     { standard_unit();}
 
-
+    bac_panel_distence=0;
     fasteners=[];
 
 
   }
 
   Box_model.fromJson(Map<String, dynamic> json) {
-    box_name = json['box_name'];
-    box_type = json['box_type'];
-    box_width = json['box_width'];
-    box_height = json['box_height'];
-    box_depth = json['box_depth'];
-    init_material_thickness = json['init_material_thickness'];
-    init_material_name = json['init_material_name'];
-    back_panel_thickness = json['back_panel_thickness'];
-    grove_value = json['grove_value'];
-    bac_panel_distence = json['bac_panel_distence'];
-    top_base_piece_width = json['top_base_piece_width'];
-    is_back_panel = json['is_back_panel'];
-    box_origin =Point_model.fromJson(json['box_origin']) ;
-  if (json['box_pieces'] != null) {
+    box_name = json["box_name"];
+    box_type = json["box_type"];
+    box_width = json["box_width"];
+    box_height = json["box_height"];
+    box_depth = json["box_depth"];
+    init_material_thickness = json["init_material_thickness"];
+    init_material_name = json["init_material_name"];
+    back_panel_thickness = json["back_panel_thickness"];
+    grove_value = json["grove_value"];
+    bac_panel_distence = json["bac_panel_distence"];
+    top_base_piece_width = json["top_base_piece_width"];
+    is_back_panel = json["is_back_panel"];
+    box_origin =Point_model.fromJson(json["box_origin"]) ;
+
+
+  if (json["box_pieces"] != null) {
     box_pieces = <Piece_model>[];
-  json['box_pieces'].forEach((v) { box_pieces!.add(new Piece_model.fromJson(v)); });
+  json["box_pieces"].forEach((v) { box_pieces!.add(new Piece_model.fromJson(v)); });
   }
-  if (json['box_groups'] != null) {
+  if (json["box_groups"] != null) {
     box_groups = <Group_model>[];
-  json['box_groups'].forEach((v) { box_groups!.add( Group_model.from_json(v)); });
+  json["box_groups"].forEach((v) { box_groups!.add( Group_model.from_json(v)); });
 
   }
-    piece_id = json['piece_id'];
+
+  ///fasteners
+    if (json["fasteners"] != null) {
+      json["fasteners"].forEach((v) {
+        Fastener fastener= Fastener.fromJson(v);
+        // print("============");
+        // print(fastener.fastener_templet.name);
+        // print("============");
+        fasteners!.add( fastener);
+      });
+
+    }
+
+    /// 3d shape fasteners
+    // if (json["fasteners_shape_3d"] != null) {
+    //
+    //   // fasteners_shape_3d = <Fastener_shape_3d>[];
+    //   // json["fasteners_shape_3d"].forEach((v) {
+    //   //
+    //   //   fasteners_shape_3d!.add( Fastener_shape_3d.fromJson(v));
+    //   //
+    //   // });
+    //
+    //
+    //
+    //
+    // }
+    piece_id = json["piece_id"];
+
+
 }
 
-Map<String, dynamic> toJson() {
-  final Map<String, dynamic> data = new Map<String, dynamic>();
-  data['box_name'] = this.box_name;
-  data['box_type'] = this.box_type;
-  data['box_width'] = this.box_width;
-  data['box_height'] = this.box_height;
-  data['box_depth'] = this.box_depth;
-  data['init_material_thickness'] = this.init_material_thickness;
-  data['init_material_name'] = this.init_material_name;
-  data['back_panel_thickness'] = this.back_panel_thickness;
-  data['grove_value'] = this.grove_value;
-  data['bac_panel_distence'] = this.bac_panel_distence;
-  data['top_base_piece_width'] = this.top_base_piece_width;
-  data['is_back_panel'] = this.is_back_panel;
-  if (this.box_origin != null) {
-    data['box_origin'] = this.box_origin!.toJson();
+
+
+  Map<String, dynamic> toJson() {
+
+    return {
+      '"box_name"': '"$box_name"',
+      '"box_type"': '"$box_type"',
+      '"box_width"': box_width,
+      '"box_height"': box_height,
+      '"box_depth"': box_depth,
+      '"init_material_thickness"': init_material_thickness,
+      '"init_material_name"': '"$init_material_name"',
+      '"back_panel_thickness"': back_panel_thickness,
+      '"grove_value"': grove_value,
+      '"bac_panel_distence"': bac_panel_distence,
+      '"top_base_piece_width"': top_base_piece_width,
+      '"is_back_panel"': is_back_panel,
+      '"box_origin"': box_origin.toJson(),
+
+
+      '"box_pieces"': box_pieces.map((piece) => piece.toJson()).toList(),
+      '"box_groups"': box_groups.map((group) => group.toJson()).toList(),
+      '"drawer_groups"': drawer_groups
+          .map((groupList) => groupList.map((group) => group.toJson()).toList())
+          .toList(),
+      '"box_deleted_pieces"': box_deleted_pieces.map((piece) => piece.toJson()).toList(),
+      '"piece_id"': '$piece_id',
+      '"fasteners"': fasteners.map((fastener) => fastener.toJson()).toList(),
+      // '"fasteners_shape_3d"': fasteners_shape_3d.map((shape) => shape.toJson()).toList(),
+    };
   }
-  if (this.box_pieces != null) {
-    data['box_pieces'] = this.box_pieces!.map((v) => v.toJson()).toList();
-  }
-  if (this.box_groups != null) {
-    data['box_groups'] = this.box_groups!.map((v) => v.toJson()).toList();
-  }
-  data['piece_id'] = this.piece_id;
-  return data;
-}
+
 
   String  get_id(String piece_name){
     piece_id++;
@@ -199,10 +242,6 @@ Map<String, dynamic> toJson() {
         )
     );
     box_pieces.add(left_piece);
-
-
-
-
 
   }
 
@@ -1026,7 +1065,7 @@ Map<String, dynamic> toJson() {
         hth,
         door_helper_origin,
       );
-      box_pieces.add(door_Hinges_Helper);
+      // box_pieces.add(door_Hinges_Helper);
 
     }
    else if(door_model.direction=="L"){
@@ -1051,7 +1090,7 @@ Map<String, dynamic> toJson() {
         door_helper_origin,
       );
 
-      box_pieces.add(door_Hinges_Helper);
+      // box_pieces.add(door_Hinges_Helper);
 
     }
 
@@ -1076,7 +1115,7 @@ Map<String, dynamic> toJson() {
          door_helper_origin,
        );
 
-       box_pieces.add(door_Hinges_Helper);
+       // box_pieces.add(door_Hinges_Helper);
 
 
      }
@@ -1100,16 +1139,16 @@ Map<String, dynamic> toJson() {
          door_helper_origin,
        );
 
-       box_pieces.add(door_Hinges_Helper);
+       // box_pieces.add(door_Hinges_Helper);
 
 
      }
 
    }
    box_pieces.add(door_piece);
-
-    Group_model door_grope=Group_model("Helper",[door_piece,door_Hinges_Helper],true);
-    box_groups.add(door_grope);
+    //
+    // Group_model door_grope=Group_model("Helper",[door_piece,door_Hinges_Helper],true);
+    // box_groups.add(door_grope);
 
 
 
@@ -1280,7 +1319,7 @@ Map<String, dynamic> toJson() {
     );
 
 
-    box_pieces.add(rdoor_Hinges_Helper);
+    // box_pieces.add(rdoor_Hinges_Helper);
 
 
 
@@ -1306,7 +1345,7 @@ Map<String, dynamic> toJson() {
     ldoor_helper_origin,
     );
 
-    box_pieces.add(ldoor_Hinges_Helper);
+    // box_pieces.add(ldoor_Hinges_Helper);
 
 
 
@@ -1329,7 +1368,7 @@ Map<String, dynamic> toJson() {
         r_door_helper_origin,
       );
 
-      box_pieces.add(r_door_Hinges_Helper);
+      // box_pieces.add(r_door_Hinges_Helper);
 
 
 
@@ -1351,14 +1390,14 @@ Map<String, dynamic> toJson() {
         l_door_helper_origin,
       );
 
-      box_pieces.add(l_door_Hinges_Helper);
+      // box_pieces.add(l_door_Hinges_Helper);
 
 
-      Group_model l_door_grope=Group_model("Helper",[door_piece_1,l_door_Hinges_Helper],true);
-      box_groups.add(l_door_grope);
-
-      Group_model r_door_grope=Group_model("Helper",[door_piece_2,r_door_Hinges_Helper],true);
-      box_groups.add(r_door_grope);
+      // Group_model l_door_grope=Group_model("Helper",[door_piece_1,l_door_Hinges_Helper],true);
+      // box_groups.add(l_door_grope);
+      //
+      // Group_model r_door_grope=Group_model("Helper",[door_piece_2,r_door_Hinges_Helper],true);
+      // box_groups.add(r_door_grope);
 
 
     }

@@ -1,6 +1,6 @@
 import 'package:auto_cam_web/online_autoam/Controller/DecimalTextInputFormatter.dart';
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
-import 'package:flutter/material.dart';
+import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/Draw_Controller.dart';
+ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 class Add_Partition_Dialog extends StatefulWidget {

@@ -1,5 +1,5 @@
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
- import 'package:auto_cam_web/online_autoam/Model/Main_Models/Group_model.dart';
+  import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/Draw_Controller.dart';
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Group_model.dart';
  import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Point_model.dart';
 import 'package:get/get.dart';
@@ -262,7 +262,7 @@ Group_model drawer_pieces_as_group=Group_model("Drawer ${drawer_groub_num}-${i+1
 
     Piece_model drawer_box_back = Piece_model(
       draw_controller.box_repository.box_model.value.get_id("DB Back"),
-        'Drawer back ',
+        'Drawer Back ',
         'F',
         "MDF",
         correct_value(box_width - drawer_box_material_thickness * 2),
@@ -312,8 +312,8 @@ double_face?
         ),
          );
 
-    Group_model drawer_base_panel=Group_model("Helper",[drawer_box_base_panel,drawer_box_base_panel_Helper],true);
-    draw_controller.box_repository.box_model.value.box_groups.add(drawer_base_panel);
+    // Group_model drawer_base_panel=Group_model("Helper",[drawer_box_base_panel,drawer_box_base_panel_Helper],true);
+    // draw_controller.box_repository.box_model.value.box_groups.add(drawer_base_panel);
 
 
 
@@ -348,9 +348,9 @@ double_face?
    );
 
 
-    Group_model drawer_sildes=Group_model("Helper",[drawer_right_slider,drawer_left_slider],true);
+    // Group_model drawer_sildes=Group_model("Helper",[drawer_right_slider,drawer_left_slider],true);
 
-    draw_controller.box_repository.box_model.value.box_groups.add(drawer_sildes);
+    // draw_controller.box_repository.box_model.value.box_groups.add(drawer_sildes);
 
     drawer_box.add(drawer_box_left);
     drawer_box.add(drawer_box_right);
@@ -362,8 +362,8 @@ double_face?
     drawer_box.add(drawer_box_base_panel);
 
     drawer_box.add(drawer_box_base_panel_Helper);
-    drawer_box.add(drawer_left_slider);
-    drawer_box.add(drawer_right_slider);
+    // drawer_box.add(drawer_left_slider);
+    // drawer_box.add(drawer_right_slider);
 
     return drawer_box;
   }

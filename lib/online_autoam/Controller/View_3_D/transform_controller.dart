@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 import 'dart:ui';
-import 'package:auto_cam_web/online_autoam/Controller/Draw_Controllers/Draw_Controller.dart';
+ import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/Draw_Controller.dart';
  import 'package:auto_cam_web/online_autoam/Controller/View_3_D/CameraTransformer.dart';
 import 'package:auto_cam_web/online_autoam/Controller/Painters/three_D_Painter.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
@@ -56,7 +56,7 @@ class transform_controller {
     /// instance of box model
     Box_model box_model=Box_model(b.box_name, b.box_type, b.box_width, b.box_height, b.box_depth,
         b.init_material_thickness, b.init_material_name, b.back_panel_thickness,
-        b.grove_value, b.bac_panel_distence, b.top_base_piece_width, b.is_back_panel, Point_model(0,0,0));
+        b.grove_value, b.bac_panel_distence, b.top_base_piece_width, b.is_back_panel, Point_model(0,0,0),b.piece_id);
 
     box_model.box_pieces=[];
     box_model.fasteners_shape_3d=draw_controller.box_repository.box_model.value.fasteners_shape_3d;
@@ -171,13 +171,18 @@ false
                 cameraTransformer.transform(original_cylinder.second_circle[cf].end_point)
             );
 
+            new_cylinder.main_circle.add(m_c);
+            new_cylinder.second_circle.add(s_c);
+
+          }
+
+          for(int cf=0;cf<original_cylinder.connect_lines.length;cf++){
+
             basic_line c_l     = basic_line(
                 cameraTransformer.transform(original_cylinder.connect_lines[cf].start_point),
                 cameraTransformer.transform(original_cylinder.connect_lines[cf].end_point)
             );
 
-            new_cylinder.main_circle.add(m_c);
-            new_cylinder.second_circle.add(s_c);
             new_cylinder.connect_lines.add(c_l);
 
           }

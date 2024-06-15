@@ -105,6 +105,7 @@ draw_fasteners(Canvas canvas){
     }
 
   if (converted_cylinder.length>0) {
+
     for(int c=0;c<converted_cylinder.length;c++){
 
       for(int cf=0;cf<converted_cylinder[c].main_circle.length;cf++){
@@ -133,6 +134,14 @@ draw_fasteners(Canvas canvas){
             Paint());
 
 
+
+
+      }
+
+
+      /// draw cylinder line
+      for(int cf=0;cf<converted_cylinder[c].connect_lines.length;cf++){
+
         canvas.drawLine(
             Offset(
                 w+converted_cylinder[c].connect_lines[cf].start_point.x_coordinate* scale,
@@ -147,6 +156,7 @@ draw_fasteners(Canvas canvas){
 
 
       }
+
 
 
     }
@@ -394,11 +404,10 @@ draw_fasteners(Canvas canvas){
 
     Paint join_line_paint = Paint();
     join_line_paint.style = PaintingStyle.stroke;
-    join_line_paint.strokeWidth=3;
-    join_line_paint.color=Colors.red;
+    join_line_paint.strokeWidth=1.5;
+    join_line_paint.color=Colors.blue;
 
     for(int i=0;i<6;i++){
-      print("${piece_model.piece_faces.faces[i].joines.length}");
 
       if(piece_model.piece_faces.faces[i].joines.length>0){
         for(int j=0;j<piece_model.piece_faces.faces[i].joines.length;j++){

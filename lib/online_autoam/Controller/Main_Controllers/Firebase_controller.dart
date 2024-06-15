@@ -15,7 +15,6 @@ import 'package:firebase_database/firebase_database.dart';
 class Firebase_caontroller extends GetxController{
 
 
-// Draw_Controller draw_controller=Get.find();
   Box_Repository box_repository = Get.find();
 
 
