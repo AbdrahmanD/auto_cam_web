@@ -167,6 +167,7 @@ Group_model drawer_pieces_as_group=Group_model("Drawer ${drawer_groub_num}-${i+1
 
     }
     draw_controller.box_repository.box_model.value.drawer_groups.add(corrent_group);
+    draw_controller. box_repository.add_new_box_to_series();
 
 
   }

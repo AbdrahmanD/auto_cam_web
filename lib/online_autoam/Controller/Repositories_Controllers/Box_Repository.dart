@@ -20,9 +20,102 @@ class Box_Repository extends GetxController {
           18, 'MDF', 5, 9, 18, 100, true, Point_model(0, 0, 0),0)
       .obs;
 
+ List<Box_model> box_series=[];
+
+ int box_indicator =-1;
+
+ add_new_box_to_series(){
+
+   Box_model nb =copy_of_box_model(box_model.value);
+
+   if (box_indicator==box_series.length-1 || box_indicator==-1) {
+     box_series.add(nb);
+
+     // print("here");
+
+   }
+   else {
+
+
+       List<Box_model> nbs=[];
+       for(int i=0;i<box_indicator;i++){
+         nbs.add(box_series[i]);
+       }
+       box_series.clear();
+       box_series=nbs;
+       box_series.add(nb);
+
+   }
+
+   // print("indecator ${box_indicator}");
+   // print("box_series ${box_series.length}");
+   // print("==================");
+
+   box_indicator++;
+
+
+ }
+
+
+   undo(){
+
+   if (box_indicator>0) {
+     box_indicator--;
+     add_box_to_repo(copy_of_box_model(box_series[box_indicator]));
+   }
+
+   // print("indecator ${box_indicator}");
+   // print("box_series ${box_series.length}");
+   // print("==================");
+
+ }
+
+  redo(){
+
+    if (box_indicator < box_series.length-1) {
+      box_indicator++;
+      add_box_to_repo(copy_of_box_model(box_series[box_indicator]));
+
+    }
+
+    // print("indecator ${box_indicator}");
+    // print("box_series ${box_series.length}");
+    // print("==================");
+
+
+  }
+
+
+  Box_model copy_of_box_model(Box_model ob){
+
+
+   Box_model nb =Box_model(
+       ob.box_name,
+       ob.box_type,
+       ob.box_width,
+       ob.box_height,
+       ob.box_depth,
+       ob.init_material_thickness,
+       ob.init_material_name,
+       ob.back_panel_thickness,
+       ob.grove_value,
+       ob.bac_panel_distence,
+       ob.top_base_piece_width,
+       ob.is_back_panel,
+       ob.box_origin,
+       ob.piece_id
+   );
+
+   nb.box_pieces=ob.box_pieces;
+   nb.fasteners= ob.fasteners;
+
+   return nb;
+  }
 
 
   String back_panel_type = "full_cover";
+
+
 
 
 
@@ -96,7 +189,6 @@ class Box_Repository extends GetxController {
 
     box_model.value.box_pieces=b.box_pieces;
     box_model.value = b;
-
   }
 
 

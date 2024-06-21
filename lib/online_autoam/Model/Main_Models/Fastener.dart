@@ -26,7 +26,7 @@ class Fastener {
   late Bore_model side_bore;
   late Bore_model side_face_1_bore;
   late Bore_model side_face_2_bore;
-
+ bool flipe=false;
   late bool rebuild;
   // Draw_Controller draw_controller = Get.find();
   Box_Repository box_repository=Get.find();
@@ -52,6 +52,7 @@ class Fastener {
       side_bore = Bore_model(0, Point_model(0, 0, 0), 0, 0);
       side_face_1_bore = Bore_model(0, Point_model(0, 0, 0), 0, 0);
       side_face_2_bore = Bore_model(0, Point_model(0, 0, 0), 0, 0);
+
     }
   }
 
@@ -100,13 +101,7 @@ class Fastener {
 
 
 
-  change_fastener_nut_face(){
 
-    side_face_1_bore=side_face_2_bore;
-    side_face_2_bore=side_face_1_bore;
-
-    transform_fastener_to_hole();
-  }
 
 
   transform_fastener_to_hole() {
@@ -117,6 +112,7 @@ class Fastener {
     box_repository.box_model.value.box_pieces[side_pice_id];
 
     if (fastener_axis == "X") {
+
       face_1_bore = Bore_model(id,
           Point_model(
               fastener_direction
@@ -129,7 +125,6 @@ class Fastener {
           fastener_templet.face_1_diameter, fastener_templet.face_1_depth);
       side_bore = Bore_model(id, fastener_origin,
           fastener_templet.side_diameter, fastener_templet.side_depth);
-
       face_2_bore = Bore_model(
           id,
           Point_model(
@@ -140,6 +135,17 @@ class Fastener {
               fastener_origin.z_coordinate),
           fastener_templet.face_2_diameter,
           fastener_templet.face_2_depth);
+
+
+      side_piece.piece_faces.faces[side_name].bores.add(side_bore);
+      if (face_1_bore.diameter > 0) {
+        face_piece.piece_faces.faces[facee_name].bores.add(face_1_bore);
+      }
+      if (face_2_bore.diameter > 0) {
+        face_piece.piece_faces.faces[finde_parallel_face(facee_name)].bores
+            .add(face_2_bore);
+      }
+
 
       double y1 = 0;
       double y2 = 0;
@@ -188,48 +194,76 @@ class Fastener {
           fastener_templet.side_face_diameter,
           fastener_templet.side_face_depth);
 
-      if (face_1_bore.diameter > 0) {
-        face_piece.piece_faces.faces[facee_name].bores.add(face_1_bore);
-      }
-      if (face_2_bore.diameter > 0) {
-        face_piece.piece_faces.faces[finde_parallel_face(facee_name)].bores
-            .add(face_2_bore);
-      }
-      if (side_bore.diameter > 0) {
-        side_piece.piece_faces.faces[side_name].bores.add(side_bore);
-      }
+
 
       if (fastener_templet.side_face_diameter > 0) {
         int face;
         Bore_model bore_model;
 
         if (side_piece.piece_direction == "F") {
-          if (side_piece.piece_name.contains("Front")) {
-            face = 4;
-            bore_model = side_face_2_bore;
-            side_face_1_bore.diameter = 0;
-          } else {
-            face = 5;
-            bore_model = side_face_1_bore;
-            side_face_2_bore.diameter = 0;
-          }
-        } else {
-          if (side_piece.piece_name.contains("top")) {
-            face = 0;
-            bore_model = side_face_1_bore;
-            side_face_2_bore.diameter = 0;
-          } else {
-            face = 2;
-            bore_model = side_face_2_bore;
-            side_face_1_bore.diameter = 0;
+          if (flipe) {
+            if (side_piece.piece_name.contains("front")) {
+
+
+              face = 5;
+              bore_model = side_face_1_bore;
+              side_face_2_bore.diameter = 0;
+
+              } else {
+
+
+              face = 4;
+              bore_model = side_face_2_bore;
+              side_face_1_bore.diameter = 0;
+
+
+            }
+          }else{
+            if (side_piece.piece_name.contains("front")) {
+              face = 4;
+              bore_model = side_face_2_bore;
+              side_face_1_bore.diameter = 0;
+            } else {
+              face = 5;
+              bore_model = side_face_1_bore;
+              side_face_2_bore.diameter = 0;
+            }
           }
         }
+        else {
+          if (flipe) {
+            if (side_piece.piece_name.contains("top")) {
+
+              face = 2;
+              bore_model = side_face_2_bore;
+              side_face_1_bore.diameter = 0;
+
+
+            } else {
+              face = 0;
+              bore_model = side_face_1_bore;
+              side_face_2_bore.diameter = 0;
+            }
+          }else{
+            if (side_piece.piece_name.contains("top")) {
+              face = 0;
+              bore_model = side_face_1_bore;
+              side_face_2_bore.diameter = 0;
+            } else {
+              face = 2;
+              bore_model = side_face_2_bore;
+              side_face_1_bore.diameter = 0;
+            }
+          }
+        }
+
 
         side_piece.piece_faces.faces[face].bores.add(bore_model);
       }
     }
 
     if (fastener_axis == "Y") {
+
       face_1_bore = Bore_model(id, Point_model(
           fastener_origin.x_coordinate,
           fastener_direction
@@ -240,7 +274,6 @@ class Fastener {
       side_bore = Bore_model(
           id, fastener_origin, fastener_templet.side_diameter,
           fastener_templet.side_depth);
-
       face_2_bore = Bore_model(
           id,
           Point_model(
@@ -251,6 +284,17 @@ class Fastener {
               fastener_origin.z_coordinate),
           fastener_templet.face_2_diameter,
           fastener_templet.face_2_depth);
+
+      if (face_1_bore.diameter > 0) {
+        face_piece.piece_faces.faces[facee_name].bores.add(face_1_bore);
+      }
+      if (face_2_bore.diameter > 0) {
+        face_piece.piece_faces.faces[finde_parallel_face(facee_name)].bores
+            .add(face_2_bore);
+      }
+      if (side_bore.diameter > 0) {
+        side_piece.piece_faces.faces[side_name].bores.add(side_bore);
+      }
 
 
       double x1 = 0;
@@ -294,43 +338,55 @@ class Fastener {
           fastener_templet.side_face_diameter,
           fastener_templet.side_face_depth);
 
-      if (face_1_bore.diameter > 0) {
-        face_piece.piece_faces.faces[facee_name].bores.add(face_1_bore);
-      }
-      if (face_2_bore.diameter > 0) {
-        face_piece.piece_faces.faces[finde_parallel_face(facee_name)].bores
-            .add(face_2_bore);
-      }
-      if (side_bore.diameter > 0) {
-        side_piece.piece_faces.faces[side_name].bores.add(side_bore);
-      }
 
 
       if (fastener_templet.side_face_diameter > 0) {
         int face;
         Bore_model bore_model;
 
-        if (side_piece.piece_direction == "F") {
-          face = 5;
-          bore_model = side_face_1_bore;
-          side_face_2_bore.diameter = 0;
-        } else {
-          if (side_piece.piece_name.contains("right")) {
-            face = 1;
+        if (flipe) {
+          if (side_piece.piece_direction == "F") {
+            face = 4;
+            bore_model = side_face_2_bore;
+            side_face_1_bore.diameter = 0;
+          } else {
+            if (side_piece.piece_name.contains("right")) {
+              face = 3;
+              bore_model = side_face_2_bore;
+              side_face_1_bore.diameter = 0;
+            } else {
+              face = 1;
+              bore_model = side_face_1_bore;
+              side_face_2_bore.diameter = 0;
+            }
+          }
+        }else{
+
+          if (side_piece.piece_direction == "F") {
+            face = 5;
             bore_model = side_face_1_bore;
             side_face_2_bore.diameter = 0;
           } else {
-            face = 3;
-            bore_model = side_face_2_bore;
-            side_face_1_bore.diameter = 0;
+            if (side_piece.piece_name.contains("right")) {
+              face = 1;
+              bore_model = side_face_1_bore;
+              side_face_2_bore.diameter = 0;
+            } else {
+              face = 3;
+              bore_model = side_face_2_bore;
+              side_face_1_bore.diameter = 0;
+            }
           }
         }
 
         side_piece.piece_faces.faces[face].bores.add(bore_model);
       }
+
+
     }
 
     if (fastener_axis == "Z") {
+
       face_1_bore = Bore_model(id,
           Point_model(
             fastener_origin.x_coordinate,
@@ -341,11 +397,9 @@ class Fastener {
                 fastener_templet.face_1_depth),
 
           ), fastener_templet.face_1_diameter, fastener_templet.face_1_depth);
-
       side_bore = Bore_model(
           id, fastener_origin, fastener_templet.side_diameter,
           fastener_templet.side_depth);
-
       face_2_bore = Bore_model(
           id,
           Point_model(
@@ -357,6 +411,17 @@ class Fastener {
           ),
           fastener_templet.face_2_diameter,
           fastener_templet.face_2_depth);
+
+      if (face_1_bore.diameter > 0) {
+        face_piece.piece_faces.faces[facee_name].bores.add(face_1_bore);
+      }
+      if (face_2_bore.diameter > 0) {
+        face_piece.piece_faces.faces[finde_parallel_face(facee_name)].bores
+            .add(face_2_bore);
+      }
+      if (side_bore.diameter > 0) {
+        side_piece.piece_faces.faces[side_name].bores.add(side_bore);
+      }
 
       double x1 = 0;
       double x2 = 0;
@@ -403,44 +468,65 @@ class Fastener {
           fastener_templet.side_face_diameter,
           fastener_templet.side_face_depth);
 
-      if (face_1_bore.diameter > 0) {
-        face_piece.piece_faces.faces[facee_name].bores.add(face_1_bore);
-      }
-      if (face_2_bore.diameter > 0) {
-        face_piece.piece_faces.faces[finde_parallel_face(facee_name)].bores
-            .add(face_2_bore);
-      }
-      if (side_bore.diameter > 0) {
-        side_piece.piece_faces.faces[side_name].bores.add(side_bore);
-      }
-
 
       if (fastener_templet.side_face_diameter > 0) {
         int face;
         Bore_model bore_model;
 
         if (side_piece.piece_direction == "V") {
-          if (side_piece.piece_name.contains("right")) {
-            face = 1;
-            bore_model = side_face_1_bore;
-            side_face_2_bore.diameter = 0;
-          } else {
-            face = 3;
-            bore_model = side_face_2_bore;
-            side_face_1_bore.diameter = 0;
-          }
-        } else {
-          if (side_piece.piece_name.contains("H")) {
-            if (side_piece.piece_name.contains("top")) {
-              face = 0;
-              bore_model = side_face_1_bore;
-              side_face_2_bore.diameter = 0;
-            } else {
-              face = 2;
+          if (flipe) {
+            if (side_piece.piece_name.contains("right")) {
+              face = 3;
               bore_model = side_face_2_bore;
               side_face_1_bore.diameter = 0;
+            } else {
+              face = 1;
+              bore_model = side_face_1_bore;
+              side_face_2_bore.diameter = 0;
             }
-          } else {
+          }
+          else{
+              if (side_piece.piece_name.contains("right")) {
+                face = 1;
+                bore_model = side_face_1_bore;
+                side_face_2_bore.diameter = 0;
+              } else {
+                face = 3;
+                bore_model = side_face_2_bore;
+                side_face_1_bore.diameter = 0;
+              }
+            }
+
+        }
+
+        else if (side_piece.piece_name.contains("H")) {
+
+            if (flipe) {
+              if (side_piece.piece_name.contains("top")) {
+                face = 2;
+                bore_model = side_face_2_bore;
+                side_face_1_bore.diameter = 0;
+              } else {
+                face = 0;
+                bore_model = side_face_1_bore;
+                side_face_2_bore.diameter = 0;
+              }
+            }
+            else{
+              if (side_piece.piece_name.contains("top")) {
+                face = 0;
+                bore_model = side_face_1_bore;
+                side_face_2_bore.diameter = 0;
+              } else {
+                face = 2;
+                bore_model = side_face_2_bore;
+                side_face_1_bore.diameter = 0;
+              }
+            }
+
+          }
+
+        else {
             face = 2;
             side_face_1_bore.diameter = 0;
             bore_model = side_face_1_bore;
@@ -449,8 +535,12 @@ class Fastener {
           side_piece.piece_faces.faces[face].bores.add(bore_model);
         }
       }
+
+
+
     }
-  }
+
+
 
   int finde_parallel_face(int face) {
     int resault = 0;

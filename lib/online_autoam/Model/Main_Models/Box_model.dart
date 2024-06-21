@@ -31,6 +31,11 @@ class Box_model {
    List<Group_model> box_groups=[];
 
    List<List<Group_model> > drawer_groups=[];
+
+
+   List<Fasteners_Group_model>  fasteners_groups=[];
+
+
    List<Piece_model> box_deleted_pieces=[];
 
    List<Fastener> fasteners=[];

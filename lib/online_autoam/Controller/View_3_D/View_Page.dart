@@ -115,6 +115,14 @@ class _View_PageState extends State<View_Page> {
                         setState(() {});
                       }
 
+                      /// escape
+                      if (event.isKeyPressed(LogicalKeyboardKey.escape)) {
+
+                        draw_controller.unselect_all();
+
+                        setState(() {});
+                      }
+
 
                     }
 
@@ -184,7 +192,7 @@ class _View_PageState extends State<View_Page> {
                         onPanDown: (v){
                           gumball_position=v.localPosition;
                           if (!shift_hold) {
-                            draw_controller.select_piece();
+                            draw_controller.select_using_mouse_click();
                           }
                           setState(() {});
                         },
@@ -253,7 +261,7 @@ class _View_PageState extends State<View_Page> {
                           onPanEnd: (v){
                             if (shift_hold) {
 
-                              draw_controller.select_piece_via_window();
+                              draw_controller.select_via_window();
                               draw_controller.select_window.value=false;
 
                             }

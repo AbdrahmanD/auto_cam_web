@@ -49,7 +49,7 @@ class _Add_Drawer_DialogState extends State<Add_Drawer_Dialog> {
     if(!inner_drawer){
       inner_drawer=true;
       round_gape_controller.text="2";
-      front_gape_controller.text="2";
+      front_gape_controller.text="0";
     }else{
       inner_drawer=false;
       All_base_gape_controller.text = '4';

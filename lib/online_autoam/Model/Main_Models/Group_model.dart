@@ -1,5 +1,6 @@
 
 
+import 'package:auto_cam_web/online_autoam/Model/Main_Models/Fastener.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Piece_model.dart';
 
 class Group_model {
@@ -33,6 +34,20 @@ class Group_model {
     }
 return map;
   }
+
+
+
+}
+
+
+class Fasteners_Group_model {
+
+  late String group_name;
+  List<Fastener> fasteners=[];
+  late bool group_enable;
+
+
+  Fasteners_Group_model(this.group_name, this.fasteners, this.group_enable);
 
 
 

@@ -19,7 +19,6 @@ class _Setting_Box_Size_FormState extends State<Setting_Box_Size_Form> {
 
   Draw_Controller draw_controller = Get.find();
 
-  late Box_model box_model;
 
   bool is_back_panel = true;
 
@@ -49,6 +48,7 @@ class _Setting_Box_Size_FormState extends State<Setting_Box_Size_Form> {
 bool set_box_size=false;
 bool chosing_box_type=false;
 bool chosing_fastener_type=false;
+bool selecting_type=false;
 
 
 List<String> box_types=[
@@ -59,6 +59,15 @@ List<String> box_types=[
   "inner_cabinet"
 ];
 String box_type="";
+
+
+  List<String> selecting_filter_list=[
+    "piece",
+    "face",
+    "join_line",
+    "fastener",
+  ];
+  String selecting_filter="piece";
 
 
 
@@ -118,30 +127,37 @@ draw_box_in_screen(){
 
 }
 
+update_data(){
+
+  Box_model box_model = draw_controller.box_repository.box_model.value;
+  box_name_controller.text=box_model.box_name.toString();
+  width_controller.text = box_model.box_width.toString();
+  hight_controller.text = box_model.box_height.toString();
+  depth_controller.text = box_model.box_depth.toString();
+  material_thickness_controller.text =
+      box_model.init_material_thickness.toString();
+  back_panel_thickness_controller.text =
+      box_model.back_panel_thickness.toString();
+  material_name_controller.text = 'MDF';
+  pack_panel_grove_depth_controller.text =
+  '${draw_controller.box_repository.pack_panel_grove_depth}';
+  pack_panel_distence_controller.text =
+  '${draw_controller.box_repository.pack_panel_distence}';
+  top_base_piece_width_controller.text =
+  '${draw_controller.box_repository.top_base_piece_width}';
+  is_back_panel=box_model.is_back_panel;
+
+  setState(() {});
+
+
+}
 
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    box_model = draw_controller.get_box();
-    box_name_controller.text=box_model.box_name.toString();
-     width_controller.text = box_model.box_width.toString();
-    hight_controller.text = box_model.box_height.toString();
-    depth_controller.text = box_model.box_depth.toString();
-    material_thickness_controller.text =
-        box_model.init_material_thickness.toString();
-    back_panel_thickness_controller.text =
-        box_model.back_panel_thickness.toString();
-    material_name_controller.text = 'MDF';
-    pack_panel_grove_depth_controller.text =
-        '${draw_controller.box_repository.pack_panel_grove_depth}';
-    pack_panel_distence_controller.text =
-        '${draw_controller.box_repository.pack_panel_distence}';
-    top_base_piece_width_controller.text =
-        '${draw_controller.box_repository.top_base_piece_width}';
-    is_back_panel=box_model.is_back_panel;
+update_data();
    }
   int text_size =12;
 
@@ -213,23 +229,27 @@ draw_box_in_screen(){
 
               });
             },
+               child: Card(elevation: 12,
               child: Container(
-                height: 40,decoration: BoxDecoration(borderRadius: BorderRadius.circular(8),
-                  color:!set_box_size? Colors.teal[200]:Colors.blue[200]),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          'setting box size',
-                          style: TextStyle(fontSize: 14, color: Colors.black),
+                height: 40,
+                decoration:BoxDecoration(
+                    color:!set_box_size? Colors.white70:Colors.blue[100]
+                ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            'setting box size',
+                            style: TextStyle(fontSize: 14, color: Colors.black),
+                          ),
                         ),
                       ),
-                    ),
-                    !set_box_size?
-                    Container(width:40,height:40,child: Icon(Icons.add_circle_outline,color: Colors.black,)):
-                    Container(width:40,height:40,child: Icon(Icons.remove_circle_outline,color: Colors.red))
-                  ],
+                      !set_box_size?
+                      Container(width:40,height:40,child: Icon(Icons.add_circle_outline,color: Colors.black,)):
+                      Container(width:40,height:40,child: Icon(Icons.remove_circle_outline,color: Colors.red))
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -566,22 +586,27 @@ draw_box_in_screen(){
 
               });
             },
-              child: Container(
-                height: 40,decoration: BoxDecoration(borderRadius: BorderRadius.circular(8),color: Colors.teal[200]),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                        'chose type of box',
-                        style: TextStyle(fontSize: 14, color: Colors.black),
-                                  ),
+              child:Card(elevation: 12,
+                child: Container(
+                  height: 40,
+                  decoration:BoxDecoration(
+                       color:!chosing_box_type? Colors.white70:Colors.blue[100]
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                          'chose type of box',
+                          style: TextStyle(fontSize: 14, color: Colors.black),
+                                    ),
+                        ),
                       ),
-                    ),
-                    !chosing_box_type?
-                    Container(width:40,height:40,child: Icon(Icons.add_circle_outline,color: Colors.black,)):
-                    Container(width:40,height:40,child: Icon(Icons.remove_circle_outline,color: Colors.red))
-                   ],
+                      !chosing_box_type?
+                      Container(width:40,height:40,child: Icon(Icons.add_circle_outline,color: Colors.black,)):
+                      Container(width:40,height:40,child: Icon(Icons.remove_circle_outline,color: Colors.red))
+                     ],
+                  ),
                 ),
               ),
             ),
@@ -630,22 +655,27 @@ draw_box_in_screen(){
 
               });
             },
-              child: Container(
-                height: 40,decoration: BoxDecoration(borderRadius: BorderRadius.circular(8),color: Colors.teal[200]),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          'chose  fastener type',
-                          style: TextStyle(fontSize: 14, color: Colors.black),
+              child:Card(elevation: 12,
+                child: Container(
+                  height: 40,
+                  decoration:BoxDecoration(
+                       color:!chosing_box_type? Colors.white70:Colors.blue[100]
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            'chose  fastener type',
+                            style: TextStyle(fontSize: 14, color: Colors.black),
+                          ),
                         ),
                       ),
-                    ),
-                    !chosing_fastener_type?
-                    Container(width:40,height:40,child: Icon(Icons.add_circle_outline,color: Colors.black,)):
-                    Container(width:40,height:40,child: Icon(Icons.remove_circle_outline,color: Colors.red))
-                  ],
+                      !chosing_fastener_type?
+                      Container(width:40,height:40,child: Icon(Icons.add_circle_outline,color: Colors.black,)):
+                      Container(width:40,height:40,child: Icon(Icons.remove_circle_outline,color: Colors.red))
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -690,7 +720,12 @@ draw_box_in_screen(){
             child: InkWell(
               onTap: () {
 
+                draw_controller.box_repository.box_series=[];
+                draw_controller.box_repository.box_indicator=0;
+                draw_controller.box_repository.add_new_box_to_series();
                 draw_box_in_screen();
+                setState(() {});
+
               },
               child: Container(
                 width: 532,
@@ -710,22 +745,22 @@ draw_box_in_screen(){
           ///////////////////////
           ///////////////////////
 
-          ///save the box
+
           Container(
-            child: Row(
+            height: 1,
+            color: Colors.grey,
+          ),
+
+          SizedBox(
+            height: 12,
+          ),
+
+
+          ///save / open / undo / redo
+      Container(
+            child: Row( mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: 18,
-                ),
-                Container(
-                    width: 120,
-                    child: Text('Save Box',
-                        style: TextStyle(
-                          fontSize: 14,
-                        ))),
-                SizedBox(
-                  width: 12,
-                ),
+
                 InkWell(
                     onTap: () {
                       draw_controller.save_BOX_File(box_name_controller.text.toString());
@@ -735,29 +770,20 @@ draw_box_in_screen(){
                       size: 30,
                       color: Colors.teal,
                     )),
-              ],
-            ),
-          ),
-
-          /// open saved box
-          Container(
-            child: Row(
-              children: [
                 SizedBox(
                   width: 18,
                 ),
-                Container(
-                    width: 120,
-                    child: Text('open saved Box',
-                        style: TextStyle(
-                          fontSize: 14,
-                        ))),
-                SizedBox(
-                  width: 12,
-                ),
+
+
                 InkWell(
-                    onTap: () {
-                      draw_controller.open_File();
+                    onTap: ()
+    {
+      draw_controller.open_File();
+
+      Future.delayed(Duration(milliseconds: 3500)).then((value) {
+       update_data();});
+
+
 
                     },
                     child: Icon(
@@ -765,6 +791,41 @@ draw_box_in_screen(){
                       size: 30,
                       color: Colors.teal,
                     )),
+
+
+
+                SizedBox(
+                  width: 32,
+                ),
+                InkWell(
+                    onTap: () {
+draw_controller.undo();
+setState(() {
+
+});
+                    },
+                    child: Icon(
+                      Icons.undo,
+                      size: 30,
+                      color: Colors.teal,
+                    )),
+                SizedBox(
+                  width: 12,
+                ),
+                InkWell(
+                    onTap: () {
+draw_controller.redo();
+setState(() {
+
+});
+                    },
+                    child: Icon(
+                      Icons.redo,
+                      size: 30,
+                      color: Colors.teal,
+                    )),
+
+
               ],
             ),
           ),
@@ -777,7 +838,6 @@ draw_box_in_screen(){
             height: 1,
             color: Colors.grey,
           ),
-
 
           SizedBox(
             height: 12,
@@ -877,7 +937,7 @@ draw_box_in_screen(){
                 InkWell(
                     onTap: () {
 
-                      draw_controller.analayzejoins.generate_3d_shape_fastener();
+                      // draw_controller.analayzejoins.generate_3d_shape_fastener();
 
                     },
                     child: Icon(
@@ -930,6 +990,85 @@ draw_box_in_screen(){
           SizedBox(
             height: 12,
           ),
+
+          Container(
+            height: 1,
+            color: Colors.grey,
+          ),
+          SizedBox(
+            height: 12,
+          ),
+
+          ///chose selecting_type
+          Padding(
+            padding: const EdgeInsets.only(left: 24,right: 24),
+            child: InkWell(onTap: (){
+              selecting_type=!selecting_type;setState(() {
+
+              });
+            },
+              child: Card(elevation: 12,
+                child: Container(
+                  height: 40,
+                  decoration:BoxDecoration(
+                    color:!selecting_type? Colors.white:Colors.blue[100]
+                ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            " selecting : $selecting_filter ",
+                            style: TextStyle(fontSize: 14, color: Colors.black),
+                          ),
+                        ),
+                      ),
+                      !selecting_type?
+                      Container(width:40,height:40,child: Icon(Icons.add_circle_outline,color: Colors.black,)):
+                      Container(width:40,height:40,child: Icon(Icons.remove_circle_outline,color: Colors.red))
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          selecting_type?
+          Container(
+              width: 532,color: Colors.grey[200],
+              height: 200,
+              child: Center(
+                child: ListView.builder(
+                    itemCount: selecting_filter_list.length,
+                    itemBuilder: (context,i){
+                      return Container(
+                          height: 40,
+                        child: Center(
+                          child: InkWell(onTap: (){
+
+                            selecting_type=false;
+selecting_filter=selecting_filter_list[i];
+draw_controller.selecting_filter=selecting_filter_list[i];
+
+                            setState(() {
+
+                            });
+
+                          },
+                            child: Text(
+                              selecting_filter_list[i]
+                            ,
+                              style: TextStyle(fontSize:(selecting_filter==selecting_filter_list[i])?24: 14,
+                                  color: (selecting_filter==selecting_filter_list[i])?Colors.red:Colors.black
+                              ),
+                            ),
+                          ),
+                        )
+
+                      );}
+                ))):SizedBox(),
+
+
+
 
 
         ],

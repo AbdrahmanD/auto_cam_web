@@ -9,8 +9,7 @@ import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/Firebase_
 import 'package:auto_cam_web/online_autoam/Controller/Main_Controllers/kdt_file.dart';
 import 'dart:typed_data';
 
-import 'package:auto_cam_web/online_autoam/Controller/Painters/Box_Painter.dart';
-import 'package:auto_cam_web/online_autoam/Controller/Repositories_Controllers/Box_Repository.dart';
+ import 'package:auto_cam_web/online_autoam/Controller/Repositories_Controllers/Box_Repository.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Box_model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Door_Model.dart';
 import 'package:auto_cam_web/online_autoam/Model/Main_Models/Faces_model.dart';
@@ -65,6 +64,9 @@ class Draw_Controller extends GetxController {
   double y_move = 0;
 
 
+  String selecting_filter="piece";
+
+
   Firebase_caontroller firebase_controller=Get.find();
 
   AnalyzeJoins analayzejoins=AnalyzeJoins(false,false);
@@ -73,11 +75,14 @@ class Draw_Controller extends GetxController {
 
   }
 
+  void reload_state() {
+
+  }
+
   zoom_all() {
     drawing_scale.value = 0.5;
 
-    draw_Box();
-  }
+   }
 
   ///
   select_window_method(Offset offset, bool select) {
@@ -114,6 +119,24 @@ class Draw_Controller extends GetxController {
     }
   }
 
+  select_via_window(){
+    if(selecting_filter=="piece"){
+
+      select_piece_via_window();
+
+
+    }
+    else  if(selecting_filter=="face"){
+
+      select_face_via_window();
+
+    }
+    else  if(selecting_filter=="fastener"){
+
+      select_fastener_via_window();
+
+    }
+  }
 
   select_piece_via_window() {
 
@@ -168,24 +191,18 @@ if(select_window.value){
       gumball.value=true;
     }
   }
-  if(selected_pieces.value.length==0){
 
-      select_face_via_window();
 
-  }
-  if(selected_pieces.value.length==0 && selected_faces.value.length==0){
 
-    select_fastener_via_window();
 
-  }
 
   start_select_window.value = Offset(0, 0);
   end_select_window.value = Offset(0, 0);
-
 }
 
     start_select_window.value = Offset(0, 0);
     end_select_window.value = Offset(0, 0);
+
   }
 
   select_face_via_window() {
@@ -248,6 +265,9 @@ if(select_window.value){
         }
       }
     }
+    start_select_window.value = Offset(0, 0);
+    end_select_window.value = Offset(0, 0);
+
 
 
   }
@@ -309,9 +329,33 @@ if(select_window.value){
 
     }
 
+    start_select_window.value = Offset(0, 0);
+    end_select_window.value = Offset(0, 0);
+
   }
 
   ///
+
+  unselect_all(){
+      selected_pieces.value = [];
+      selected_faces.value = [];
+     selected_fasteners = [];
+     hover_id=100;
+     gumball.value=false;
+  }
+
+  select_using_mouse_click(){
+    if(selecting_filter=="piece"){
+      select_piece();
+    }
+    else  if(selecting_filter=="face"){
+      select_face();
+    }
+    else  if(selecting_filter=="fastener"){
+      select_fastener();
+    }
+
+  }
 
   select_piece() {
 
@@ -376,39 +420,108 @@ if(select_window.value){
     }
   }
 
+  select_face() {
+
+    if (hover_id != 100) {
+
+      Piece_model hovered_piece = box_repository.box_model.value.box_pieces[hover_id];
+
+      if (!box_repository.box_model.value.box_pieces[hover_id].piece_name.contains('inner'))
+      {
+
+        if(view_port=="F"){
+
+          selected_faces.add(Selected_Face(hovered_piece.piece_id, 5));
+        }
+        else if(view_port=="R"){          selected_faces.add(Selected_Face(hovered_piece.piece_id, 2));}
+        else if(view_port=="T"){          selected_faces.add(Selected_Face(hovered_piece.piece_id, 1));}
+        else if(view_port=="P"){
+          // selected_faces.add(hovered_piece.piece_faces.faces[4]);
+        }
+
+        gumball.value=true;
+
+      }
+
+
+    }
+
+    else {
+        gumball.value=false;
+        selected_pieces.value = [];
+        selected_faces.value = [];
+
+    }
+  }
+
+  select_fastener() {
+
+
+    bool fastener_in_group = false;
+
+    Group_model group_model = Group_model("",[],true);
+
+    if (hover_id != 100) {
+
+        //
+        //   for (int g = 0; g < box_repository.box_model.value.fasteners_groups.length; g++) {
+        //     for (int f = 0; f < box_repository.box_model.value.fasteners_groups[g].fasteners.length; f++) {
+        //       Fastener fastener = box_repository.box_model.value.fasteners_groups[g].fasteners[f];
+        //
+        //       if (piece.piece_id == hovered_piece.piece_id) {
+        //         piece_in_group = true;
+        //         group_model = box_repository.box_model.value.box_groups[g];
+        //         break;
+        //       }
+        //
+        //     }
+        //   }
+        //
+        //   if (piece_in_group) {
+        //     for (int fp = 0; fp < group_model.pieces.length; fp++) {
+        //       Piece_model piece = group_model.pieces[fp];
+        //       selected_pieces.add(piece);
+        //     }
+        //   } else {
+        //     selected_pieces.add(hovered_piece);
+        //
+        //
+        //   }
+        //
+        //
+        // gumball.value=true;
+        //
+        //
+
+
+    }
+
+    else {
+        gumball.value=false;
+        selected_pieces.value = [];
+        selected_faces.value = [];
+
+    }
+
+
+  }
+
   Box_model get_box() {
     return box_repository.box_model.value;
   }
 
-  Box_Painter draw_Box() {
-    Box_model box_model = get_box();
-
-    hover_id_find();
-
-    Box_Painter boxPainter = Box_Painter(
-        box_model,
-        drawing_scale.value,
-        Size(screen_size.value.width, screen_size.value.height),
-        hover_id,
-        selected_pieces,
-        selected_faces,
-        view_port.value,
-        start_select_window.value,
-        end_select_window.value,
-        drawing_origin,
-        start_corners_points);
-
-    return boxPainter;
-  }
 
   add_Box(Box_model box_model) {
-    // box_repository.box_model.value = box_model;
 
     box_repository.add_box_to_repo(box_model);
     anlyze_inners();
 
-    draw_Box();
-  }
+   }
+
+
+  undo(){box_repository.undo();anlyze_inners();}
+
+  redo(){box_repository.redo();anlyze_inners();}
 
   /// here tow method :
   /// 1-hover_id_finder :
@@ -530,6 +643,15 @@ if(select_window.value){
     return my_widget;
   }
 
+
+
+
+  /// //////////////////////////////
+
+  /// //////////////////////////////
+
+  /// add parts
+
   /// add shelf method
   add_shelf(double top_Distence, double frontage_Gap, double material_thickness,
       int quantity, String shelf_type) {
@@ -541,11 +663,11 @@ if(select_window.value){
       quantity,
       shelf_type,box_repository.shelf_templet
     );
+    box_repository.add_new_box_to_series();
 
     anlyze_inners();
 
-    draw_Box();
-  }
+   }
 
   /// add partition method
   add_partition(double left_Distence, double frontage_Gap,
@@ -557,10 +679,11 @@ if(select_window.value){
         left_Distence,
         quantity,
         helper ? "Helper_partition" : "partition");
+    box_repository.add_new_box_to_series();
+
     anlyze_inners();
 
-    draw_Box();
-  }
+   }
 
   /// add support
   add_support(Support_Filler support_filler, int quantity) {
@@ -580,15 +703,19 @@ if(select_window.value){
           support_filler.thickness,
           quantity);
     }
+
+    box_repository.add_new_box_to_series();
+
     anlyze_inners();
 
-    draw_Box();
-  }
+   }
 
   /// add door method
   add_door(Door_Model door_model) {
     door_model.inner_id = hover_id;
     box_repository.box_model.value.add_door(door_model);
+    box_repository.add_new_box_to_series();
+
     anlyze_inners();
   }
 
@@ -636,10 +763,12 @@ if(select_window.value){
     Piece_model piece_model = Piece_model(piece_id, piece_name, piece_direction,
         material_name, piece_width, piece_height, piece_thickness, fix_origin);
     box_repository.box_model.value.box_pieces.add(piece_model);
+
+    box_repository.add_new_box_to_series();
+
     anlyze_inners();
 
-    draw_Box();
-  }
+   }
 
   /// add back panel
 
@@ -742,6 +871,8 @@ if(select_window.value){
       // box_repository.back_panel_type=back_panel_type;
     }
 
+    box_repository.add_new_box_to_series();
+
     anlyze_inners();
   }
 
@@ -815,10 +946,11 @@ if(select_window.value){
     } else if (inner_box.box_type == "inner_top") {
     } else if (inner_box.box_type == "support") {}
 
+    box_repository.add_new_box_to_series();
+
     anlyze_inners();
 
-    draw_Box();
-  }
+   }
 
   /// delete piece
   delete_piece() {
@@ -836,8 +968,7 @@ if(select_window.value){
 
         box_repository.add_box_to_repo(b);
         selected_pieces.value = [];
-        draw_Box();
-      }
+       }
     }else if(selected_fasteners.length>0){
 
       for (int f = 0; f < selected_fasteners.length; f++) {
@@ -855,6 +986,10 @@ if(select_window.value){
 
     selected_pieces.value=[];
     gumball.value=false;
+
+    box_repository.add_new_box_to_series();
+
+
     anlyze_inners();
 
   }
@@ -886,6 +1021,10 @@ if(select_window.value){
       // print("======================");
 
     }
+
+
+    box_repository.add_new_box_to_series();
+
   }
 
 
@@ -1022,9 +1161,11 @@ if(select_window.value){
     selected_faces.value=[];
     selected_fasteners =[];
 
-    anlyze_inners();
+      box_repository.add_new_box_to_series();
 
-    draw_Box();
+
+      anlyze_inners();
+
 
   }
 
@@ -1105,27 +1246,32 @@ if(select_window.value){
           dx = 0;
           dy = x_move_value;
           dz = 0;
-        } else if (face_name == 2 || face_name == 4) {
+        }
+        else if (face_name == 2 || face_name == 4) {
           dx = x_move_value;
           dy = 0;
           dz = 0;
         }
-      } else if (view_port == 'R') {
+      }
+      else if (view_port == 'R') {
         if (face_name == 1 || face_name == 3) {
           dx = 0;
           dy = x_move_value;
           dz = 0;
-        } else if (face_name == 5 || face_name == 6) {
+        }
+        else if (face_name == 5 || face_name == 6) {
           dx = 0;
           dy = 0;
           dz = x_move_value;
         }
-      } else if (view_port == 'T') {
+      }
+      else if (view_port == 'T') {
         if (face_name == 2 || face_name == 4) {
           dx = x_move_value;
           dy = 0;
           dz = 0;
-        } else if (face_name == 5 || face_name == 6) {
+        }
+        else if (face_name == 5 || face_name == 6) {
           dx = 0;
           dy = 0;
           dz = x_move_value;
@@ -1228,6 +1374,7 @@ analayzejoins.generate_3d_shape_fastener();
     }
     update_holes();
     analayzejoins.generate_3d_shape_fastener();
+    box_repository.add_new_box_to_series();
 
   }
 
@@ -1304,15 +1451,21 @@ analayzejoins.generate_3d_shape_fastener();
       box_repository.box_model.value.fasteners[f].transform_fastener_to_hole();
     }
 
+    analayzejoins.generate_3d_shape_fastener();
 
 
   }
 
   flip_fasteners() {
-    for(int f=0;f<box_repository.box_model.value.fasteners.length;f++){
-      box_repository.box_model.value.fasteners[f].change_fastener_nut_face();
+    for(int f=0;f<selected_fasteners.length;f++){
+      Fastener fastener=selected_fasteners[f];
+      fastener.flipe=true;
     }
     update_holes();
+
+    box_repository.add_new_box_to_series();
+
+
   }
 
   /// analyze box
@@ -1354,8 +1507,7 @@ analayzejoins.generate_3d_shape_fastener();
       selected_pieces.add(p);
     }
     move_piece(x_move_value / 100, y_move_value / 100);
-    draw_Box();
-  }
+   }
 
   /// extract executable files with xml extension  to use in this case with kdt drilling machine
   extract_xml_files_pattern() {
@@ -1441,12 +1593,84 @@ analayzejoins.generate_3d_shape_fastener();
   // }
 
 
+  anlyze_inners() {
+    List<Piece_model> old_inners = [];
+
+    for (int ine = 0;
+    ine < box_repository.box_model.value.box_pieces.length;
+    ine++) {
+      Piece_model p = box_repository.box_model.value.box_pieces[ine];
+      if (p.piece_name.contains("inner")) {
+        old_inners.add(p);
+      }
+    }
+    // print("old_inners = ${old_inners.length}");
+
+    clear_inners_list();
+    corners_points = detct_corners();
+    List<Rectangle_model> rectangles = draw_rectangles();
+    List<Rectangle_model> correct_rectangles =
+    cancel_contained_rectangle_in_piece(rectangles);
+
+    for (Rectangle_model rectangle in correct_rectangles) {
+      double inner_depth = box_repository.box_model.value.box_depth
+      // -rectangle.corners[0].z_coordinate
+          ;
+
+// print('box depth = ${box_repository.box_model.value.box_depth}');
+// print('corner  z = ${rectangle.corners[0].z_coordinate}');
+// print('inner depth = $inner_depth');
+
+      double back_distance = 0;
+
+      for (int oi = 0; oi < old_inners.length; oi++) {
+        if (center_in_piece(old_inners[oi], rectangle_center(rectangle))) {
+          inner_depth -= old_inners[oi].back_distance;
+
+          back_distance = old_inners[oi].back_distance;
+        }
+      }
+
+      Piece_model inner = Piece_model(
+          box_repository.box_model.value.get_id("inner"),
+          "inner",
+          "F",
+          "inner",
+          rectangle.width,
+          rectangle.height,
+          inner_depth,
+          origin_of_rectangle(rectangle));
+
+      inner.back_distance = back_distance;
+
+      bool exist = false;
+
+      for (Piece_model piece in box_repository.box_model.value.box_pieces) {
+        bool same_width = piece.piece_width == inner.piece_width;
+        bool same_height = piece.piece_height == inner.piece_height;
+        bool same_origin = piece.piece_origin.x_coordinate ==
+            inner.piece_origin.x_coordinate &&
+            piece.piece_origin.y_coordinate ==
+                inner.piece_origin.y_coordinate &&
+            piece.piece_origin.z_coordinate == inner.piece_origin.z_coordinate;
+
+        exist = same_width && same_height && same_origin;
+      }
+      if (!exist) {
+        box_repository.box_model.value.box_pieces.add(inner);
+      }
+    }
+
+
+  }
+
 
   void save_BOX_File( String fName) {
 
+    box_repository.box_model.value.box_name=fName;
 
     var contents=box_repository.box_model.value.toJson();
-    box_repository.box_model.value.box_name=fName;
+
     String fileName = "${fName}.json";
 
     // print(contents);
@@ -1472,26 +1696,7 @@ analayzejoins.generate_3d_shape_fastener();
 
   ///   //////////////////////
 
-  open_File() async{
-
-   await open_box_from_repo();
-
-   Get.defaultDialog(title: "",
-       content:    Container(width: 200,height: 50,color: Colors.blue,
-           child: LinearProgressIndicator()
-       )
-   );
-
-    await Future.delayed(Duration(seconds: 4)).then((value) {
-      Navigator.of(Get.overlayContext!).pop();
-    } );
-
-
-   analayzejoins.generate_3d_shape_fastener();
-
-
-  }
-  open_box_from_repo()  {
+  open_File()    {
 
     html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
     uploadInput.accept = '.json'; // Accept only JSON files
@@ -1516,6 +1721,19 @@ analayzejoins.generate_3d_shape_fastener();
 
               Box_model box_model=Box_model.fromJson(data);
               add_Box(box_model);
+
+              Get.defaultDialog(title: "",
+                  content:    Container(width: 200,height: 50,color: Colors.blue,
+                      child: LinearProgressIndicator()
+                  )
+              );
+
+               Future.delayed(Duration(seconds: 2)).then((value) {
+                analayzejoins.generate_3d_shape_fastener();
+
+                Navigator.of(Get.overlayContext!).pop();
+
+              } );
 
               // Print the decoded JSON
 
@@ -1982,74 +2200,7 @@ analayzejoins.generate_3d_shape_fastener();
   /// /###############################################
   /// automatic detect inners
 
-  anlyze_inners() {
-    List<Piece_model> old_inners = [];
 
-    for (int ine = 0;
-        ine < box_repository.box_model.value.box_pieces.length;
-        ine++) {
-      Piece_model p = box_repository.box_model.value.box_pieces[ine];
-      if (p.piece_name.contains("inner")) {
-        old_inners.add(p);
-      }
-    }
-    // print("old_inners = ${old_inners.length}");
-
-    clear_inners_list();
-    corners_points = detct_corners();
-    List<Rectangle_model> rectangles = draw_rectangles();
-    List<Rectangle_model> correct_rectangles =
-        cancel_contained_rectangle_in_piece(rectangles);
-
-    for (Rectangle_model rectangle in correct_rectangles) {
-      double inner_depth = box_repository.box_model.value.box_depth
-          // -rectangle.corners[0].z_coordinate
-          ;
-
-// print('box depth = ${box_repository.box_model.value.box_depth}');
-// print('corner  z = ${rectangle.corners[0].z_coordinate}');
-// print('inner depth = $inner_depth');
-
-      double back_distance = 0;
-
-      for (int oi = 0; oi < old_inners.length; oi++) {
-        if (center_in_piece(old_inners[oi], rectangle_center(rectangle))) {
-          inner_depth -= old_inners[oi].back_distance;
-
-          back_distance = old_inners[oi].back_distance;
-        }
-      }
-
-      Piece_model inner = Piece_model(
-          box_repository.box_model.value.get_id("inner"),
-          "inner",
-          "F",
-          "inner",
-          rectangle.width,
-          rectangle.height,
-          inner_depth,
-          origin_of_rectangle(rectangle));
-
-      inner.back_distance = back_distance;
-
-      bool exist = false;
-
-      for (Piece_model piece in box_repository.box_model.value.box_pieces) {
-        bool same_width = piece.piece_width == inner.piece_width;
-        bool same_height = piece.piece_height == inner.piece_height;
-        bool same_origin = piece.piece_origin.x_coordinate ==
-                inner.piece_origin.x_coordinate &&
-            piece.piece_origin.y_coordinate ==
-                inner.piece_origin.y_coordinate &&
-            piece.piece_origin.z_coordinate == inner.piece_origin.z_coordinate;
-
-        exist = same_width && same_height && same_origin;
-      }
-      if (!exist) {
-        box_repository.box_model.value.box_pieces.add(inner);
-      }
-    }
-  }
 
   /// detect if the inner intersected with piece
 
@@ -2397,6 +2548,8 @@ analayzejoins.generate_3d_shape_fastener();
     double resault = double.parse(v.toStringAsFixed(2));
     return resault;
   }
+
+
 
 
 }
